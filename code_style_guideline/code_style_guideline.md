@@ -7,13 +7,12 @@ Our overarching goals are clarity, consistency, readability, simplicity, and bre
 
 Following this style guide should:
 
-* Make it easier to read.
+* Improves the readability.
 * Make code easier to maintain.
-* Reduce simple programmer errors.
-* Reduce cognitive load while coding.
-* Keep discussions on diffs focused on the code's logic rather than its style.
 
-Note that brevity is not a primary goal. Code should be made more concise only if other good code qualities (such as readability, simplicity, and clarity) remain equal or are improved.
+Clarity is more important than brevity. Although Swift code can be compact, it is a non-goal to enable the smallest possible code with the fewest characters. Brevity in Swift code, where it occurs, is a side-effect of the strong type system and features that naturally reduce boilerplate. Note that brevity is not a primary goal. Code should be made more concise only if other good code qualities (such as readability, simplicity, and clarity) remain equal or are improved.
+
+If you are having trouble describing your API’s functionality in simple terms, **you may have designed the wrong API.** -Apple
 
 ## Table of Contents
 
@@ -24,12 +23,38 @@ Note that brevity is not a primary goal. Code should be made more concise only i
     1. [Operators](#operators)
 1. [Patterns](#patterns)
 1. [File Organization](#file-organization)
+1. [Documentation Comments](#documentation)
+1. [References](#references)
 
 ## Naming
 
+* <a id='static-class-properties'></a>(<a href='#static-class-properties'>link</a>) **Static and Class Properties**
+
+  Static and class properties that return instances of the declaring type are not suffixed with the name of the type.
+
+  <details>
+
+  ```swift
+  // RIGHT
+  public class UIColor {
+    public class var red: UIColor {               
+      // ...
+    }
+  }
+
+  // WRONG
+  public class UIColor {
+    public class var redColor: UIColor {               
+      // ...
+    }
+  }
+  ```
+  </details>
+
+
 * <a id='use-camel-case'></a>(<a href='#use-camel-case'>link</a>) **Use PascalCase for type and protocol names, and lowerCamelCase for everything else.** [![SwiftLint: type_name](https://img.shields.io/badge/SwiftLint-type__name-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#type-name)
 
-  This one not using on our project right now. But we should. There is a lot of struct  and enum which are starts lowerCamelCase. If we add this thing, it will generate 150  error. FYI, folks.
+  This one not using on our project right now. But we should. There is a lot of struct and enum which are starts lowerCamelCase. If we add this thing, it will generate 150  error. FYI, folks.
   <details>
 
   ```swift
@@ -778,9 +803,13 @@ Note that brevity is not a primary goal. Code should be made more concise only i
 
     </details>
 
+## Documentation Comments
 
-    ## References
+  * <a id='documentation'></a>(<a href='#documentation'>link</a>) **Documentation comments are written using the format where each line is preceded by a triple slash (///). Beacuse if you use that it will see on autocomplete dropdown view. Javadoc-style block comments (/* * ... **/) are not permitted.**
 
+## References
+
+* [The Google API Design Guidelines](https://google.github.io/swift/#naming)
 * [The Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
 * [The Airbnb API Design Guidelines](https://github.com/airbnb/swift)
 * [The Raywenderlich API Design Guidelines](https://github.com/raywenderlich/swift-style-guide)
