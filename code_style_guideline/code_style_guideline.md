@@ -24,9 +24,6 @@ Note that brevity is not a primary goal. Code should be made more concise only i
     1. [Operators](#operators)
 1. [Patterns](#patterns)
 1. [File Organization](#file-organization)
-1. [Objective-C Interoperability](#objective-c-interoperability)
-1. [Contributors](#contributors)
-1. [Amendments](#amendments)
 
 ## Naming
 
@@ -86,34 +83,22 @@ Note that brevity is not a primary goal. Code should be made more concise only i
   </details>
 
 
-* <a id='general-part-first'></a>(<a href='#constants'>link</a>) **Constant should be written inside of enum.** We are collecting all enums on Constant enum. It is a private enum inside that class extension. And also if there is more than one same stuff's property group them.
+* <a id='namespace-using-enums'></a>(<a href='#namespace-using-enums'>link</a>) **Use `enum`s for organizing `public` or `internal` constants and functions into namespaces.** Avoid creating non-namespaced global constants and functions. Feel free to nest namespaces where it adds clarity.
 
     <details>
 
+    #### Why?
+    Caseless `enum`s work well as namespaces because they cannot be instantiated, which matches their intent.
+
     ```swift
-    // WRONG
-    let kRadiusBorder: CGFloat
-    let kWidthBorder: CGFloat
-    let bodyRightMargin: CGFloat
-    let bodyLeftMargin: CGFloat
+    enum Environment {
 
-    // WRONG
-    enum Constant {
-      let kRadiusBorder: CGFloat
-      let kWidthBorder: CGFloat
-      let bodyRightMargin: CGFloat
-      let bodyLeftMargin: CGFloat
-    }
-
-    // RIGHT
-    enum Constant {
-      enum Border {
-        let Radius: CGFloat
-        let Width: CGFloat
+      enum Earth {
+        static let gravity = 9.8
       }
-      enum Margin {
-        let bodyRight: CGFloat
-        let bodyLeft: CGFloat  
+
+      enum Moon {
+        static let gravity = 1.6
       }
     }
     ```
@@ -208,6 +193,9 @@ Note that brevity is not a primary goal. Code should be made more concise only i
 **[⬆ back to top](#table-of-contents)**
 
 ## Style
+
+
+* <a id='line_length'></a>(<a href='#line_length'>link</a>) **We need a line length, we are not using it right now.**
 
 * <a id='use-implicit-types'></a>(<a href='#use-implicit-types'>link</a>) **Don't include types where they can be easily inferred.**
 
@@ -567,7 +555,7 @@ Note that brevity is not a primary goal. Code should be made more concise only i
     </details>
 
 
-* <a id='closure-brace-spacing'></a>(<a href='#closure-brace-spacing'>link</a>) **Single-line closures should have a space inside each brace. Also if you can do it on one line do it. When you doing that remember readability is our most important thing.** [![SwiftLint: closure_spacing](https://img.shields.io/badge/SwiftLint-closure__spacing-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#closure-spacing)
+* <a id='closure-brace-spacing'></a>(<a href='#closure-brace-spacing'>link</a>) **Single-line closures should have a space inside each brace. Also if you can do it on one line, do it. When you doing that remember readability is our most important thing.** [![SwiftLint: closure_spacing](https://img.shields.io/badge/SwiftLint-closure__spacing-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#closure-spacing)
 
   <details>
 
@@ -580,3 +568,221 @@ Note that brevity is not a primary goal. Code should be made more concise only i
   ```
 
   </details>
+
+### Operators
+
+* <a id='infix-operator-spacing'></a>(<a href='#infix-operator-spacing'>link</a>) **Infix operators should have a single space on either side.** Prefer parenthesis to visually group statements with many operators rather than varying widths of whitespace. This rule does not apply to range operators (e.g. `1...3`) and postfix or prefix operators (e.g. `guest?` or `-1`). [![SwiftLint: operator_usage_whitespace](https://img.shields.io/badge/SwiftLint-operator__usage__whitespace-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#operator-usage-whitespace)
+
+  <details>
+
+  ```swift
+  // WRONG
+  let capacity = 1+2
+  let capacity = currentCapacity   ?? 0
+  let mask = (UIAccessibilityTraitButton|UIAccessibilityTraitSelected)
+  let capacity=newCapacity
+  let latitude = region.center.latitude - region.span.latitudeDelta/2.0
+
+  // RIGHT
+  let capacity = 1 + 2
+  let capacity = currentCapacity ?? 0
+  let mask = (UIAccessibilityTraitButton | UIAccessibilityTraitSelected)
+  let capacity = newCapacity
+  let latitude = region.center.latitude - (region.span.latitudeDelta / 2.0)
+  ```
+
+  </details>
+
+**[⬆ back to top](#table-of-contents)**
+
+## Patterns
+
+* <a id='implicitly-unwrapped-optionals'></a>(<a href='#implicitly-unwrapped-optionals'>link</a>) **Prefer initializing properties at `init` time whenever possible, rather than using implicitly unwrapped optionals.**  A notable exception is UIViewController's `view` property. [![SwiftLint: implicitly_unwrapped_optional](https://img.shields.io/badge/SwiftLint-implicitly__unwrapped__optional-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#implicitly-unwrapped-optional)
+
+  <details>
+
+  ```swift
+  // WRONG
+  class MyClass: NSObject {
+
+    init() {
+      super.init()
+      someValue = 5
+    }
+
+    var someValue: Int!
+  }
+
+  // RIGHT
+  class MyClass: NSObject {
+
+    init() {
+      someValue = 0
+      super.init()
+    }
+
+    var someValue: Int
+  }
+  ```
+
+</details>
+
+* <a id='guards-at-top'></a>(<a href='#guards-at-top'>link</a>) **Prefer using `guard` at the beginning of a scope.**
+
+  <details>
+
+    #### Why?
+    It's easier to reason about a block of code when all `guard` statements are grouped together at the top rather than intermixed with business logic.
+    </details>
+
+
+* <a id='limit-access-control'></a>(<a href='#limit-access-control'>link</a>) **Access control should be at the strictest level possible.**
+
+
+* <a id='prefer-immutable-values'></a>(<a href='#prefer-immutable-values'>link</a>) **Prefer immutable values whenever possible.** Use `map` and `compactMap` instead of appending to a new collection. Use `filter` instead of removing elements from a mutable collection.
+
+  <details>
+
+  #### Why?
+  Mutable variables increase complexity, so try to keep them in as narrow a scope as possible.
+
+  ```swift
+  // WRONG
+  var results = [SomeType]()
+  for element in input {
+    let result = transform(element)
+    results.append(result)
+  }
+
+  // RIGHT
+  let results = input.map { transform($0) }
+  ```
+
+  ```swift
+  // WRONG
+  var results = [SomeType]()
+  for element in input {
+    if let result = transformThatReturnsAnOptional(element) {
+      results.append(result)
+    }
+  }
+
+  // RIGHT
+  let results = input.compactMap { transformThatReturnsAnOptional($0) }
+  ```
+
+  </details>
+
+
+* <a id='final-classes-by-default'></a>(<a href='#final-classes-by-default'>link</a>) **Default classes to `final`.**
+
+    <details>
+
+    #### Why?
+    If a class needs to be overridden, the author should opt into that functionality by omitting the `final` keyword.
+
+    ```swift
+    // WRONG
+    class SettingsRepository {
+      // ...
+    }
+
+    // RIGHT
+    final class SettingsRepository {
+      // ...
+    }
+    ```
+
+  </details>
+
+
+* <a id='switch-never-default'></a>(<a href='#switch-never-default'>link</a>) **Dont use the `default` case when `switch`ing over an enum.**
+
+    <details>
+
+    #### Why?
+    Enumerating every case requires developers and reviewers have to consider the correctness of every switch statement when new cases are added.
+
+    ```swift
+    // WRONG
+    switch anEnum {
+    case .a:
+      // Do something
+    default:
+      // Do something else.
+    }
+
+    // RIGHT
+    switch anEnum {
+    case .a:
+      // Do something
+    case .b, .c:
+      // Do something else.
+    }
+    ```
+
+    Also if you can use ternary if use it on here.
+
+    ```swift
+    let value = anEnum == .a ? XXX : xxx
+    ```    
+
+  </details>
+
+
+
+  * <a id='optional-nil-check'></a>(<a href='#optional-nil-check'>link</a>) **Check for nil rather than using optional binding if you don't need to use the value.** [![SwiftLint: unused_optional_binding](https://img.shields.io/badge/SwiftLint-unused_optional_binding-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#unused-optional-binding)
+
+    <details>
+
+    #### Why?
+    Checking for nil makes it immediately clear what the intent of the statement is. Optional binding is less explicit.
+
+    ```swift
+    var thing: Thing?
+
+    // WRONG
+    if let _ = thing {
+      doThing()
+    }
+
+    // RIGHT
+    if thing != nil {
+      doThing()
+    }
+    ```
+
+    </details>
+
+
+## File Organization
+
+* <a id='alphabetize-imports'></a>(<a href='#alphabetize-imports'>link</a>) **Alphabetize module imports at the top of the file a single line below the last line of the header comments. Do not add additional line breaks between import statements.** [![SwiftFormat: sortedImports](https://img.shields.io/badge/SwiftFormat-sortedImports-7B0051.svg)](https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md#sortedImports)
+
+    <details>
+
+    #### Why?
+    A standard organization method helps engineers more quickly determine which modules a file depends on. Also if some module has another module do not import it. Ex: BottomPopup has a UIKit
+
+    ```swift
+      // WRONG
+      import SDWebImage
+      import UIKit
+      import BottomPopup
+
+      //RIGHT
+
+      import BottomPopup
+      import SDWebImage
+    ```
+
+    </details>
+
+
+    ## References
+
+* [The Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
+* [The Airbnb API Design Guidelines](https://github.com/airbnb/swift)
+* [The Raywenderlich API Design Guidelines](https://github.com/raywenderlich/swift-style-guide)
+
+**[⬆ back to top](#table-of-contents)**
