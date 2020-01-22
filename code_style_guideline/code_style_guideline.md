@@ -108,12 +108,12 @@ Note that brevity is not a primary goal. Code should be made more concise only i
     // RIGHT
     enum Constant {
       enum Border {
-        let Radius: CGFloat
-        let Width: CGFloat
+        static let Radius: CGFloat
+        static let Width: CGFloat
       }
       enum Margin {
-        let bodyRight: CGFloat
-        let bodyLeft: CGFloat  
+        static let bodyRight: CGFloat
+        static let bodyLeft: CGFloat  
       }
     }
     ```
