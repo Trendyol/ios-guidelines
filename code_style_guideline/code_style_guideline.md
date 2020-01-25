@@ -85,7 +85,7 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
-* <a id='bool-names'></a>(<a href='#bool-names'>link</a>) **Name booleans like `isSpaceship`, `hasSpacesuit`, etc.** This makes it clear that they are booleans and not other types.
+* <a id='bool-names'></a>(<a href='#bool-names'>link</a>) **Name booleans like `isAddAddressVisible`, `hasChangePermission`, etc.** This makes it clear that they are booleans and not other types.
 
 * <a id='general-part-first'></a>(<a href='#general-part-first'>link</a>) **Names should be written with their most general part first and their most specific part last.** The meaning of "most general" depends on context, but should roughly mean "that which most helps you narrow down your search for the item you're looking for." Most importantly, be consistent with how you order the parts of your name.
 
@@ -219,8 +219,46 @@ If you are having trouble describing your API’s functionality in simple terms,
 
 ## Style
 
+* <a id='allTodos'></a>(<a href='#alTodos'>link</a>) **Delete all TODO comments.**
 
-* <a id='line_length'></a>(<a href='#line_length'>link</a>) **We need a line length, we are not using it right now.**
+* <a id='fetchPrefix'></a>(<a href='#fetchPrefix'>link</a>) **Use fetch prefix instead of get for interactor functions.**
+
+* <a id='useComputedVariable'></a>(<a href='#useComputedVariable'>link</a>) **For casting values use computed variables inside extensions, warn anyone if they use function instead of computed variable unnecessarily.**
+
+* <a id='useComputedVariable'></a>(<a href='#useComputedVariable'>link</a>) **Remove line spaces for class's first and last lines.**
+
+* <a id='cellToViper'></a>(<a href='#cellToViper'>link</a>) **Convert cells to viper module. at least move logic into presenter (Who touches it changes it)**
+
+* <a id='onUnitTest'></a>(<a href='#onUnitTest'>link</a>) **On UnitTest every `it` method should restore changed data if test case makes changes on any data.**
+
+* <a id='markEachExtension'></a>(<a href='#markEachExtension'>link</a>) **Mark each extension. Also use `MARK: -` over `MARK:` it will add a seperator on each extension.**
+
+  <details>
+
+    ```swift
+    // MARK: - UrlOpenable
+    public extension UrlOpenable {
+      func canOpenUrl(_ url: URL) -> Bool { ... }
+      func openUrl(_ url: URL) { ... }
+    }
+    ```
+
+  </details>
+
+
+
+* <a id='line_length'></a>(<a href='#line_length'>link</a>) **Line length rule. Some view or requests are too long. We can move some parameters to new line.**
+
+  <details>
+
+  ```
+  line_length:
+    warning: 140
+    error: 160
+  ```
+
+  </details>
+
 
 * <a id='use-implicit-types'></a>(<a href='#use-implicit-types'>link</a>) **Don't include types where they can be easily inferred.**
 
@@ -779,6 +817,44 @@ If you are having trouble describing your API’s functionality in simple terms,
 
     </details>
 
+
+* <a id='protocol-inheritance'></a>(<a href='#protocol-inheritance'>link</a>) **Seperation of Concerns. Do not add everything to _BaseProtocolInterface_.**
+
+  <details>
+
+  #### Why?
+ Add protocols with specific needs. With that, we can easily identify that interface what it can do? On Trendyol we are adding all common functions to Base...Interface. For example on our project most of ViewInterface can can openUrl but not all of them needs that ability.
+
+  ```swift
+  public protocol UrlOpenable {
+    func canOpenUrl(_ url: URL) -> Bool
+    func openUrl(_ url: URL)
+  }
+
+  public extension UrlOpenable {
+    func canOpenUrl(_ url: URL) -> Bool { ... }
+    func openUrl(_ url: URL) { ... }
+  }
+  ```
+
+  ```swift
+  public protocol NavigationBarConfigurable {
+    func prepareBackButton(tintColor: Color)
+    func prepareCrossButton(tintColor: Color, target: Any?, selector: Selector)
+    func setNavigationBarHidden(_ shouldHide: Bool)
+  }
+
+  public extension NavigationBarConfigurable {
+    func prepareBackButton(tintColor: Color) { ... }
+    func prepareCrossButton(tintColor: Color, target: Any?, selector: Selector) { ... }
+    func setNavigationBarHidden(_ shouldHide: Bool) { ... }
+  }
+  ```
+
+  ```swift
+  protocol ProductDetailViewInterface: ViewInterface, UrlOpenable, NavigationBarConfigurable { .... }
+  ```
+  </details>
 
 ## File Organization
 
