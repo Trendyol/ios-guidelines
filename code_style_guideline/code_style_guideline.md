@@ -14,7 +14,7 @@ Clarity is more important than brevity. Although Swift code can be compact, it i
 
 If you are having trouble describing your API’s functionality in simple terms, **you may have designed the wrong API.** -Apple
 
-## [Table of Contents](#table-of-contents)
+## [**Table of Contents**](#table-of-contents)
 
 1. [Naming](#naming)
 1. [Style](#style)
@@ -26,7 +26,7 @@ If you are having trouble describing your API’s functionality in simple terms,
 1. [Documentation Comments](#documentation)
 1. [References](#references)
 
-## Naming
+## [**Naming**](#naming)
 
 * **Static and Class Properties**
 
@@ -215,9 +215,9 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
-**[⬆ back to top](#table-of-contents)**
+#### <a href="#top">**⬆ Back to top**</a>
 
-## Style
+## [**Style**](#style)
 
 * **Add localization parameters to domain based. When adding string key use below logic.**
 
@@ -501,8 +501,6 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
-### Casting
-
 * **Don't cast parameters with default constructors. Use extension for readability. I think we can use intValue over toInt**
 
   <details>
@@ -521,7 +519,7 @@ If you are having trouble describing your API’s functionality in simple terms,
 
   </details>
 
-### Functions
+## [**Functions**](#functions)
 
 * **Omit unnecessary parameters.**
 
@@ -586,7 +584,7 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
-### Closures
+## [**Closures**](#closures)
 
 * **Favor `Void` return types over `()` in closure declarations.** If you must specify a `Void` return type in a function declaration, use `Void` rather than `()` to improve readability. [![SwiftLint: void_return](https://img.shields.io/badge/SwiftLint-void__return-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#void-return)
 
@@ -644,7 +642,8 @@ If you are having trouble describing your API’s functionality in simple terms,
 
   </details>
 
-### Operators
+
+## [**Operators**](#operators)
 
 * **Infix operators should have a single space on either side.** Prefer parenthesis to visually group statements with many operators rather than varying widths of whitespace. This rule does not apply to range operators (e.g. `1...3`) and postfix or prefix operators (e.g. `guest?` or `-1`). [![SwiftLint: operator_usage_whitespace](https://img.shields.io/badge/SwiftLint-operator__usage__whitespace-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#operator-usage-whitespace)
 
@@ -668,9 +667,9 @@ If you are having trouble describing your API’s functionality in simple terms,
 
   </details>
 
-**[⬆ back to top](#table-of-contents)**
+#### <a href="#top">**⬆ Back to top**</a>
 
-## Patterns
+## [**Patterns**](#patterns)
 
 * **Prefer initializing properties at `init` time whenever possible, rather than using implicitly unwrapped optionals.**  A notable exception is UIViewController's `view` property. [![SwiftLint: implicitly_unwrapped_optional](https://img.shields.io/badge/SwiftLint-implicitly__unwrapped__optional-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#implicitly-unwrapped-optional)
 
@@ -868,7 +867,8 @@ If you are having trouble describing your API’s functionality in simple terms,
   ```
   </details>
 
-## File Organization
+
+## [**File Organization**](#file-organization)
 
 * **Alphabetize module imports at the top of the file a single line below the last line of the header comments. Do not add additional line breaks between import statements.** [![SwiftFormat: sortedImports](https://img.shields.io/badge/SwiftFormat-sortedImports-7B0051.svg)](https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md#sortedImports)
 
@@ -891,11 +891,13 @@ If you are having trouble describing your API’s functionality in simple terms,
 
     </details>
 
-## Documentation Comments
+
+## [**Documentation Comments**](#documentation)
+
 
 * **Documentation comments are written using the format where each line is preceded by a triple slash (///). Beacuse if you use that it will see on autocomplete dropdown view. Javadoc-style block comments (/* * ... **/) are not permitted.**
 
-## References
+## [**References**](#references)
 
 * [The Google API Design Guidelines](https://google.github.io/swift/#naming)
 * [The Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
