@@ -117,11 +117,9 @@ If you are having trouble describing your API’s functionality in simple terms,
 
     ```swift
     enum Environment {
-
       enum Earth {
         static let gravity = 9.8
       }
-
       enum Moon {
         static let gravity = 1.6
       }
@@ -219,7 +217,7 @@ If you are having trouble describing your API’s functionality in simple terms,
 
 ## [**Style**](#style)
 
-* **Add localization parameters to domain based. When adding string key use below logic.**
+* **Add localization parameters to domain based. When adding string key use below logic. And fileName must be end of the extension.**
 
   <details>
 
