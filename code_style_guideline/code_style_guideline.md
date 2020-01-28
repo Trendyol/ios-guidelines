@@ -108,11 +108,11 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
-* **Use `enum`s for organizing `public` or `internal` constants and functions into namespaces.** Avoid creating non-namespaced global constants and functions. Feel free to nest namespaces where it adds clarity.
+* **Use `enum`s for organizing constants into namespaces.**. Feel free to nest namespaces where it adds clarity.
 
     <details>
 
-    #### Why?
+    #### Why `Enum`s?
     Caseless `enum`s work well as namespaces because they cannot be instantiated, which matches their intent.
 
     ```swift
@@ -233,7 +233,26 @@ If you are having trouble describing your API’s functionality in simple terms,
 
 * **Use fetch prefix instead of get for interactor functions.**
 
-* **For casting values use computed variables inside extensions, warn anyone if they use function instead of computed variable unnecessarily.**
+* **Don't use get prefix on function or variable.**
+
+* **For casting values use computed variables inside extensions for readability, warn anyone if they use function instead of computed variable unnecessarily. I think we can use intValue over toInt.**
+
+  <details>
+
+  ```swift
+  // WRONG
+  func userIdReceived(userId: String) {
+      interactor?.userIdReceived(Int(userId))
+  }
+
+  // RIGHT
+  func userIdReceived(userId: String) {
+      interactor?.userIdReceived(userId.intValue)
+  }
+  ```
+
+  </details>
+
 
 * **Remove line spaces for class's first and last lines.**
 
@@ -499,24 +518,6 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
-* **Don't cast parameters with default constructors. Use extension for readability. I think we can use intValue over toInt**
-
-  <details>
-
-  ```swift
-  // WRONG
-  func userIdReceived(userId: String) {
-      interactor?.userIdReceived(Int(userId))
-  }
-
-  // RIGHT
-  func userIdReceived(userId: String) {
-      interactor?.userIdReceived(userId.intValue)
-  }
-  ```
-
-  </details>
-
 ## [**Functions**](#functions)
 
 * **Omit unnecessary parameters.**
@@ -558,23 +559,27 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
-* **Dont use ommited parameters on function**
+* **Mostly don't use ommited parameters on function. If parameter name contains on method name at it is clear to recognize. You can use.**
 
   <details>
 
   ```swift
   // WRONG
-  func doSomething(_ awesomeStuff: String) {
+  func addImage(_ imageUrl: String) {
+    ...
+  }
+
+  func addImage(image: UIImage) {
     ...
   }
 
   // RIGHT
-  func doSomething(awesomeStuff: String) {
+  func addImage(_ image: UIImage) {
     ...
   }
 
   // RIGHT
-  func doSomething(with something: String) {
+  func addImage(with image: UIImage) {
     ...
   }
   ```
@@ -691,7 +696,7 @@ If you are having trouble describing your API’s functionality in simple terms,
 
 * **Don't use same delegate name when you use chain delegate. A unique method name helps engineers more quickly determine which modules depends on.**
 
-* **Prefer initializing properties at `init` time whenever possible, rather than using implicitly unwrapped optionals.**  A notable exception is UIViewController's `view` property. [![SwiftLint: implicitly_unwrapped_optional](https://img.shields.io/badge/SwiftLint-implicitly__unwrapped__optional-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#implicitly-unwrapped-optional)
+* **Prefer initializing properties at `init` time whenever possible, rather than using implicitly unwrapped optionals.** [![SwiftLint: implicitly_unwrapped_optional](https://img.shields.io/badge/SwiftLint-implicitly__unwrapped__optional-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#implicitly-unwrapped-optional)
 
   <details>
 
@@ -853,38 +858,39 @@ If you are having trouble describing your API’s functionality in simple terms,
 
   <details>
 
-  #### Why?
- Add protocols with specific needs. With that, we can easily identify that interface what it can do? On Trendyol we are adding all common functions to Base...Interface. For example on our project most of ViewInterface can can openUrl but not all of them needs that ability.
+    #### Why?
+   Add protocols with specific needs. With that, we can easily identify that interface what it can do? On Trendyol we are adding all common functions to Base...Interface. For example on our project most of ViewInterface can can openUrl but not all of them needs that ability.
 
-  ```swift
-  public protocol UrlOpenable {
-    func canOpenUrl(_ url: URL) -> Bool
-    func openUrl(_ url: URL)
-  }
+    ```swift
+    public protocol UrlOpenable {
+      func canOpenUrl(_ url: URL) -> Bool
+      func openUrl(_ url: URL)
+    }
 
-  public extension UrlOpenable {
-    func canOpenUrl(_ url: URL) -> Bool { ... }
-    func openUrl(_ url: URL) { ... }
-  }
-  ```
+    public extension UrlOpenable {
+      func canOpenUrl(_ url: URL) -> Bool { ... }
+      func openUrl(_ url: URL) { ... }
+    }
+    ```
 
-  ```swift
-  public protocol NavigationBarConfigurable {
-    func prepareBackButton(tintColor: Color)
-    func prepareCrossButton(tintColor: Color, target: Any?, selector: Selector)
-    func setNavigationBarHidden(_ shouldHide: Bool)
-  }
+    ```swift
+    public protocol NavigationBarConfigurable {
+      func prepareBackButton(tintColor: Color)
+      func prepareCrossButton(tintColor: Color, target: Any?, selector: Selector)
+      func setNavigationBarHidden(_ shouldHide: Bool)
+    }
 
-  public extension NavigationBarConfigurable {
-    func prepareBackButton(tintColor: Color) { ... }
-    func prepareCrossButton(tintColor: Color, target: Any?, selector: Selector) { ... }
-    func setNavigationBarHidden(_ shouldHide: Bool) { ... }
-  }
-  ```
+    public extension NavigationBarConfigurable {
+      func prepareBackButton(tintColor: Color) { ... }
+      func prepareCrossButton(tintColor: Color, target: Any?, selector: Selector) { ... }
+      func setNavigationBarHidden(_ shouldHide: Bool) { ... }
+    }
+    ```
 
-  ```swift
-  protocol ProductDetailViewInterface: ViewInterface, UrlOpenable, NavigationBarConfigurable { .... }
-  ```
+    ```swift
+    protocol ProductDetailViewInterface: ViewInterface, UrlOpenable, NavigationBarConfigurable { .... }
+    ```
+
   </details>
 
 
