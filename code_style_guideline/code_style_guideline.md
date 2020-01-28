@@ -669,6 +669,28 @@ If you are having trouble describing your API’s functionality in simple terms,
 
 ## [**Patterns**](#patterns)
 
+* **Don't use chain delegate if you are not make any changes on every scope.**
+
+  <details>
+
+    ```swift
+    extension ReviewCell: ReviewContainerViewDelegate {
+      func photosTapped(imageUrls: [String], currentImageIndex: Int) {
+          delegate?.photosTapped(imageUrls: imageUrls, currentImageIndex:   currentImageIndex)
+      }
+    }
+
+    extension ReviewContainerViewPresenter: ReviewContainerViewPresenterInterface {
+      func reviewPhotoTapped(imageUrls: [String], currentImageIndex: Int) {
+          delegate?.photosTapped(imageUrls: imageUrls, currentImageIndex: currentImageIndex)
+      }
+    }
+    ```
+    </details>
+
+
+* **Don't use same delegate name when you use chain delegate. A unique method name helps engineers more quickly determine which modules depends on.**
+
 * **Prefer initializing properties at `init` time whenever possible, rather than using implicitly unwrapped optionals.**  A notable exception is UIViewController's `view` property. [![SwiftLint: implicitly_unwrapped_optional](https://img.shields.io/badge/SwiftLint-implicitly__unwrapped__optional-007A87.svg)](https://github.com/realm/SwiftLint/blob/master/Rules.md#implicitly-unwrapped-optional)
 
   <details>
