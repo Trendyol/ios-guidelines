@@ -856,10 +856,10 @@ If you are having trouble describing your API’s functionality in simple terms,
 
 * **Seperation of Concerns. Do not add everything to _BaseProtocolInterface_.**
 
-  <details>
+    <details>
 
     #### Why?
-   Add protocols with specific needs. With that, we can easily identify that interface what it can do? On Trendyol we are adding all common functions to Base...Interface. For example on our project most of ViewInterface can can openUrl but not all of them needs that ability.
+    Add protocols with specific needs. With that, we can easily identify that interface what it can do? On Trendyol we are adding all common functions to Base...Interface. For example on our project most of ViewInterface can can openUrl but not all of them needs that ability.
 
     ```swift
     public protocol UrlOpenable {
@@ -891,7 +891,7 @@ If you are having trouble describing your API’s functionality in simple terms,
     protocol ProductDetailViewInterface: ViewInterface, UrlOpenable, NavigationBarConfigurable { .... }
     ```
 
-  </details>
+    </details>
 
 
 * **Use ternary if only setting value or calling function.**
