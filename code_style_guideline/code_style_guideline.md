@@ -173,19 +173,7 @@ If you are having trouble describing your API’s functionality in simple terms,
 
   // RIGHT
   class ExperiencesViewController {
-    private func didTapBookButton() {
-      // ...
-    }
-
-    private func didTapCampaignView() {
-      // ...
-    }
-
     private func campaignViewTapped() {
-      // ...
-    }
-
-    private func modelDidChange() {
       // ...
     }
   }
@@ -234,25 +222,6 @@ If you are having trouble describing your API’s functionality in simple terms,
 * **Use fetch prefix instead of get for interactor functions.**
 
 * **Don't use get prefix on function or variable.**
-
-* **For casting values use computed variables inside extensions for readability, warn anyone if they use function instead of computed variable unnecessarily. I think we can use intValue over toInt.**
-
-  <details>
-
-  ```swift
-  // WRONG
-  func userIdReceived(userId: String) {
-      interactor?.userIdReceived(Int(userId))
-  }
-
-  // RIGHT
-  func userIdReceived(userId: String) {
-      interactor?.userIdReceived(userId.intValue)
-  }
-  ```
-
-  </details>
-
 
 * **Remove line spaces for class's first and last lines.**
 
