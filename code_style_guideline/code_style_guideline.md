@@ -894,6 +894,46 @@ If you are having trouble describing your API’s functionality in simple terms,
   </details>
 
 
+* **Use ternary if only setting value or calling function.**
+
+    <details>
+
+    #### Why?
+    Swift build times are slow mostly because of expensive type checking. By default Xcode doesn't show code that's slow to compile. You can instruct it to show slowly compiling functions and expressions, though by adding:
+
+    -Xfrontend -warn-long-function-bodies=100 (100 means 100ms here, you should experiment with this value depending on your computer speed and project)
+    -Xfrontend -warn-long-expression-type-checking=100
+
+    ```swift
+    // Build time: 239.0ms
+    let labelNames = type == 0 ? (1...5).map{type0ToString($0)} : (0...2).map{type1ToString($0)}
+
+    // Build time: 16.9ms
+    var labelNames: [String]
+    if type == 0 {
+        labelNames = (1...5).map{type0ToString($0)}
+    } else {
+        labelNames = (0...2).map{type1ToString($0)}
+    }
+    ```
+
+    ```swift
+    // Build time: 1034.0ms
+    let moveValue = willShowKeyboard ? -(endKeyboardFrame.height/Constant.dividerNumberForKeyboardHeight + (view?.doneButtonHeight ?? 0)) : 0
+
+    // Build time: 103.0ms
+    var moveValue: CGFloat = 0.0
+      if willShowKeyboard {
+          moveValue = -(endKeyboardFrame.height/Constant.dividerNumberForKeyboardHeight)
+          if let doneButtonHeight = view?.doneButtonHeight {
+              moveValue += doneButtonHeight
+          }
+      }
+    ```
+
+    </details>
+
+
 ## [**File Organization**](#file-organization)
 
 * **Alphabetize module imports at the top of the file a single line below the last line of the header comments. Do not add additional line breaks between import statements.** [![SwiftFormat: sortedImports](https://img.shields.io/badge/SwiftFormat-sortedImports-7B0051.svg)](https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md#sortedImports)
