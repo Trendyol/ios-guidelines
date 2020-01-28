@@ -890,6 +890,28 @@ If you are having trouble describing your API’s functionality in simple terms,
     </details>
 
 
+* **On group name don't add full name to subgroups. Don't use Module suffix if it already inside on Module. on Don't use camelCase add a space.**
+
+    <details>
+
+    #### Why?
+    A standard organization method helps engineers more quickly determine which modules a file depends on.
+
+    ```swift
+    // WRONG
+    Modules > Account > BrandFollowingModule > Views > BrandFollowingTableViewHeader
+    Modules > Account > AccountModule > AccountListFooterBanner
+    Modules > Account > AccountSettingsModule
+
+    //RIGHT
+    Modules > Account > Brand Following > Views > TableView Header
+    Modules > Account > Listing > Footer Banner
+    Modules > Account > Settings
+    ```
+
+    </details>
+
+
 ## [**Documentation Comments**](#documentation)
 
 
