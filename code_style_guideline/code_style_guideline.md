@@ -227,7 +227,7 @@ If you are having trouble describing your API’s functionality in simple terms,
 
   </details>
 
-
+* **Add accessibilityIdentifiers as Localizable.**
 
 * **Delete all TODO comments.**
 
