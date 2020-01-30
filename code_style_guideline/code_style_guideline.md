@@ -927,7 +927,7 @@ If you are having trouble describing your API’s functionality in simple terms,
     </details>
 
 
-* **On group name don't add full name to subgroups. Don't use Module suffix if it already inside on Module. on Don't use camelCase add a space.**
+* **On group name don't add full name to subgroups. Don't use Module suffix if it already inside on Module.**
 
     <details>
 
@@ -941,8 +941,8 @@ If you are having trouble describing your API’s functionality in simple terms,
     Modules > Account > AccountSettingsModule
 
     //RIGHT
-    Modules > Account > Brand Following > Views > TableView Header
-    Modules > Account > Listing > Footer Banner
+    Modules > Account > BrandFollowing > Views > TableViewHeader
+    Modules > Account > Listing > FooterBanner
     Modules > Account > Settings
     ```
 
