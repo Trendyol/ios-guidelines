@@ -21,5 +21,4 @@ For detailed info for each practice, you can navigate using links below;
 | [Layering Approach](practices/layering_approach.md) | What is layering approach, how we build the project using frameworks in different layers |
 | [Networking](practices/networking.md) | CoreApi, NetworkManager, Interceptors, Logging  |
 | [VIPER as Architectural Design Pattern](practices/viper.md) | How we implement VIPER, Layers, Viper practices, Unit tests |
-| [Event Tracking](practices/event_tracking.md) | Core Event Tracking Layer, Channel event trackers |
 | [Routing](practices/routing.md) | How we handle navigating between different modules, Deeplinking |
