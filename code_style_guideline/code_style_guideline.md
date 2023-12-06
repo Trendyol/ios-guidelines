@@ -555,6 +555,50 @@ If you are having trouble describing your API’s functionality in simple terms,
 
   </details>
 
+* **Long function invocations should also break on each argument. Put the closing parenthesis on the last parameter of the invocation..**
+
+  <details>
+
+  ```swift
+  // WRONG
+  universe.generateStars(at: location, count: 5, color: starColor, withAverageDistance: 4)
+
+  
+  // WRONG
+  universe.generateStars(
+    at: location,
+    count: 5,
+    color: starColor,
+    withAverageDistance: 4
+  )
+
+  // WRONG
+  universe.generateStars(
+    at: location,
+    count: 5,
+    color: starColor,
+    withAverageDistance: 4)
+
+  // WRONG
+  universe.generate(
+    5,
+    .stars,
+    at: location)
+
+  // RIGHT
+  universe.generateStars(at: location,
+                         count: 5,
+                         color: starColor,
+                         withAverageDistance: 4)
+
+  // RIGHT
+  universe.generate(5,
+                   .stars,
+                   at: location)
+
+  ```
+
+  </details>
 
 ## [**Closures**](#closures)
 
