@@ -147,6 +147,34 @@ func makeView(position: CGPoint, size: CGSize) -> UIView
 init(withName name: String, andID id: Int)
 ```
 
+It's very common to force engineers to put an object of delegation as the first argument of delegation methods. This is not strictly necessary and is used only in cases when it makes sense.
+
+**Preferred**:
+```
+func buttonTapped(_ button: UIButton)
+```
+
+**Not Preferred**:
+```swift
+func screen(_ screen: UIViewController, hasButtonTapped button: UIButton)
+```
+
+UIKit's UIControl actions are called with the control's name in the beginning and the "action" word in the end:
+
+**Preferred**:
+```
+@objc
+private func nextButtonTapped(_ sender: UIButton) { // ...
+```
+
+**Not Preferred**:
+```swift
+@objc
+private func nextButtonAction(_ sender: UIButton) { // ...
+```
+
+However, if the return value might be useful in some specific situations, it doesn't force one to use it (the `@discardableResult` annotation serves this purpose). Though, such return values are not encouraged. An engineer shall follow the principle of [the command-query separation](https://en.wikipedia.org/wiki/Command–query_separation).
+
 ### Delegates
 
 When creating custom delegate methods, an unnamed first parameter should be the delegate source. (UIKit contains numerous examples of this.)
@@ -647,6 +675,32 @@ let success = reticulateSplines(
   adjustmentFactor: 1.3,
   translateConstant: 2,
   comment: "normalize the display")
+```
+
+
+A method declaration is placed on a single line if it can fit most display screen widths without a carry-over. Otherwise, each parameter is placed on its own line and matches the beginning of the previous one. Return type carries on to the last parameter's line.
+
+**Preferred**:
+
+```swift
+func fetchResults(from endpoint: URL,
+                  transferringTo device: Device,
+                  compressed: Bool,
+                  completionHandler: (() -> Void)?) –> [Data]
+```
+
+**Not Preferred**:
+
+```swift
+func fetchResults(
+    from endpoint: URL = .remoteServerPath,
+    transferringTo device: Device = .current,
+    compressed: Bool = true,
+    completionHandler: ((_ success: Bool) -> ())? = nil
+) –> [Data]
+
+func fetchResults(from endpoint: URL, transferringTo device: Device, 
+                  compressed: Bool, completionHandler: (() -> Void)?) –> [Data]
 ```
 
 ## Closure Expressions
