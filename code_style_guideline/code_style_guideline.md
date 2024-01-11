@@ -47,11 +47,13 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Access Control](#access-control)
 * [Control Flow](#control-flow)
   * [Ternary Operator](#ternary-operator)
+  * [Switch Statements](#switch-statements)
 * [Golden Path](#golden-path)
   * [Failing Guards](#failing-guards)
 * [Semicolons](#semicolons)
 * [Parentheses](#parentheses)
 * [Multi-line String Literals](#multi-line-string-literals)
+* [Pre-processor Directives](#pre-processor-directives)
 * [No Emoji](#no-emoji)
 * [No #imageLiteral or #colorLiteral](#no-imageliteral-or-colorliteral)
 * [Organization and Bundle Identifier](#organization-and-bundle-identifier)
@@ -739,6 +741,17 @@ For single-expression closures where the context is clear, use implicit returns:
 attendeeList.sort { a, b in
   a > b
 }
+
+array
+    .filter { $0 > 0 }
+    .sort { $0 > $1 }
+    .map { Int($0) }
+```
+
+**Not Preferred**:
+```swift
+array.filter { $0 > 0 }
+    .sort { $0 > $1 }.map { Int($0) }
 ```
 
 Chained methods using trailing closures should be clear and easy to read in context. Decisions on spacing, line breaks, and when to use named versus anonymous arguments is left to the discretion of the author. Examples:
@@ -950,6 +963,38 @@ var lookup = [String: Int]()
 
 **NOTE**: Following this guideline means picking descriptive names is even more important than before.
 
+Array literals shall not contain spaces after the left square bracket and before the right one. The included items shall be listed one below another, aligned at the same level of indentation. The first element shall be on the declaration's line. The closing bracket shall go on the same line with the last item. However, if items are short and their sequence can be read easily (e.g., integer literals) it's acceptable to have them all on the one line.
+
+**Preferred**:
+```swift
+var numbers = [1, 2, 3]
+
+let airVehicles = [helicopter,
+                   airLiner,
+                   carrierRocket,
+                   wings]
+```
+
+**Not Preferred**:
+```swift
+var numbers = [
+    1, 
+    2, 
+    3
+]
+              
+let airVehicles = [helicopter, airLiner, carrierRocket, wings]
+```
+
+The option with braces on separate lines is used when elements don't fit the line width:
+
+**Preferred**:
+```swift
+let airVehicles = [
+    assumeThisNameDoesNotFitTheLineWidth,
+    airLiner
+]
+```
 
 ### Syntactic Sugar
 
@@ -1116,6 +1161,50 @@ result = isHorizontal ? x : y
 result = a > b ? x = c > d ? c : d : y
 ```
 
+The ternary operator `?`-`:` shall not be used where the single `if`-check is sufficient, because although it can save lines, it makes the intention unclear and spawns extra entities (empty tuples or functions).
+
+**Preferred**:
+```swift
+if error == nil {
+    completion()
+}
+```
+
+**Not Preferred**:
+```swift
+error == nil
+  ? completion()
+  : ()
+```
+
+### Switch Statements
+
+One level of indentation is used inside a `switch`'s parentheses and for `case` implementations.
+All statements inside the cases of a `switch` statement start on separate lines.
+
+**Preferred**:
+
+```swift
+switch direction {
+    case .left:
+        turnLeft()
+    case .right:
+        turnRight():
+    case .straight:
+        break
+}
+```
+
+**Not Preferred**:
+
+```swift
+switch direction {
+    case .left: turnLeft()
+    case .right: turnRight()
+    case .straight: break
+}
+```
+
 ## Golden Path
 
 When coding with conditionals, the left-hand margin of the code should be the "golden" or "happy" path. That is, don't nest `if` statements. Multiple return statements are OK. The `guard` statement is built for this.
@@ -1181,6 +1270,22 @@ if let number1 = number1 {
 } else {
   fatalError("impossible")
 }
+```
+
+In any `guard`-statement, the `else` (and its left brace) goes on the same line after the last condition.
+
+
+**Preferred**:
+```swift
+guard !array.isEmpty else {
+    // ...
+```
+
+**Not Preferred**:
+```swift
+guard !array.isEmpty 
+    else {
+    // ...
 ```
 
 ### Failing Guards
@@ -1265,6 +1370,46 @@ let message = "You cannot charge the flux " +
   "You must use a super-charger " +
   "which costs 10 credits. You currently " +
   "have \(credits) credits available."
+```
+
+## Line breaks
+
+Long expressions are broken into several parts on different lines so that the symbol that connects two parts of expression starts the new line. Each new line is indented with one additional indentation level. Having a special character starting a new line avoids creating the illusion that a new line is a new statement.
+
+**Preferred**:
+```swift
+let a = (a + b)
+    + (a + c)
+```
+
+**Not Preferred**:
+```swift
+let a = (a + b) +
+    (a + c)
+```
+
+## Pre-processor Directives
+
+Any macros shall not be indented, the surrounded code shall be formatted as if the macro doesn't exist.
+
+**Preferred**:
+```swift
+func handleLogin() {
+#if DEBUG
+    printDebugInfo()
+#endif
+    openHomeScreen()
+}
+```
+
+**Not Preferred**:
+```swift
+func handleLogin() {
+    #if DEBUG
+        printDebugInfo()
+    #endif
+    openHomeScreen()
+}
 ```
 
 ## No Emoji
