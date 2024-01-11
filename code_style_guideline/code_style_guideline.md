@@ -843,6 +843,8 @@ Declare variables and function return types as optional with `?` where a `nil` v
 
 Use implicitly unwrapped types declared with `!` only for instance variables that you know will be initialized later before use, such as subviews that will be set up in `viewDidLoad()`. Prefer optional binding to implicitly unwrapped optionals in most other cases.
 
+Don't use as! or try!.
+
 When accessing an optional value, use optional chaining if the value is only accessed once or if there are many optionals in the chain:
 
 ```swift
@@ -903,6 +905,35 @@ UIView.animate(withDuration: 2.0) { [weak self] in
   guard let strongSelf = self else { return }
   strongSelf.alpha = 1.0
 }
+```
+
+If you don't plan on actually using the value stored in an optional, but need to determine whether or not this value is `nil`, explicitly check this value against `nil` as opposed to using `if let` syntax.
+
+**Preferred**:
+```swift
+if someOptional != nil {
+    // do something
+}
+```
+
+**Not Preferred**:
+```swift
+// NOT PREFERRED
+if let _ = someOptional {
+    // do something
+}
+```
+
+Use XCTUnwrap instead of forced unwrapping in tests.
+
+**Preferred**:
+```swift
+let product = try XCTUnwrap(priceComparisonResponse.stores?.first?.products?.first)
+```
+
+**Not Preferred**:
+```swift
+let product = priceComparisonResponse.stores!.first!.products!.first!
 ```
 
 ### Lazy Initialization
