@@ -64,7 +64,7 @@ Strive to make your code compile without warnings. This rule informs many style 
 
 ## Using SwiftLint
 
-When writing for Kodeco, you are strongly encouraged — perhaps even required, depending on your team — to use our SwiftLint configuration. See the [SwiftLint Policy](SWIFTLINT.markdown) for more information.
+When developing for Trendyol, it is highly recommended — and may even be mandatory, depending on your team — to incorporate our SwiftLint configuration. Please refer to the [SwiftLint Policy](SWIFTLINT.markdown) for detailed information.
 
 ## Naming
 
