@@ -211,6 +211,25 @@ func calculateSum(_ a: Int, _ b: Int, _ c: Int) -> Int {
 
 Omit `Void` return types from function definitions.
 
+<details>
+<summary>Examples</summary>
+
+**Preferred**:
+```swift
+func performTask() {
+    // Implementation
+}
+```
+
+**Not Preferred**:
+```swift
+func performTask() -> Void {
+    // Implementation
+}
+```
+
+</details>
+
 However, if the return value might be useful in some specific situations, it doesn't force one to use it (the `@discardableResult` annotation serves this purpose). Though, such return values are not encouraged. An engineer shall follow the principle of [the command-query separation](https://en.wikipedia.org/wiki/Command–query_separation).
 
 </details>
