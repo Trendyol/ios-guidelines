@@ -85,6 +85,7 @@ Descriptive and consistent naming makes software easier to read and understand. 
   - boolean types should read like assertions
   - protocols that describe _what something is_ should read as nouns
   - protocols that describe _a capability_ should end in _-able_ or _-ible_
+- omitting all labels when arguments can't be usefully distinguished _e.g. min(number1, number2), zip(sequence1, sequence2)_
 - using terms that don't surprise experts or confuse beginners
 - generally avoiding abbreviations
 - using precedent for names
