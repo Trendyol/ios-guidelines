@@ -213,25 +213,6 @@ Omit `Void` return types from function definitions.
 
 However, if the return value might be useful in some specific situations, it doesn't force one to use it (the `@discardableResult` annotation serves this purpose). Though, such return values are not encouraged. An engineer shall follow the principle of [the command-query separation](https://en.wikipedia.org/wiki/Command–query_separation).
 
-Long function invocations should also break on each argument. Put the closing parenthesis on the last parameter of the invocation.
-
-<details>
-<summary>Examples</summary>
- 
-**Preferred**:
-```swift
-let result = calculateTotal(
-    initialValue: 10,
-    additionalValue: 5,
-    multiplier: 2
-)
-```
-
-**Not Preferred**:
-```swift
-let result = calculateTotal(initialValue: 10, additionalValue: 5, multiplier: 2)
-```
-
 </details>
 
 ### Delegates
