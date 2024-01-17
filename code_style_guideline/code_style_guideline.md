@@ -718,6 +718,9 @@ var diameter: Double {
 
 Marking classes or members as `final` in tutorials can distract from the main topic and is not required. Nevertheless, use of `final` can sometimes clarify your intent and is worth the cost. In the below example, `Box` has a particular purpose and customization in a derived class is not intended. Marking it `final` makes that clear.
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 // Turn any generic type into a reference type using this Box class.
 final class Box<T> {
@@ -728,18 +731,28 @@ final class Box<T> {
 }
 ```
 
+</details>
+
 ## Function Declarations
 
 Keep short function declarations on one line including the opening brace:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 func reticulateSplines(spline: [Double]) -> Bool {
   // reticulate code goes here
 }
 ```
 
+</details>
+
 For functions with long signatures, put each parameter on a new line and add an extra indent on subsequent lines:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 func reticulateSplines(
   spline: [Double], 
@@ -750,6 +763,8 @@ func reticulateSplines(
   // reticulate code goes here
 }
 ```
+
+</details>
 
 Don't use `(Void)` to represent the lack of an input; simply use `()`. Use `Void` instead of `()` for closure and function outputs.
 
@@ -782,12 +797,20 @@ typealias CompletionHandler = (result) -> ()
 
 Mirror the style of function declarations at call sites. Calls that fit on a single line should be written as such:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 let success = reticulateSplines(splines)
 ```
 
+</details>
+
 If the call site must be wrapped, put each parameter on a new line, indented one additional level:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 let success = reticulateSplines(
   spline: splines,
@@ -796,6 +819,7 @@ let success = reticulateSplines(
   comment: "normalize the display")
 ```
 
+</details>
 
 A method declaration is placed on a single line if it can fit most display screen widths without a carry-over. Otherwise, each parameter is placed on its own line and matches the beginning of the previous one. Return type carries on to the last parameter's line.
 
@@ -1001,25 +1025,42 @@ Don't use as! or try!.
 
 When accessing an optional value, use optional chaining if the value is only accessed once or if there are many optionals in the chain:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 textContainer?.textLabel?.setNeedsDisplay()
 ```
 
+</details>
+
 Use optional binding when it's more convenient to unwrap once and perform multiple operations:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 if let textContainer = textContainer {
   // do many things with textContainer
 }
 
 ```
+
+</details>
+
 **Notes:** Swift 5.7 introduced new shorthand syntax for unwrapping optionals into shadowed variables:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 if let textContainer {
   // do many things with textContainer
 }
 ```
+
+</details>
+
 
 When naming optional variables and properties, avoid naming them like `optionalString` or `maybeView` since their optional-ness is already in the type declaration.
 
@@ -1204,8 +1245,6 @@ var numbers = [
 let airVehicles = [helicopter, airLiner, carrierRocket, wings]
 ```
 
-</details>
-
 The option with braces on separate lines is used when elements don't fit the line width:
 
 **Preferred**:
@@ -1215,6 +1254,8 @@ let airVehicles = [
     airLiner
 ]
 ```
+
+</details>
 
 ### Syntactic Sugar
 
@@ -1263,10 +1304,16 @@ launch(&rocket)
 </details>
 
 **Free Function Exceptions**
+
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 let tuples = zip(a, b)  // feels natural as a free function (symmetry)
 let value = max(x, y, z)  // another free function that feels natural
 ```
+
+</details>
 
 ## Memory Management
 
