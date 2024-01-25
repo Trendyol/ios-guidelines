@@ -153,38 +153,21 @@ init(withName name: String, andID id: Int)
 
 </details>
 
-It's very common to force engineers to put an object of delegation as the first argument of delegation methods. This is not strictly necessary and is used only in cases when it makes sense.
-
-<details>
-<summary>Examples</summary>
-
-**Preferred**:
-```
-func buttonTapped(_ button: UIButton)
-```
-
-**Not Preferred**:
-```swift
-func screen(_ screen: UIViewController, hasButtonTapped button: UIButton)
-```
-
-</details>
-
 UIKit's UIControl actions are called with the control's name in the beginning and the "action" word in the end:
 
 <details>
 <summary>Examples</summary>
  
 **Preferred**:
-```
+```swift
 @objc
-private func nextButtonTapped(_ sender: UIButton) { // ...
+private func nextButtonAction(_ sender: UIButton) { // ...
 ```
 
 **Not Preferred**:
 ```swift
 @objc
-private func nextButtonAction(_ sender: UIButton) { // ...
+private func nextButtonTapped(_ sender: UIButton) { // ...
 ```
 
 </details>
@@ -238,13 +221,21 @@ Long function invocations should also break on each argument. Put the closing pa
 
 **Preferred**:
 ```swift
+universe.generateStars(at: location,
+                       count: 5,
+                       color: starColor,
+                       withAverageDistance: 4)
+```
+
+**Not Preferred**:
+```swift
 universe.generate(
   5,
   .stars,
   at: location)
 ```
 
-**Preferred**:
+**Not Preferred**:
 ```swift
 universe.generateStars(
   at: location,
@@ -268,14 +259,6 @@ universe.generateStars(
   color: starColor,
   withAverageDistance: 4
 )
-```
-
-**Not Preferred**:
-```swift
-universe.generateStars(at: location,
-                       count: 5,
-                       color: starColor,
-                       withAverageDistance: 4)
 ```
 
 **Not Preferred**:
