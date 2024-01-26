@@ -153,7 +153,7 @@ init(withName name: String, andID id: Int)
 
 </details>
 
-UIKit's UIControl actions are called with the control's name in the beginning and the "action" word in the end:
+UIKit's UIControl actions are called with the control's name in the beginning and the "tapped" word in the end:
 
 <details>
 <summary>Examples</summary>
@@ -161,13 +161,13 @@ UIKit's UIControl actions are called with the control's name in the beginning an
 **Preferred**:
 ```swift
 @objc
-private func nextButtonAction(_ sender: UIButton) { // ...
+private func nextButtonTapped(_ sender: UIButton) { // ...
 ```
 
 **Not Preferred**:
 ```swift
 @objc
-private func nextButtonTapped(_ sender: UIButton) { // ...
+private func nextButtonAction(_ sender: UIButton) { // ...
 ```
 
 </details>
