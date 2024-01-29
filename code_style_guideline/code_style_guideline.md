@@ -1,7 +1,6 @@
-# The Official Kodeco Swift Style Guide.
-### Updated for Swift 5
+# Trendyol iOS Style Guide
 
-This style guide is different from others you may see, because the focus is centered on readability for print and the web. We created this style guide to keep the code in our books, tutorials, and starter kits nice and consistent — even though we have many different authors working on the books.
+Tailored exclusively for the Trendyol app, this Swift Style Guide prioritizes code readability within Trendyol's unique development environment. Crafted to ensure consistency across diverse contributors, the guide serves as a dedicated resource for maintaining a cohesive and clear codebase.
 
 Our overarching goals are clarity, consistency and brevity, in that order.
 
@@ -56,9 +55,6 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Pre-processor Directives](#pre-processor-directives)
 * [No Emoji](#no-emoji)
 * [No #imageLiteral or #colorLiteral](#no-imageliteral-or-colorliteral)
-* [Organization and Bundle Identifier](#organization-and-bundle-identifier)
-* [Copyright Statement](#copyright-statement)
-* [Smiley Face](#smiley-face)
 * [References](#references)
 
 
@@ -68,7 +64,7 @@ Strive to make your code compile without warnings. This rule informs many style 
 
 ## Using SwiftLint
 
-When writing for Kodeco, you are strongly encouraged — perhaps even required, depending on your team — to use our SwiftLint configuration. See the [SwiftLint Policy](SWIFTLINT.markdown) for more information.
+When developing for Trendyol, it is highly recommended — and may even be mandatory, depending on your team — to incorporate our SwiftLint configuration. Please refer to the [SwiftLint Policy](SWIFTLINT.markdown) for detailed information.
 
 ## Naming
 
@@ -89,6 +85,7 @@ Descriptive and consistent naming makes software easier to read and understand. 
   - boolean types should read like assertions
   - protocols that describe _what something is_ should read as nouns
   - protocols that describe _a capability_ should end in _-able_ or _-ible_
+- omitting all labels when arguments can't be usefully distinguished _e.g. min(number1, number2), zip(sequence1, sequence2)_
 - using terms that don't surprise experts or confuse beginners
 - generally avoiding abbreviations
 - using precedent for names
@@ -113,18 +110,20 @@ For the above example using `UIGestureRecognizer`, 1 is unambiguous and preferre
 
 **Pro Tip:** You can use Xcode's jump bar to lookup methods with argument labels. If you’re particularly good at mashing lots of keys simultaneously, put the cursor in the method name and press **Shift-Control-Option-Command-C** (all 4 modifier keys) and Xcode will kindly put the signature on your clipboard.
 
-![Methods in Xcode jump bar](screens/xcode-jump-bar.png)
-
-
 ### Class Prefixes
 
 Swift types are automatically namespaced by the module that contains them and you should not add a class prefix such as RW. If two names from different modules collide you can disambiguate by prefixing the type name with the module name. However, only specify the module name when there is possibility for confusion, which should be rare.
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 import SomeModule
 
 let myClass = MyModule.UsefulClass()
 ```
+
+</details>
 
 ### Methods
 
@@ -138,6 +137,9 @@ Parameter names follow rules for variable names. An engineer shall make use of S
 
 Factory method names start with the word "make". Both factory methods and initializers have their parameters as a list of items, they are not required to form phrases.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 init(name: String, id: Int)
@@ -149,22 +151,15 @@ func makeView(position: CGPoint, size: CGSize) -> UIView
 init(withName name: String, andID id: Int)
 ```
 
-It's very common to force engineers to put an object of delegation as the first argument of delegation methods. This is not strictly necessary and is used only in cases when it makes sense.
+</details>
 
+UIKit's UIControl actions are called with the control's name in the beginning and the "tapped" word in the end:
+
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
-```
-func buttonTapped(_ button: UIButton)
-```
-
-**Not Preferred**:
 ```swift
-func screen(_ screen: UIViewController, hasButtonTapped button: UIButton)
-```
-
-UIKit's UIControl actions are called with the control's name in the beginning and the "action" word in the end:
-
-**Preferred**:
-```
 @objc
 private func nextButtonTapped(_ sender: UIButton) { // ...
 ```
@@ -175,12 +170,115 @@ private func nextButtonTapped(_ sender: UIButton) { // ...
 private func nextButtonAction(_ sender: UIButton) { // ...
 ```
 
+</details>
+
+Omit unused parameters.
+
+<details>
+<summary>Examples</summary>
+ 
+**Preferred**:
+```swift
+func calculateSum(_ a: Int, _ b: Int) -> Int {
+    return a + b
+}
+```
+
+**Not Preferred**:
+```swift
+func calculateSum(_ a: Int, _ b: Int, _ c: Int) -> Int {
+    return a + b  // The parameter 'c' is unused
+}
+```
+
+</details>
+
+Omit `Void` return types from function definitions.
+
+<details>
+<summary>Examples</summary>
+
+**Preferred**:
+```swift
+func performTask() {
+    // Implementation
+}
+```
+
+**Not Preferred**:
+```swift
+func performTask() -> Void {
+    // Implementation
+}
+```
+
+</details>
+
+Long function invocations should also break on each argument. Put the closing parenthesis on the last line of the invocation.
+
+<details>
+<summary>Examples</summary>
+
+**Preferred**:
+```swift
+universe.generateStars(at: location,
+                       count: 5,
+                       color: starColor,
+                       withAverageDistance: 4)
+```
+
+**Not Preferred**:
+```swift
+universe.generate(
+  5,
+  .stars,
+  at: location)
+```
+
+**Not Preferred**:
+```swift
+universe.generateStars(
+  at: location,
+  count: 5,
+  color: starColor,
+  withAverageDistance: 4)
+```
+
+**Not Preferred**:
+```swift
+universe.generate(5,
+  .stars,
+  at: location)
+```
+
+**Not Preferred**:
+```swift
+universe.generateStars(
+  at: location,
+  count: 5,
+  color: starColor,
+  withAverageDistance: 4
+)
+```
+
+**Not Preferred**:
+```swift
+universe.generateStars(at: location, count: 5, color: starColor, withAverageDistance: 4)
+```
+
+</details>
+
 However, if the return value might be useful in some specific situations, it doesn't force one to use it (the `@discardableResult` annotation serves this purpose). Though, such return values are not encouraged. An engineer shall follow the principle of [the command-query separation](https://en.wikipedia.org/wiki/Command–query_separation).
+
+</details>
 
 ### Delegates
 
 When creating custom delegate methods, an unnamed first parameter should be the delegate source. (UIKit contains numerous examples of this.)
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 func namePickerView(_ namePickerView: NamePickerView, didSelectName name: String)
@@ -193,6 +291,8 @@ func didSelectName(namePicker: NamePickerViewController, name: String)
 func namePickerShouldReload() -> Bool
 ```
 
+</details>
+
 ### Interface
 
 Classes and structures are named using noun phrases, as well as protocols describing what an object is. Protocols which add abilities are named descriptively (e.g., `Sortable`). Protocols should not have the word `Protocol` at the end of the name. Instead, conforming types should have a specifying word in the name, because protocols are general, but classes and structures are specific.
@@ -201,6 +301,9 @@ Types implementing design patterns are usually named with the pattern name at th
 
 No prefixes shall be used (e.g., just `PriceCalculator` instead of `XYZPriceCalculator`), since there's no necessity for that in Swift (other than, maybe, to maintain consistency with Objective-C libraries and components).
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 protocol Engine { }
@@ -213,10 +316,15 @@ protocol EngineProtocol { }
 struct Engine: EngineProtocol { }
 ```
 
+</details>
+
 ### Use Type Inferred Context
 
 Use compiler inferred context to write shorter, clear code.  (Also see [Type Inference](#type-inference).)
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let selector = #selector(viewDidLoad)
@@ -233,10 +341,15 @@ let toView = context.view(forKey: UITransitionContextViewKey.to)
 let view = UIView(frame: CGRect.zero)
 ```
 
+</details>
+
 ### Generics
 
 Generic type parameters should be descriptive, upper camel case names. When a type name doesn't have a meaningful relationship or role, use a traditional single uppercase letter such as `T`, `U`, or `V`.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 struct Stack<Element> { ... }
@@ -251,10 +364,15 @@ func write<target: OutputStream>(to target: inout target)
 func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
 ```
 
+</details>
+
 ### Language
 
 Use US English spelling to match Apple's API.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let color = "red"
@@ -265,6 +383,8 @@ let color = "red"
 let colour = "red"
 ```
 
+</details>
+
 ## Code Organization
 
 Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
@@ -273,6 +393,9 @@ Use extensions to organize your code into logical blocks of functionality. Each 
 
 In particular, when adding protocol conformance to a model, prefer adding a separate extension for the protocol methods. This keeps the related methods grouped together with the protocol and can simplify instructions to add a protocol to a class with its associated methods.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 class MyViewController: UIViewController {
@@ -297,6 +420,8 @@ class MyViewController: UIViewController, UITableViewDataSource, UIScrollViewDel
 }
 ```
 
+</details>
+
 Since the compiler does not allow you to re-declare protocol conformance in a derived class, it is not always required to replicate the extension groups of the base class. This is especially true if the derived class is a terminal class and a small number of methods are being overridden. When to preserve the extension groups is left to the discretion of the author.
 
 For UIKit view controllers, consider grouping lifecycle, custom accessors, and IBAction in separate class extensions.
@@ -307,6 +432,9 @@ Unused (dead) code, including Xcode template code and placeholder comments shoul
 
 Aspirational methods not directly associated with the tutorial whose implementation simply calls the superclass should also be removed. This includes any empty/unused UIApplicationDelegate methods.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -332,10 +460,16 @@ override func tableView(_ tableView: UITableView, numberOfRowsInSection section:
 }
 
 ```
+
+</details>
+
 ### Minimal Imports
 
 Import only the modules a source file requires. For example, don't import `UIKit` when importing `Foundation` will suffice. Likewise, don't import `Foundation` if you must import `UIKit`.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 import UIKit
@@ -362,16 +496,19 @@ var deviceModels: [String]
 import UIKit
 var deviceModels: [String]
 ```
+
+</details>
 
 ## Spacing
 
 * Indent using 2 spaces rather than tabs to conserve space and help prevent line wrapping. Be sure to set this preference in Xcode and in the Project settings as shown below:
 
-![Xcode indent settings](screens/indentation.png)
-
 * Method braces and other braces (`if`/`else`/`switch`/`while` etc.) always open on the same line as the statement but close on a new line.
 * Tip: You can re-indent by selecting some code (or **Command-A** to select all) and then **Control-I** (or **Editor ▸ Structure ▸ Re-Indent** in the menu). Some of the Xcode template code will have 4-space tabs hard coded, so this is a good way to fix that.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 if user.isHappy {
@@ -392,12 +529,17 @@ else {
 }
 ```
 
+</details>
+
 * There should be one blank line between methods and up to one blank line between type declarations to aid in visual clarity and organization. Whitespace within methods should separate functionality, but having too many sections in a method often means you should refactor into several methods.
 
 * There should be no blank lines after an opening brace or before a closing brace.
 
 * Closing parentheses should not appear on a line by themselves.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let user = try await getUser(
@@ -413,8 +555,13 @@ let user = try await getUser(
 )
 ```
 
+</details>
+
 * Colons always have no space on the left and one space on the right. Exceptions are the ternary operator `? :`, empty dictionary `[:]` and `#selector` syntax `addTarget(_:action:)`.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 class TestDatabase: Database {
@@ -428,6 +575,8 @@ class TestDatabase : Database {
   var data :[String:CGFloat] = ["A" : 1.2, "B":3.2]
 }
 ```
+
+</details>
 
 * Long lines should be wrapped at around 70 characters. A hard limit is intentionally not specified.
 
@@ -459,6 +608,9 @@ Indicating a method's time complexity in documentation generally is a good idea,
 
 The basic structure of multi-line descriptions:
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 /// Summary.
@@ -487,6 +639,8 @@ Detailed description.
 */
 ```
 
+</details>
+
 Though, if a method has any parameters, they are necessary to be documented. A single parameter must be documented as - Parameter: Description. Multiple parameters shall be documented by the help of - Parameters: syntax. If the method has functions as parameters, their arguments must have labels and be documented, as well.
 
 If a method's return value type is not Void, it should be documented.
@@ -495,6 +649,9 @@ If a method throws an exception, the exception is documented with Throws.
 
 Two HeaderDoc parts are divided by a single blank line. However, if there's no description, blank lines are omitted:
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 // Summary.
@@ -514,6 +671,8 @@ Two HeaderDoc parts are divided by a single blank line. However, if there's no d
 // - Throws: Exception description.
 ```
 
+</details>
+
 ## Classes and Structures
 
 ### Which one to use?
@@ -527,6 +686,9 @@ Sometimes, things should be structs but need to conform to `AnyObject` or are hi
 ### Example definition
 
 Here's an example of a well-styled class definition:
+
+<details>
+<summary>Examples</summary>
 
 ```swift
 class Circle: Shape {
@@ -566,6 +728,8 @@ extension Circle: CustomStringConvertible {
 }
 ```
 
+</details>
+
 The example above demonstrates the following style guidelines:
 
  + Specify types for properties, variables, constants, argument declarations and other statements with a space after the colon but not before, e.g. `x: Int`, and `Circle: Shape`.
@@ -586,6 +750,9 @@ Use self only when required by the compiler (in `@escaping` closures, or in init
 
 For conciseness, if a computed property is read-only, omit the get clause. The get clause is required only when a set clause is provided.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 var diameter: Double {
@@ -602,10 +769,15 @@ var diameter: Double {
 }
 ```
 
+</details>
+
 ### Final
 
 Marking classes or members as `final` in tutorials can distract from the main topic and is not required. Nevertheless, use of `final` can sometimes clarify your intent and is worth the cost. In the below example, `Box` has a particular purpose and customization in a derived class is not intended. Marking it `final` makes that clear.
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 // Turn any generic type into a reference type using this Box class.
 final class Box<T> {
@@ -616,18 +788,28 @@ final class Box<T> {
 }
 ```
 
+</details>
+
 ## Function Declarations
 
 Keep short function declarations on one line including the opening brace:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 func reticulateSplines(spline: [Double]) -> Bool {
   // reticulate code goes here
 }
 ```
 
+</details>
+
 For functions with long signatures, put each parameter on a new line and add an extra indent on subsequent lines:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 func reticulateSplines(
   spline: [Double], 
@@ -639,8 +821,13 @@ func reticulateSplines(
 }
 ```
 
+</details>
+
 Don't use `(Void)` to represent the lack of an input; simply use `()`. Use `Void` instead of `()` for closure and function outputs.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 
 ```swift
@@ -661,16 +848,26 @@ func updateConstraints() -> () {
 typealias CompletionHandler = (result) -> ()
 ```
 
+</details>
+
 ## Function Calls
 
 Mirror the style of function declarations at call sites. Calls that fit on a single line should be written as such:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 let success = reticulateSplines(splines)
 ```
 
+</details>
+
 If the call site must be wrapped, put each parameter on a new line, indented one additional level:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 let success = reticulateSplines(
   spline: splines,
@@ -679,9 +876,13 @@ let success = reticulateSplines(
   comment: "normalize the display")
 ```
 
+</details>
 
 A method declaration is placed on a single line if it can fit most display screen widths without a carry-over. Otherwise, each parameter is placed on its own line and matches the beginning of the previous one. Return type carries on to the last parameter's line.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 
 ```swift
@@ -705,10 +906,15 @@ func fetchResults(from endpoint: URL, transferringTo device: Device,
                   compressed: Bool, completionHandler: (() -> Void)?) –> [Data]
 ```
 
+</details>
+
 ## Closure Expressions
 
 Use trailing closure syntax only if there's a single closure expression parameter at the end of the argument list. Give the closure parameters descriptive names.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 UIView.animate(withDuration: 1.0) {
@@ -735,7 +941,12 @@ UIView.animate(withDuration: 1.0, animations: {
 }
 ```
 
+</details>
+
 For single-expression closures where the context is clear, use implicit returns:
+
+<details>
+<summary>Examples</summary>
 
 ```swift
 attendeeList.sort { a, b in
@@ -754,8 +965,13 @@ array.filter { $0 > 0 }
     .sort { $0 > $1 }.map { Int($0) }
 ```
 
+</details>
+
 Chained methods using trailing closures should be clear and easy to read in context. Decisions on spacing, line breaks, and when to use named versus anonymous arguments is left to the discretion of the author. Examples:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 let value = numbers.map { $0 * 2 }.filter { $0 % 3 == 0 }.index(of: 90)
 
@@ -765,10 +981,15 @@ let value = numbers
   .map {$0 + 10}
 ```
 
+</details>
+
 ## Types
 
 Always use Swift's native types and expressions when available. Swift offers bridging to Objective-C so you can still use the full set of methods as needed.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let width = 120.0                                    // Double
@@ -787,6 +1008,8 @@ let width: NSNumber = 120.0                          // NSNumber
 let widthString: NSString = width.stringValue        // NSString
 ```
 
+</details>
+
 In drawing code, use `CGFloat` if it makes the code more succinct by avoiding too many conversions.
 
 ##  Initialization
@@ -795,6 +1018,9 @@ If the initial or constant value of a property doesn't depend on the initializer
 
 `.init()` is not used for initialization:
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let color = UIColor(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
@@ -805,6 +1031,8 @@ let color = UIColor(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
 let color: UIColor = .init(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
 ```
 
+</details>
+
 ### Constants
 
 Constants are defined using the `let` keyword and variables with the `var` keyword. Always use `let` instead of `var` if the value of the variable will not change.
@@ -813,6 +1041,9 @@ Constants are defined using the `let` keyword and variables with the `var` keywo
 
 You can define constants on a type rather than on an instance of that type using type properties. To declare a type property as a constant simply use `static let`. Type properties declared in this way are generally preferred over global constants because they are easier to distinguish from instance properties. Example:
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 enum Math {
@@ -823,6 +1054,8 @@ enum Math {
 let hypotenuse = side * Math.root2
 
 ```
+
+
 **Note:** The advantage of using a case-less enumeration is that it can't accidentally be instantiated and works as a pure namespace.
 
 **Not Preferred**:
@@ -832,6 +1065,8 @@ let root2 = 1.41421356237309504880168872
 
 let hypotenuse = side * root2 // what is root2?
 ```
+
+</details>
 
 ### Static Methods and Variable Type Properties
 
@@ -847,30 +1082,50 @@ Don't use as! or try!.
 
 When accessing an optional value, use optional chaining if the value is only accessed once or if there are many optionals in the chain:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 textContainer?.textLabel?.setNeedsDisplay()
 ```
 
+</details>
+
 Use optional binding when it's more convenient to unwrap once and perform multiple operations:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 if let textContainer = textContainer {
   // do many things with textContainer
 }
 
 ```
+
+</details>
+
 **Notes:** Swift 5.7 introduced new shorthand syntax for unwrapping optionals into shadowed variables:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 if let textContainer {
   // do many things with textContainer
 }
 ```
 
+</details>
+
+
 When naming optional variables and properties, avoid naming them like `optionalString` or `maybeView` since their optional-ness is already in the type declaration.
 
 For optional binding, shadow the original name whenever possible rather than using names like `unwrappedView` or `actualLabel`.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 var subview: UIView?
@@ -907,8 +1162,13 @@ UIView.animate(withDuration: 2.0) { [weak self] in
 }
 ```
 
+</details>
+
 If you don't plan on actually using the value stored in an optional, but need to determine whether or not this value is `nil`, explicitly check this value against `nil` as opposed to using `if let` syntax.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 if someOptional != nil {
@@ -924,8 +1184,13 @@ if let _ = someOptional {
 }
 ```
 
+</details>
+
 Use XCTUnwrap instead of forced unwrapping in tests.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let product = try XCTUnwrap(priceComparisonResponse.stores?.first?.products?.first)
@@ -936,10 +1201,15 @@ let product = try XCTUnwrap(priceComparisonResponse.stores?.first?.products?.fir
 let product = priceComparisonResponse.stores!.first!.products!.first!
 ```
 
+</details>
+
 ### Lazy Initialization
 
 Consider using lazy initialization for finer grained control over object lifetime. This is especially true for `UIViewController` that loads views lazily. You can either use a closure that is immediately called `{ }()` or call a private factory method. Example:
 
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 lazy var locationManager = makeLocationManager()
 
@@ -952,6 +1222,8 @@ private func makeLocationManager() -> CLLocationManager {
 }
 ```
 
+</details>
+
 **Notes:**
   - `[unowned self]` is not required here. A retain cycle is not created.
   - Location manager has a side-effect for popping up UI to ask the user for permission so fine grain control makes sense here.
@@ -961,6 +1233,9 @@ private func makeLocationManager() -> CLLocationManager {
 
 Prefer compact code and let the compiler infer the type for constants or variables of single instances. Type inference is also appropriate for small, non-empty arrays and dictionaries. When required, specify the specific type such as `CGFloat` or `Int16`.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let message = "Click the button"
@@ -976,10 +1251,15 @@ let currentBounds: CGRect = computeViewBounds()
 var names = [String]()
 ```
 
+</details>
+
 #### Type Annotation for Empty Arrays and Dictionaries
 
 For empty arrays and dictionaries, use type annotation. (For an array or dictionary assigned to a large, multi-line literal, use type annotation.)
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 var names: [String] = []
@@ -992,10 +1272,15 @@ var names = [String]()
 var lookup = [String: Int]()
 ```
 
+</details>
+
 **NOTE**: Following this guideline means picking descriptive names is even more important than before.
 
 Array literals shall not contain spaces after the left square bracket and before the right one. The included items shall be listed one below another, aligned at the same level of indentation. The first element shall be on the declaration's line. The closing bracket shall go on the same line with the last item. However, if items are short and their sequence can be read easily (e.g., integer literals) it's acceptable to have them all on the one line.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 var numbers = [1, 2, 3]
@@ -1027,10 +1312,15 @@ let airVehicles = [
 ]
 ```
 
+</details>
+
 ### Syntactic Sugar
 
 Prefer the shortcut versions of type declarations over the full generics syntax.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 var deviceModels: [String]
@@ -1045,12 +1335,17 @@ var employees: Dictionary<Int, String>
 var faxNumber: Optional<Int>
 ```
 
+</details>
+
 ## Functions vs Methods
 
 Free functions, which aren't attached to a class or type, should be used sparingly. When possible, prefer to use a method instead of a free function. This aids in readability and discoverability.
 
 Free functions are most appropriate when they aren't associated with any particular type or instance.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**
 ```swift
 let sorted = items.mergeSorted()  // easily discoverable
@@ -1063,11 +1358,19 @@ let sorted = mergeSort(items)  // hard to discover
 launch(&rocket)
 ```
 
+</details>
+
 **Free Function Exceptions**
+
+<details>
+<summary>Examples</summary>
+ 
 ```swift
 let tuples = zip(a, b)  // feels natural as a free function (symmetry)
 let value = max(x, y, z)  // another free function that feels natural
 ```
+
+</details>
 
 ## Memory Management
 
@@ -1077,6 +1380,9 @@ Code (even non-production, tutorial demo code) should not create reference cycle
 
 Extend object lifetime using the `[weak self]` and `guard let self = self else { return }` idiom. `[weak self]` is preferred to `[unowned self]` where it is not immediately obvious that `self` outlives the closure. Explicitly extending lifetime is preferred to optional chaining.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**
 ```swift
 resource.request().onComplete { [weak self] response in
@@ -1106,6 +1412,8 @@ resource.request().onComplete { [weak self] response in
 }
 ```
 
+</details>
+
 ## Access Control
 
 Full access control annotation in tutorials can distract from the main topic and is not required. Using `private` and `fileprivate` appropriately, however, adds clarity and promotes encapsulation. Prefer `private` to `fileprivate`; use `fileprivate` only when the compiler insists.
@@ -1114,6 +1422,9 @@ Only explicitly use `open`, `public`, and `internal` when you require a full acc
 
 Use access control as the leading property specifier. The only things that should come before access control are the `static` specifier or attributes such as `@IBAction`, `@IBOutlet` and `@discardableResult`.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 private let message = "Great Scott!"
@@ -1132,10 +1443,15 @@ class TimeMachine {
 }
 ```
 
+</details>
+
 ## Control Flow
 
 Prefer the `for-in` style of `for` loop over the `while-condition-increment` style.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 for _ in 0..<3 {
@@ -1172,10 +1488,15 @@ while i < attendeeList.count {
 }
 ```
 
+</details>
+
 ### Ternary Operator
 
 The Ternary operator, `?:` , should only be used when it increases clarity or code neatness. A single condition is usually all that should be evaluated. Evaluating multiple conditions is usually more understandable as an `if` statement or refactored into instance variables. In general, the best use of the ternary operator is during assignment of a variable and deciding which value to use.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 
 ```swift
@@ -1192,8 +1513,13 @@ result = isHorizontal ? x : y
 result = a > b ? x = c > d ? c : d : y
 ```
 
+</details>
+
 The ternary operator `?`-`:` shall not be used where the single `if`-check is sufficient, because although it can save lines, it makes the intention unclear and spawns extra entities (empty tuples or functions).
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 if error == nil {
@@ -1208,11 +1534,16 @@ error == nil
   : ()
 ```
 
+</details>
+
 ### Switch Statements
 
 One level of indentation is used inside a `switch`'s parentheses and for `case` implementations.
 All statements inside the cases of a `switch` statement start on separate lines.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 
 ```swift
@@ -1236,10 +1567,15 @@ switch direction {
 }
 ```
 
+</details>
+
 ## Golden Path
 
 When coding with conditionals, the left-hand margin of the code should be the "golden" or "happy" path. That is, don't nest `if` statements. Multiple return statements are OK. The `guard` statement is built for this.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies {
@@ -1272,8 +1608,13 @@ func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies 
 }
 ```
 
+</details>
+
 When multiple optionals are unwrapped either with `guard` or `if let`, minimize nesting by using the compound version when possible. In the compound version, place the `guard` on its own line, then indent each condition on its own line. The `else` clause is indented to match the `guard` itself, as shown below. Example:
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 guard 
@@ -1303,9 +1644,13 @@ if let number1 = number1 {
 }
 ```
 
+</details>
+
 In any `guard`-statement, the `else` (and its left brace) goes on the same line after the last condition.
 
-
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 guard !array.isEmpty else {
@@ -1319,6 +1664,8 @@ guard !array.isEmpty
     // ...
 ```
 
+</details>
+
 ### Failing Guards
 
 Guard statements are required to exit in some way. Generally, this should be simple one line statement such as `return`, `throw`, `break`, `continue`, and `fatalError()`. Large code blocks should be avoided. If cleanup code is required for multiple exit points, consider using a `defer` block to avoid cleanup code duplication.
@@ -1329,6 +1676,9 @@ Swift does not require a semicolon after each statement in your code. They are o
 
 Do not write multiple statements on a single line separated with semicolons.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let swift = "not a scripting language"
@@ -1339,12 +1689,17 @@ let swift = "not a scripting language"
 let swift = "not a scripting language";
 ```
 
+</details>
+
 **NOTE**: Swift is very different from JavaScript, where omitting semicolons is [generally considered unsafe](https://stackoverflow.com/questions/444080/do-you-recommend-using-semicolons-after-every-statement-in-javascript)
 
 ## Parentheses
 
 Parentheses around conditionals are not required and should be omitted.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 if name == "Hello" {
@@ -1359,17 +1714,27 @@ if (name == "Hello") {
 }
 ```
 
+</details>
+
 In larger expressions, optional parentheses can sometimes make code read more clearly.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let playerMark = (player == current ? "X" : "O")
 ```
 
+</details>
+
 ## Multi-line String Literals
 
 When building a long string literal, you're encouraged to use the multi-line string literal syntax. Open the literal on the same line as the assignment but do not include text on that line. Indent the text block one additional level.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 
 ```swift
@@ -1402,11 +1767,15 @@ let message = "You cannot charge the flux " +
   "which costs 10 credits. You currently " +
   "have \(credits) credits available."
 ```
+</details>
 
 ## Line breaks
 
 Long expressions are broken into several parts on different lines so that the symbol that connects two parts of expression starts the new line. Each new line is indented with one additional indentation level. Having a special character starting a new line avoids creating the illusion that a new line is a new statement.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 let a = (a + b)
@@ -1419,10 +1788,15 @@ let a = (a + b) +
     (a + c)
 ```
 
+</details>
+
 ## Pre-processor Directives
 
 Any macros shall not be indented, the surrounded code shall be formatted as if the macro doesn't exist.
 
+<details>
+<summary>Examples</summary>
+ 
 **Preferred**:
 ```swift
 func handleLogin() {
@@ -1443,6 +1817,8 @@ func handleLogin() {
 }
 ```
 
+</details>
+
 ## No Emoji
 
 Do not use emoji in your projects. For those readers who actually type in their code, it's an unnecessary source of friction. While it may be cute, it doesn't add to the learning and it interrupts the coding flow for these readers.
@@ -1451,68 +1827,10 @@ Do not use emoji in your projects. For those readers who actually type in their 
 
 Likewise, do not use Xcode's ability to drag a color or an image into a source statement. These turn into #colorLiteral and #imageLiteral, respectively, and present unpleasant challenges for a reader trying to enter them based on tutorial text. Instead, use `UIColor(red:green:blue)` and `UIImage(imageLiteralResourceName:)`.
 
-## Organization and Bundle Identifier
-
-Where an Xcode project is involved, the organization should be set to `Kodeco` and the Bundle Identifier set to `com.yourcompany.TutorialName` where `TutorialName` is the name of the tutorial project.
-
-![Xcode Project settings](screens/project_settings.png)
-
-## Copyright Statement
-
-The following copyright statement should be included at the top of every source
-file:
-
-```swift
-/// Copyright (c) 2023 Kodeco Inc.
-/// 
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-/// 
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-/// 
-/// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
-/// distribute, sublicense, create a derivative work, and/or sell copies of the
-/// Software in any work that is designed, intended, or marketed for pedagogical or
-/// instructional purposes related to programming, coding, application development,
-/// or information technology.  Permission for such use, copying, modification,
-/// merger, publication, distribution, sublicensing, creation of derivative works,
-/// or sale is expressly withheld.
-/// 
-/// This project and source code may use libraries or frameworks that are
-/// released under various Open-Source licenses. Use of those libraries and
-/// frameworks are governed by their own individual licenses.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
-```
-
-## Smiley Face
-
-Smiley faces are a very prominent style feature of the [Kodeco](https://www.kodeco.com/) site! It is very important to have the correct smile signifying the immense amount of happiness and excitement for the coding topic. The closing square bracket `]` is used because it represents the largest smile able to be captured using ASCII art. A closing parenthesis `)` creates a half-hearted smile, and thus is not preferred.
-
-**Preferred**:
-```
-:]
-```
-
-**Not Preferred**:
-```
-:)
-```
-
 ## References
 
 * [The Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
 * [The Swift Programming Language](https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/index.html)
 * [Using Swift with Cocoa and Objective-C](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/index.html)
 * [Swift Standard Library Reference](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/SwiftStandardLibraryReference/index.html)
+* [Airbnb Swift Style Guide](https://github.com/airbnb/swift)
