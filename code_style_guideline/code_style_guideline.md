@@ -11,6 +11,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Using SwiftLint](#using-swiftlint)
 * [Naming](#naming)
   * [Prose](#prose)
+  * [Variables](#variables)
   * [Methods](#methods)
   * [Delegates](#delegates)
   * [Interface](#interface)
@@ -115,6 +116,153 @@ For the above example using `UIGestureRecognizer`, 1 is unambiguous and preferre
 
 ![Methods in Xcode jump bar](screens/xcode-jump-bar.png)
 
+### Variables
+### 1. Booleans
+Use one the **is**, **has** or **should** etc. prefixes to name a boolean to makes it clear that it is boolean and not other type.
+
+**Preferred**:
+```swift
+ let isAddressAvailable = false
+ let hasPermissionChanged = true
+```
+
+**Not Preferred**:
+```swift
+let permissionChanged = false
+let isProductHasContent = false
+```
+
+### 2. Declaration
+Variable declaration should be lowerCamelCase.
+
+### 3. Type Inference
+Don't include type information.
+
+**Preferred**:
+```swift
+let screenName = ""
+let presenter = ScreenPresenter()
+```
+
+**Not Preferred**:
+```swift
+let screenName: String = ""
+let presenter: ScreenPresenter = ScreenPresenter()
+```
+
+There might be some exceptions, like array and floating number declarations when explicitly needed.
+
+```swift
+let products: [Product] = []
+let products: [Product] = .empty
+let buttonOpacity: CGFloat = 1
+```
+
+### 4. Let vs var
+Always use let over var for immutable variables.
+
+### 5. Avoid Ambuguity
+Name variables according to their roles, rather than their types. Include all the words needed to avoid ambiguity for a person reading code where the name is used. 
+
+**Preferred**:
+```swift
+@IBOutlet private weak var iconImageView: UIImageView!
+let isLowestPriceDurationActive = false
+let greetingText = "Hello Trendyol!"
+```
+
+**Not Preferred**:
+```swift
+@IBOutlet private weak var icon: UIImageView!
+let isDurationActive = false
+let text = "Hello Trendyol!"
+```
+
+### 6. Naming from general part to specific part
+Order names by starting with the most general part and ending with the most specific part.
+
+**Preferred**:
+```swift
+let borderRadius: CGFloat
+let bodyMarginRight: CGFloat
+```
+
+**Not Preferred**:
+```swift
+let radiusBorder: CGFloat
+let bodyRightMargin: CGFloat
+```
+
+### 7. Underscore Usage
+Don't use underscore.
+
+**Preferred**:
+```swift
+let array: [String] = []
+let filteredArray: [String] = []
+```
+
+**Not Preferred**:
+```swift
+let array: [String] = []
+let _array: [String] = []
+```
+
+### 8. Static Properties
+Static properties returning instances of their declaring type are not suffixed with the type's name.
+
+**Preferred**:
+```swift
+enum Constant {
+    enum InstallmentView {
+        static let backgroundColor: UIColor
+        static let cornerRadius: CGFloat
+        static let borderWidth: Double
+    }
+}
+```
+
+**Not Preferred**:
+```swift
+enum Constant {
+    static let installmentViewBackgroundColor: UIColor
+    static let installmentViewCornerRadius: CGFloat
+    static let installmentViewBorderWidth: Double
+}
+```
+
+### 9. Proper Nouns
+Use lowercased naming if noun is being used as prefix, otherwise it should be uppercased.
+
+**Preferred**:
+```swift
+ var utf8Bytes: [UTF8.CodeUnit]
+ var endpointURL: URL
+ var userSMTPServer: SecureSMTPServer
+```
+
+**Not Preferred**:
+```swift
+ var endpointUrl: URL
+ var userSmtpServer: SecureSMTPServer
+```
+
+### 10. Computed Properties
+Naming should be just like ordinary variable, not like functions.
+
+**Preferred**:
+```swift
+var productDetailDescriptionText: String {
+    ...
+}
+```
+
+**Not Preferred**:
+```swift
+var makeProductDetailDescriptionText: String {
+    ...
+}
+```
 
 ### Class Prefixes
 
