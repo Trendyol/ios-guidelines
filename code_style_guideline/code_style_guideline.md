@@ -16,7 +16,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Interface](#interface)
   * [Use Type Inferred Context](#use-type-inferred-context)
   * [Generics](#generics)
-  * [Class Prefixes](#class-prefixes)
+  * [Class and Structs](#class-struct)
   * [Language](#language)
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
@@ -249,6 +249,86 @@ func swap<T>(_ a: inout T, _ b: inout T)
 struct Stack<T> { ... }
 func write<target: OutputStream>(to target: inout target)
 func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
+```
+
+### Class and Structs
+### 1. Controller Suffix
+Don't use "Controller" in names of classes that aren't view controllers.
+
+### 2. Declaration
+Use PascalCase for type names.
+
+### 3. Mock Naming
+Use "Mock" prefix for entire mock classes. 
+
+**Preferred**:
+```swift
+class MockPriceView: PriceViewInterface { }
+```
+
+**Not Preferred**:
+```swift
+class PriceView: PriceViewInterface { }
+```
+
+Don't use "controller" and "interface" suffixes for mock naming.
+
+**Preferred**:
+```swift
+class MockPriceView: PriceViewInterface { }
+```
+
+**Not Preferred**:
+```swift
+class MockPriceViewInterface: PriceViewInterface { }
+class MockPriceViewController: PriceViewInterface { } 
+```
+
+"Mock" prefix should be first rather than channel prefixes.
+
+**Preferred**:
+```swift
+class MockPDPTagView: PriceViewInterface { }
+```
+
+**Not Preferred**:
+```swift
+class PDPMockTagView: PriceViewInterface { }
+```
+
+### 4. Test Class Naming
+Use "Tests" suffix for BaseXCTestCases.
+
+### 5. UI Related Class Naming
+Use type constraint as suffix.
+
+**Preferred**:
+```swift
+class INTPriceView: UIView { }
+class INTDescriptionCell: UICollectionViewCell { }
+```
+
+**Not Preferred**:
+```swift
+class INTPriceComponent: UIView { }
+class INTDescriptionComponent: UICollectionViewCell { }
+```
+
+### 6. Version Suffixes
+Use "V" suffix for versions of the classes. 
+
+**Preferred**:
+```swift
+class ProductSliderCell { }
+class ProductSliderCellV2 { }
+class ProductSliderCellV3 { }
+```
+
+**Not Preferred**:
+```swift
+class ProductSliderCell { }
+class ProductSliderCellNew { }
+class ProductSliderCellRedesign { }
 ```
 
 ### Language
