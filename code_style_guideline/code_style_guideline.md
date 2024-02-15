@@ -265,6 +265,47 @@ let color = "red"
 let colour = "red"
 ```
 
+### Protocol Conformance
+### 1. AnyObject vs class
+Use AnyObject instead of class in protocol definitions.
+
+### 2. Mark Usage
+Use mark for protocol conformance.
+
+```swift
+// MARK: - ViewInterface
+extension MyViewController: ViewInterface {
+...
+}
+```
+
+### 3. Extension Usage
+Prefer adding a separate extension for the protocol methods and each extension should confirm single protocol. If protocol/type is generic or don't require any implementation, it can be confirmed without extension.
+
+**Preferred**:
+```swift
+class MyViewController: UIViewController, Loadable {
+  // class stuff here
+}
+
+// MARK: - UITableViewDataSource
+extension MyViewController: UITableViewDataSource {
+  // table view data source methods
+}
+
+// MARK: - UITableViewDelegate
+extension MyViewController: UITableViewDelegate {
+  // scroll view delegate methods
+}
+```
+
+**Not Preferred**:
+```swift
+extension MyViewController: UITableViewDelegate, UITableViewDataSource {
+  // scroll view delegate methods
+}
+```
+
 ## Code Organization
 
 Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
