@@ -265,6 +265,70 @@ let color = "red"
 let colour = "red"
 ```
 
+### Init Usage
+
+### 1. Variable declaration
+Do not use '.init()' while assigning value to variable. Unit test variable declarations is an exception for this rule.
+
+**Preferred**:
+```swift
+presenter = MyCellPresenter()
+```
+
+**Not Preferred**:
+```swift
+presenter: MyCellPresenter= .init()
+```
+
+### 2. Nested Statement
+Prefer not to use use .init inside nested statements.
+
+**Preferred**:
+```swift
+tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: EvenArgument(type: .click, screen: arguments.screen)))
+```
+
+**Not Preferred**:
+```swift
+tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: .init(type: .click, screen: arguments.screen)))
+```
+
+### 3. Convenience init
+Use convenience init if we have already one designated initializer.
+
+### 4.Initializer Arguments
+Don't omit parameter names for initializers, parameter name should be same as the variable its initializing.
+
+**Preferred**:
+```swift
+struct BasketDiscountViewEvent: CoreTrackable {
+    enum Action: String {    }
+    
+    let action: Action
+
+    init(action: Action) {
+        self.action = action
+    }
+}
+```
+
+**Not Preferred**:
+```swift
+struct BasketDiscountViewEvent: CoreTrackable {
+    enum Action: String {    }
+    
+    let action: Action
+
+    init(_ eventAction: Action) {
+         action = eventAction
+    }
+}
+```
+
+### 5. Failable Initializers
+Avoid failable initializers as much as possible.
+
+
 ## Code Organization
 
 Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
