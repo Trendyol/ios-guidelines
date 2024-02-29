@@ -251,6 +251,52 @@ func write<target: OutputStream>(to target: inout target)
 func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
 ```
 
+### Loops
+### 1. Where Clause
+Prefer to use where clause if it's possible.
+
+**Preferred**:
+```swift
+for item in items where item.productCount > 1 {
+    ...
+}
+```
+
+**Not Preferred**:
+```swift
+for item in items {
+    if item.productCount > 1 {
+        
+    }
+}
+```
+
+### 2. Indices
+Use .indicies property to loop over array indexes.
+
+**Preferred**:
+```swift
+for index in array.indices {
+    
+}
+```
+
+**Not Preferred**:
+```swift
+for index in 0..<array.count {
+    
+}
+```
+
+### 3. Enumarated
+Use .enumarated to loop through both index and item.
+
+```swift
+for (index, item) in array.enumarated() {
+    
+}
+```
+
 ### Language
 
 Use US English spelling to match Apple's API.
