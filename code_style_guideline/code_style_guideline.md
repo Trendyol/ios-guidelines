@@ -195,42 +195,24 @@ func namePickerShouldReload() -> Bool
 
 ### Interface
 
-Classes and structures are named using noun phrases, as well as protocols describing what an object is. Protocols which add abilities are named descriptively (e.g., `Sortable`). Protocols should not have the word `Protocol` at the end of the name. Instead, conforming types should have a specifying word in the name, because protocols are general, but classes and structures are specific.
-
-Types implementing design patterns are usually named with the pattern name at the end (e.g., ViewBuilder, `DisplayingStrategy`).
-
-No prefixes shall be used (e.g., just `PriceCalculator` instead of `XYZPriceCalculator`), since there's no necessity for that in Swift
+Classes and structures are named using noun phrases, as well as protocols describing what an object is. Protocols which add abilities are named descriptively (e.g., `Sortable`). Protocols should not have the word `Protocol` at the end of the name. Instead, conforming types should have a specifying word in the name with Interface suffix
 
 **Preferred**:
 ```swift
-protocol Engine { }
-struct DefaultEngine: Engine { }
+protocol EngineInterface { }
+struct DefaultEngine: EngineInterface { }
+protocol AccountRouterInterface { }
+struct AccountRouter: AccountRouterInterface { }
+private let router: AccountRouterInterface
 ```
-
 **Not Preferred**:
 ```swift
 protocol EngineProtocol { }
 struct Engine: EngineProtocol { }
-```
-
-If we want use as Interface as ViewInterface, We should use "Interface" postfix end of the protocol. If depents on the design pattern;
-
-**Preferred**:
-```swift
-protocol AccountRouterInterface { }
-struct AccountRouter: AccountRouterInterface { }
-
-private let router: AccountRouterInterface
-```
-
-**Not Preferred**:
-```swift
 protocol AccountRouter { }
 protocol AccountRouterProtocol { }
-
 private let router: AccountRouter
 ```
-
 Which introduced support for using the AnyObject keyword as a protocol constraint, recommends preferring AnyObject over class:
 
 > This proposal merges the concepts of class and AnyObject, which now have the same meaning: they represent an existential for classes. To get rid of the duplication, we suggest only keeping AnyObject around. To reduce source-breakage to a minimum, class could be redefined as typealias class = AnyObject and give a deprecation warning on class for the first version of Swift this proposal is implemented in. Later, class could be removed in a subsequent version of Swift.
