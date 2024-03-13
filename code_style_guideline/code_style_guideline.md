@@ -219,12 +219,12 @@ Which introduced support for using the AnyObject keyword as a protocol constrain
 
 **Preferred**:
 ```swift
-protocol Foo: class { }
+protocol Foo: AnyObject { }
 ```
 
 **Not Preferred**:
 ```swift
-protocol Foo: AnyObject { }
+protocol Foo: class { }
 ```
 ---
 
