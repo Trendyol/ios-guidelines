@@ -804,7 +804,7 @@ let color = UIColor(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
 ```swift
 let color: UIColor = .init(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
 ```
-
+---
 ### Constants
 
 Constants are defined using the `let` keyword and variables with the `var` keyword. Always use `let` instead of `var` if the value of the variable will not change.
@@ -833,6 +833,53 @@ let root2 = 1.41421356237309504880168872
 let hypotenuse = side * root2 // what is root2?
 ```
 
+Use caseless enums for organizing **public** or **internal** constants and functions into namespaces. `SwiftFormat: enumNamespaces`
+
+- Avoid creating non-namespaced global constants and functions.
+- Feel free to nest namespaces where it adds clarity.
+- **private** globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an **enum** namespace to match the guidelines for other declaration types.
+
+For correct usage, We should use **enum** instead of **struct**. 
+
+**Why?** Caseless `enums` work well as namespaces because they cannot be instantiated, which matches their intent.
+
+**Preferred**:
+```swift
+struct Environment {
+  struct Earth {
+    static let gravity = 9.8
+  }
+
+  struct Moon {
+    static let gravity = 1.6
+  }
+}
+```
+
+**Not Preferred**:
+```swift
+struct Environment {
+  static let earthGravity = 9.8
+  static let moonGravity = 1.6
+}
+```
+
+**Note:** We should put constant under extension of class and class extension must be private
+
+**Preferred**:
+```swift
+private extension AccountPresenter {
+    enum Constant {
+        enum Date {
+            static let cobrandedOnboardingLastShownDateFormat: String = "yyyy-MM-dd"
+        }
+
+        enum URL {
+            static let trendyolDeeplinkUrl = "ty://"
+        }
+ }
+ ```
+---
 ### Static Methods and Variable Type Properties
 
 Static methods and type properties work similarly to global functions and global variables and should be used sparingly. They are useful when functionality is scoped to a particular type or when Objective-C interoperability is required.
