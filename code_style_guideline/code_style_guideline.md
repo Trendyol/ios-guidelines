@@ -332,6 +332,47 @@ override func tableView(_ tableView: UITableView, numberOfRowsInSection section:
 }
 
 ```
+
+### Omitting Return
+
+Omit the return keyword when not required by the language.
+
+**Preferred**:
+```swift
+["1", "2", "3"].compactMap { Int($0) }
+
+var size: CGSize {
+  CGSize(
+    width: 100.0,
+    height: 100.0)
+}
+
+func makeInfoAlert(message: String) -> UIAlertController {
+  UIAlertController(
+    title: "ℹ️ Info",
+    message: message,
+    preferredStyle: .alert)
+}
+```
+
+**Not Preferred**:
+```swift
+["1", "2", "3"].compactMap { return Int($0) }
+
+var size: CGSize {
+  return CGSize(
+    width: 100.0,
+    height: 100.0)
+}
+
+func makeInfoAlert(message: String) -> UIAlertController {
+  return UIAlertController(
+    title: "ℹ️ Info",
+    message: message,
+    preferredStyle: .alert)
+}
+```
+
 ### Minimal Imports
 
 Import only the modules a source file requires. For example, don't import `UIKit` when importing `Foundation` will suffice. Likewise, don't import `Foundation` if you must import `UIKit`.
