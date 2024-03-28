@@ -251,6 +251,107 @@ func write<target: OutputStream>(to target: inout target)
 func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
 ```
 
+### Self and self usage
+
+### 1. Bind to self
+Bind to self when capturing weak self reference.
+
+**Preferred**:
+```swift
+func fetch(completion: () -> Void) {
+  networkManager.request() { [weak self] response in
+    guard let self else { return }
+    self.bar()
+    self.foo()
+  }
+}
+```
+
+### 2. Bind to self
+Prefer using guard self checking unless you have single self usage. If you bind to self, don't use self again in the rest of the closure.
+
+**Preferred**:
+```swift
+
+func fetch(completion: () -> Void) {
+    networkManager.request { [weak self] response in
+        guard let self else { return }
+        bark()
+        foo()
+    }
+}
+
+func fetch(completion: () -> Void) {
+    networkManager.request { [weak self] response in
+        self?.bark()
+    }
+}
+
+func fetch(completion: () -> Void) {
+    networkManager..request() { [weak self] response in.
+        guard let self else { return }
+        bark(item, item2)
+    }
+}
+```
+
+**Not Preferred**:
+```swift
+func fetch(completion: () -> Void) {
+    networkManager..request { [weak self] response in
+        guard let self else { return }
+        bark()
+    }
+}
+
+func fetch(completion: () -> Void) {
+    networkManager..request { [weak self] response in
+        self?.foo()
+        self?.bark()
+    }
+}
+
+func fetch(completion: () -> Void) {
+    networkManager.request { [weak self] response in.
+        self?.bark(self?.item, self?.item2)
+    }
+}
+```
+
+### 3. Unnecesary self usage
+Use self only if you need it explicitly.
+
+### 4. Self usage
+Prefer to use "Self" over concrete type name.
+
+**Preferred**:
+```swift
+final class HomePageBarButtonsBuilder {
+    private var buttons: [UIBarButtonItem] = []
+    
+    @discardableResult
+    func appendSellerNotificationButton(target: Any?, selector: Selector) -> Self {
+        ...
+        return self
+    }
+    
+    @discardableResult
+    func appendSpacerButton(width: CGFloat) -> Self {
+        ...
+        return self
+    }
+    
+    func build() -> [UIBarButtonItem] {
+        return buttons
+    }
+}
+
+protocol SomeProtocol {
+    static func createModule() -> Self
+}
+```
+
+
 ### Language
 
 Use US English spelling to match Apple's API.
