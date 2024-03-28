@@ -435,6 +435,77 @@ class TestDatabase : Database {
 
 * Add a single newline character at the end of each file.
 
+## Parantheses & Braces
+
+### Parantheses
+
+Omit unnecessary parentheses.
+
+**Preferred**:
+```swift
+if name == "Hello" {
+  print("World")
+}
+
+if userCount > 0 { ... }
+switch someValue { ... }
+let evens = userCounts.filter { number in number.isMultiple(of: 2) }
+
+if (x == 0 || y == 1) && z == 2 {
+  print("...")
+}
+```
+
+**Not Preferred**:
+```swift
+if (name == "Hello") {
+  print("World")
+}
+
+if (userCount > 0) { ... }
+switch (someValue) { ... }
+let evens = userCounts.filter { (number) in number.isMultiple(of: 2) }
+
+if ((x == 0 || y == 1) && z == 2) {
+  print("...")
+}
+```
+
+### Braces
+
+The opening brace following a single-line expression should be on the same line as the rest of the statement. 
+
+**Preferred**:
+```swift
+if !planet.isHabitable {
+  planet.terraform()
+}
+
+class Planet {
+  func terraform() {
+    generateAtmosphere()
+    generateOceans()
+  }
+}
+```
+
+**Not Preferred**:
+```swift
+if !planet.isHabitable
+{
+  planet.terraform()
+}
+
+class Planet
+{
+  func terraform()
+  {
+    generateAtmosphere()
+    generateOceans()
+  }
+}
+```
+
 ## Comments
 
 When they are needed, use comments to explain **why** a particular piece of code does something. Comments must be kept up-to-date or deleted.
