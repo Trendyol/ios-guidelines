@@ -765,6 +765,56 @@ let value = numbers
   .map {$0 + 10}
 ```
 
+## Tuples
+
+A tuple type is a comma-separated list of types, enclosed in parentheses.
+
+Name members of tuples for extra clarity. Rule of thumb: if you've got more than **3 fields**, you should probably be using a struct.
+
+**Preferred**:
+```swift
+func whatever() -> (x: Int, y: Int) {
+  return (x: 4, y: 4)
+}
+
+func whatever2() -> (x: Int, y: Int) {
+  return (4, 4)
+}
+
+let coord = whatever()
+coord.x
+coord.y
+```
+
+**Not Preferred**:
+```swift
+func whatever() -> (Int, Int) {
+  return (4, 4)
+}
+let thing = whatever()
+print(thing.0)
+```
+
+**Preferred**:
+```swift
+struct Product {
+  let priceSet = (price: 100.0, discountedPrice: 80.0)
+}
+
+let product = Product()
+product.priceSet.discountedPrice // returns 80.0
+```
+
+**Not Preferred**:
+```swift
+struct Product {
+  let priceSet = (100.0, 80.0)
+}
+
+let product = Product()
+product.priceSet.1 // returns 80.0
+```
+
 ## Types
 
 Always use Swift's native types and expressions when available. Swift offers bridging to Objective-C so you can still use the full set of methods as needed.
