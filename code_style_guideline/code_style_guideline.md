@@ -265,6 +265,21 @@ let color = "red"
 let colour = "red"
 ```
 
+### String Concatenation
+
+### 1. String(format:) usage
+Prefer "\()" over String(format:).
+
+**Preferred**:
+```swift
+return "user name: \(user.name), user id: \(user.id), user height: \(length)"
+```
+
+**Not Preferred**:
+```swift
+return String(format: "user name: %@, user id: %d, user height: %f", user.name,  user.id, length)
+```
+
 ## Code Organization
 
 Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
