@@ -265,6 +265,45 @@ let color = "red"
 let colour = "red"
 ```
 
+### Attributes
+
+### 1. Attribute Placement
+Prefer to declare attribute in the same line if it's stored property, otherwise declare it in one line above. As exception, IBAction is declared in the same line by Xcode, you don't need to change it.
+
+**Preferred**:
+```swift
+@objc 
+class Manager {
+    @State private var isLoggedIn = false
+    
+    @discardableResult
+    func reset() {
+      ...
+    }
+    
+    @IBAction func logout() {
+        ...
+    }
+    
+    @IBAction
+    func login() {
+      ...
+    }
+}
+```
+
+**Not Preferred**:
+```swift
+@objc class Manager {
+    @State
+    private var isLoggedIn = false
+    
+    @discardableResult func reset() {
+      ...
+    }
+}
+```
+
 ## Code Organization
 
 Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
