@@ -455,7 +455,7 @@ var gravity: CGFloat
 ```swift
 var atmosphere: Atmosphere {
   didSet {
-    print(""oh my god, the atmosphere changed"")
+    print("oh my god, the atmosphere changed")
   }
 }
 var gravity: CGFloat
@@ -466,7 +466,7 @@ var gravity: CGFloat
 var gravity: CGFloat
 var atmosphere: Atmosphere {
   didSet {
-    print(""oh my god, the atmosphere changed"")
+    print("oh my god, the atmosphere changed")
   }
 }
 ```
