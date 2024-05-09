@@ -984,7 +984,7 @@ public typealias Dependencies
   & LawsOfPhysicsProviding
   & PlanetBuilderProviding
   & UniverseBuilderProviding
-  & UniverseSimulatorServiceProviding"
+  & UniverseSimulatorServiceProviding
 ```
 
 Sort protocol composition type aliases alphabetically. SwiftFormat: sortTypealiases
@@ -1042,7 +1042,7 @@ func pirateName() -> UserInfo {
 
 let name = pirateName()
 let firstName = name.firstName
-let lastName = name.lastName"
+let lastName = name.lastName
 ```
 
 Typealias declaration is used only for the sake of brevity when it doesn't prevent clarity.
