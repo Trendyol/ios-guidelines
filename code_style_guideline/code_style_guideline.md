@@ -1108,28 +1108,133 @@ resource.request().onComplete { [weak self] response in
 
 ## Access Control
 
-Full access control annotation in tutorials can distract from the main topic and is not required. Using `private` and `fileprivate` appropriately, however, adds clarity and promotes encapsulation. Prefer `private` to `fileprivate`; use `fileprivate` only when the compiler insists.
-
-Only explicitly use `open`, `public`, and `internal` when you require a full access control specification.
-
-Use access control as the leading property specifier. The only things that should come before access control are the `static` specifier or attributes such as `@IBAction`, `@IBOutlet` and `@discardableResult`.
-
-**Preferred**:
-```swift
-private let message = "Great Scott!"
-
-class TimeMachine {  
-  private dynamic lazy var fluxCapacitor = FluxCapacitor()
-}
-```
+#### 1. General
+Omitting an explicit access level is permitted on declarations. For top-level declarations, the default access level is internal. For nested declarations, the default access level is the lesser of internal and the access level of the enclosing declaration. The default access modifier, namely internal, is not specified explicitly (as well as any other default, in general). class type members are rarely useful because of discouraged use of inheritance, especially for static members. An engineer must be aware of the use-cases of class and static modifiers (confusing them is a common mistake.) Generally, encapsulation is honored in any way. E.g., @IBOutlet properties and @IBAction methods are always private. Implementation details are hidden behind meaningful API. 3.2.2 The access modifier keyword should not be on a line by itself - keep it inline with what it is describing.
 
 **Not Preferred**:
 ```swift
-fileprivate let message = "Great Scott!"
+open class Pirate { /* ... */ }
+```
 
-class TimeMachine {  
-  lazy dynamic private var fluxCapacitor = FluxCapacitor()
+**Preferred**:
+```swift
+open class Pirate { /* ... */ }
+```
+
+#### 2. RedundantInternal
+
+Omit the internal keyword when defining types, properties, or functions with an internal access control level.
+
+**Not Preferred**:
+```swift
+internal class Spaceship {
+ internal init() { … } 
+ internal func travel(to planet: Planet) { … }
+ }
+ ```
+ 
+**Preferred**:
+Because internal access control is implied if no other access control level is specified.
+```swift
+
+class Spaceship { 
+	 init() { … } 
+	 func travel(to planet: Planet) { … }
+ }
+```
+
+#### 3. RedundantFileprivate
+
+Access control should be at the strictest level possible. Prefer public to open and private to fileprivate unless you need that behavior.
+
+**Not Preferred**:
+```swift
+public struct Spaceship {
+ // WRONG: `engine` is used in `extension Spaceship` below, 
+ // but extensions in the same file can access `private` members. 
+ fileprivate let engine: AntimatterEngine 
+
+// WRONG: `hull` is not used by any other type, so `fileprivate` is unnecessary.
+ fileprivate let hull: Hull
+```
+
+```swift
+extension Spaceship { 
+public func blastOff() { 
+		engine.start() 
+	} 
 }
+ extension Pilot { 
+ public func chartCourse() {
+		  spaceship.navigation.course = .andromedaGalaxy spaceship.blastOff() 
+	  } 
+ }
+```
+**Preferred**:
+Because internal access control is implied if no other access control level is specified.
+```swift
+// RIGHT: `navigation` is used in `extension Pilot` below,
+// so `fileprivate` is necessary here. 
+ fileprivate let navigation: SpecialRelativityNavigationService
+ 
+public struct Spaceship { 
+	fileprivate let navigation: SpecialRelativityNavigationService 
+	private let engine: AntimatterEngine 
+	private let hull: Hull 
+}
+
+extension Spaceship { 
+ public func blastOff() { 
+		 engine.start() 
+	 } 
+ } 
+
+extension Pilot { 
+public func chartCourse() {
+	 spaceship.navigation.course = .andromedaGalaxy spaceship.blastOff()
+  }
+}
+```
+
+#### 4. ExtensionAccessControl
+Specifying an explicit access level at the file level on an extension is forbidden. Each member of the extension has its access level specified if it is different than the default.
+
+**Not Preferred**:
+```swift
+public extension String {
+	 var isUppercase: Bool {
+	  // ... 
+	  }
+	 var isLowercase: Bool {
+	  // ... 
+	  } 
+}
+```
+
+**Preferred**:
+```swift
+extension String {
+	public var isUppercase: Bool {
+	  // ... 
+	} 
+	public var isLowercase: Bool {
+      // ... 
+    } 
+}
+```
+
+#### 5. Access
+Use access control as the leading property specifier. The only things that should come before access control are the static specifier or attributes such as @IBAction, @IBOutlet and @discardableResult. 3.2.1 Write the access modifier keyword first if it is needed. 
+
+**Not Preferred**:
+```swift
+static private let myPrivateNumber: Int
+```
+
+**Preferred**:
+```swift
+private static let myPrivateNumber: Int
+
 ```
 
 ## Control Flow
