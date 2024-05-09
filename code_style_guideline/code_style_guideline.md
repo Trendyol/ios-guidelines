@@ -1174,38 +1174,52 @@ while i < attendeeList.count {
 
 ### Ternary Operator
 
-The Ternary operator, `?:` , should only be used when it increases clarity or code neatness. A single condition is usually all that should be evaluated. Evaluating multiple conditions is usually more understandable as an `if` statement or refactored into instance variables. In general, the best use of the ternary operator is during assignment of a variable and deciding which value to use.
-
-**Preferred**:
-
-```swift
-let value = 5
-result = value != 0 ? x : y
-
-let isHorizontal = true
-result = isHorizontal ? x : y
-```
+1. Long ternary operator expressions should wrap before the ? and before the :, putting each conditional branch on a separate line. SwiftFormat: wrap
 
 **Not Preferred**:
-
 ```swift
-result = a > b ? x = c > d ? c : d : y
+// WRONG (too long)
+
+ let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first
+ let result = a > b ? x = c > d ? c : d : y
+ 
+// WRONG (naive wrapping) 
+let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first 
+
+// WRONG (unbalanced operators) 
+let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first
+```
+**Preferred**:
+```swift
+let destinationPlanet = solarSystem.hasPlanetsInHabitableZone 
+? solarSystem.planetsInHabitableZone.first
+: solarSystem.uninhabitablePlanets.first
 ```
 
-The ternary operator `?`-`:` shall not be used where the single `if`-check is sufficient, because although it can save lines, it makes the intention unclear and spawns extra entities (empty tuples or functions).
+2. If we have huge logic and code, we should use if condition instead of ternary operator
 
 **Preferred**:
 ```swift
-if error == nil {
-    completion()
+let result: Bool
+
+if IamOldIfElse { 
+	 result = true 
+} else {
+	result = false 
 }
 ```
 
+3. By using ternary operator, we were able to get rid of many lines of code. But some developers find the ternary operator hard to read so for those, Swift 5.9 improved the if else statement to be on one single line for the single statements:
+
 **Not Preferred**:
 ```swift
-error == nil
-  ? completion()
-  : ()
+let result = IamTernary ? true : false
+```
+
+**Preferred**:
+```swift
+let result = if IamNewIfElse { true } else { false }
+
 ```
 
 ### Switch Statements
