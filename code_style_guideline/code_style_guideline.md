@@ -40,6 +40,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Optionals](#optionals)
   * [Lazy Initialization](#lazy-initialization)
   * [Type Inference](#type-inference)
+  * [Typealiases](#Typealiases)
   * [Syntactic Sugar](#syntactic-sugar)
 * [Functions vs Methods](#functions-vs-methods)
 * [Memory Management](#memory-management)
@@ -956,6 +957,106 @@ private func makeLocationManager() -> CLLocationManager {
   - `[unowned self]` is not required here. A retain cycle is not created.
   - Location manager has a side-effect for popping up UI to ask the user for permission so fine grain control makes sense here.
 
+###  Typealiases
+
+"Long type aliases of protocol compositions should wrap before the = and before each individual &. SwiftFormat: wrapArguments
+
+**Not Preferred**:
+```swift
+// WRONG (too long)
+public typealias Dependencies = CivilizationServiceProviding & LawsOfPhysicsProviding & PlanetBuilderProviding & UniverseBuilderProviding & UniverseSimulatorServiceProviding
+
+// WRONG (naive wrapping)
+public typealias Dependencies = CivilizationServiceProviding & LawsOfPhysicsProviding & PlanetBuilderProviding &
+  UniverseBuilderProviding & UniverseSimulatorServiceProviding
+
+// WRONG (unbalanced)
+public typealias Dependencies = CivilizationServiceProviding
+  & LawsOfPhysicsProviding
+  & PlanetBuilderProviding
+  & UniverseBuilderProviding
+  & UniverseSimulatorServiceProviding
+```
+**Preferred**:
+```swift
+public typealias Dependencies
+  = CivilizationServiceProviding
+  & LawsOfPhysicsProviding
+  & PlanetBuilderProviding
+  & UniverseBuilderProviding
+  & UniverseSimulatorServiceProviding"
+```
+
+Sort protocol composition type aliases alphabetically. SwiftFormat: sortTypealiases
+
+Protocol composition type aliases are an unordered list with no natural ordering. Sorting alphabetically keeps these lists more organized, which is especially valuable for long protocol compositions.
+
+**Not Preferred**:
+```swift
+// WRONG (not sorted)
+public typealias Dependencies
+  = UniverseBuilderProviding
+  & LawsOfPhysicsProviding
+  & UniverseSimulatorServiceProviding
+  & PlanetBuilderProviding
+  & CivilizationServiceProviding
+```
+**Preferred**:
+```swift
+// RIGHT
+public typealias Dependencies
+  = CivilizationServiceProviding
+  & LawsOfPhysicsProviding
+  & PlanetBuilderProviding
+  & UniverseBuilderProviding
+  & UniverseSimulatorServiceProviding"
+```  
+If a function returns multiple values, prefer returning a tuple to using inout arguments (it’s best to use labeled tuples for clarity on what you’re returning if it is not otherwise obvious). If you use a certain tuple more than once, consider using a typealias. If you’re returning 3 or more items in a tuple, consider using a struct or class instead.
+
+**Not Preferred**:
+```swift
+func pirateName() -> (firstName: String, lastName: String, age: Int) {
+    return (""Guybrush"", ""Threepwood"", 32)
+}
+
+let name = pirateName()
+let firstName = name.firstName
+let lastName = name.lastName
+```
+**Preferred**:
+```swift
+func pirateName() -> (firstName: String, lastName: String) {
+    return (""Guybrush"", ""Threepwood"")
+}
+
+let name = pirateName()
+let firstName = name.firstName
+let lastName = name.lastName
+
+typealias UserInfo = (firstName: String, lastName: String, age: Int)
+
+func pirateName() -> UserInfo {
+    return (""Guybrush"", ""Threepwood"", 23)
+}
+
+let name = pirateName()
+let firstName = name.firstName
+let lastName = name.lastName"
+```
+
+Typealias declaration is used only for the sake of brevity when it doesn't prevent clarity.
+
+**Not Preferred**:
+```swift
+typealias T = (Int, Int) -> (String)
+func process(task: T) -> String"
+```
+
+**Preferred**:
+```swift
+typealias Task = (_ token: Sting) -> (_ result: Result<Data, Error>)
+func enqueue(task: Task)
+```
 
 ### Type Inference
 
