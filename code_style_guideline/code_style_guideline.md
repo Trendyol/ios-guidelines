@@ -959,7 +959,7 @@ private func makeLocationManager() -> CLLocationManager {
 
 ###  Typealiases
 
-"Long type aliases of protocol compositions should wrap before the = and before each individual &. SwiftFormat: wrapArguments
+Long type aliases of protocol compositions should wrap before the = and before each individual &. SwiftFormat: wrapArguments
 
 **Not Preferred**:
 ```swift
@@ -1009,14 +1009,15 @@ public typealias Dependencies
   & LawsOfPhysicsProviding
   & PlanetBuilderProviding
   & UniverseBuilderProviding
-  & UniverseSimulatorServiceProviding"
-```  
+  & UniverseSimulatorServiceProviding
+```
+
 If a function returns multiple values, prefer returning a tuple to using inout arguments (it’s best to use labeled tuples for clarity on what you’re returning if it is not otherwise obvious). If you use a certain tuple more than once, consider using a typealias. If you’re returning 3 or more items in a tuple, consider using a struct or class instead.
 
 **Not Preferred**:
 ```swift
 func pirateName() -> (firstName: String, lastName: String, age: Int) {
-    return (""Guybrush"", ""Threepwood"", 32)
+    return ("Guybrush", "Threepwood", 32)
 }
 
 let name = pirateName()
@@ -1026,7 +1027,7 @@ let lastName = name.lastName
 **Preferred**:
 ```swift
 func pirateName() -> (firstName: String, lastName: String) {
-    return (""Guybrush"", ""Threepwood"")
+    return ("Guybrush", "Threepwood")
 }
 
 let name = pirateName()
@@ -1036,7 +1037,7 @@ let lastName = name.lastName
 typealias UserInfo = (firstName: String, lastName: String, age: Int)
 
 func pirateName() -> UserInfo {
-    return (""Guybrush"", ""Threepwood"", 23)
+    return ("Guybrush", "Threepwood", 23)
 }
 
 let name = pirateName()
@@ -1049,7 +1050,7 @@ Typealias declaration is used only for the sake of brevity when it doesn't preve
 **Not Preferred**:
 ```swift
 typealias T = (Int, Int) -> (String)
-func process(task: T) -> String"
+func process(task: T) -> String
 ```
 
 **Preferred**:
