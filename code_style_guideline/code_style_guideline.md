@@ -1002,7 +1002,7 @@ case .enumCaseWithMultipleAssociatedValues(let string, let int):
 // The `let` keyword is quite far from the variable identifiers,
 // so it is less obvious that they represent new variable bindings
 case let .enumCaseWithSingleAssociatedValue(string):
-case let .enumCaseWithMultipleAssociatedValues(string, int):"
+case let .enumCaseWithMultipleAssociatedValues(string, int):
 ```
 ##### Enum Namespaces
 Use caseless enums for organizing public or internal constants and functions into namespaces. SwiftFormat: **enumNamespaces**
