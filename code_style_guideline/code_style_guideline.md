@@ -938,16 +938,17 @@ var diameter: Double {
 
 ### Final
 
-Marking classes or members as `final` in tutorials can distract from the main topic and is not required. Nevertheless, use of `final` can sometimes clarify your intent and is worth the cost. In the below example, `Box` has a particular purpose and customization in a derived class is not intended. Marking it `final` makes that clear.
+Default classes to final. 
 
+Details Why? If a class needs to be overridden, the author should opt into that functionality by omitting the final keyword.
+
+**Not Preferred**:
 ```swift
-// Turn any generic type into a reference type using this Box class.
-final class Box<T> {
-  let value: T
-  init(_ value: T) {
-    self.value = value
-  }
-}
+class SettingsRepository { // ... }
+```
+**Preferred**:
+```swift
+final class SettingsRepository { // ... }
 ```
 
 ## Function Declarations
