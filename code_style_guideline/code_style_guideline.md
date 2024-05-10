@@ -251,7 +251,7 @@ func write<target: OutputStream>(to target: inout target)
 func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
 ```
 
-### Language
+## Language
 
 Use US English spelling to match Apple's API.
 
@@ -264,6 +264,17 @@ let color = "red"
 ```swift
 let colour = "red"
 ```
+
+***Some tips***:
+
+ if you turn on "Check spelling while you type", found in the Edit->Format->Spelling and Grammar menu, Xcode will display the red word spelled wrong indicator for comments as they are spelled wrong. It will also spell check camel case identifiers
+
+![Xcode while editing settings](screens/check-spelling.png)
+
+Also, you can look for the correct form via right-click
+
+![Xcode while editing settings](screens/check-spelling-suggestion.png)
+
 
 ## Code Organization
 
