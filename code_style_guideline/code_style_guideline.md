@@ -604,7 +604,7 @@ return String(format: "user name: %@, user id: %d, user height: %f", user.name, 
 
 ## Code Organization
 
-Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
+Use extensions to organize your code into logical blocks of functionality.
 
 ### Protocol Conformance
 ### 1. AnyObject vs class
@@ -1141,17 +1141,105 @@ class Planet
 
 ## Comments
 
-When they are needed, use comments to explain **why** a particular piece of code does something. Comments must be kept up-to-date or deleted.
+### Comment blocks should use single-line comments (// for code comments and /// for documentation comments), rather than multi-line comments (/* ... */ and /** ... */).
 
-Avoid block comments inline with code, as the code should be as self-documenting as possible. _Exception: This does not apply to those comments used to generate documentation._
 
-If a commented code is changed, the comments shall be either updated or deleted.
+**Preferred**:
+```swift
+/// A planet that exists somewhere in the universe.
+///
+/// Planets have many properties. For example, the best planets
+/// have atmospheres and bodies of water to support life.
+class Planet {
+  /// Terraforms the planet, by adding an atmosphere and ocean that is hospitable for life.
+  func terraform() {
+    // Generate the atmosphere first, before generating the ocean.
+    // Otherwise, the water will just boil off immediately.
+    generateAtmosphere()
 
-One-line comments start with `\\` (although `\\\` makes comments look "fancier" in IDE, it's reserved for HeaderDoc.)
+    // Now that we have an atmosphere, it's safe to generate the ocean
+    generateOceans()
+  }
+}
+```
 
-Multi-line comments start with `\*` and end with `*\`. Comment delimiters are placed on separate lines. There's no blank lines after symbols denoting the beginning of comment and before ones at the end.
+**Not Preferred**:
+```swift
+/**
+* A planet that exists somewhere in the universe.
+*
+* Planets have many properties. For example, the best planets
+* have atmospheres and bodies of water to support life.
+*/
+class Planet {
+  /**
+    Terraforms the planet, by adding an atmosphere and ocean that is hospitable for life.
+  */
+  func terraform() {
+    /*
+    Generate the atmosphere first, before generating the ocean.
+    Otherwise, the water will just boil off immediately.
+    */
+    generateAtmosphere()
 
-Comments, both single- and multi-line, are placed on the line above the commented code and separated from a preceding code by a blank line. The latter is not relevant if a comment is the first line of the scope. Also, it's acceptable to place one-line comments at the end of the commented line of code, separating by a space, if and only if the comment doesn't make this line too long.
+    /* Now that we have an atmosphere, it's safe to generate the ocean */
+    generateOceans()
+  }
+}
+```
+
+### Include spaces or newlines before and after comment delimiters 
+
+**Preferred**:
+```swift
+/// A spacecraft with incredible performance characteristics
+struct Spaceship {
+
+  func travelFasterThanLight() { /* unimplemented */ }
+
+  func travelBackInTime() { } // TODO: research whether or not this is possible
+
+}
+```
+
+**Not Preferred**:
+```swift
+///A spacecraft with incredible performance characteristics
+struct Spaceship {
+
+  func travelFasterThanLight() {/*unimplemented*/}
+
+  func travelBackInTime() { }//TODO: research whether or not this is possible
+
+}
+```
+
+### Each type and extension which implements a conformance should be preceded by a MARK comment.
+
+* Extensions that immediately follow the type being extended should omit that type's name and instead use // MARK: ProtocolName.
+* If there is only one type or extension in a file, the MARK comment can be omitted.
+* If the extension in question is empty (e.g. has no declarations in its body), the MARK comment can be omitted.
+* For extensions that do not add new conformances, consider adding a MARK with a descriptive comment.
+
+```swift
+class MyViewController: UIViewController {
+    ...
+}
+
+// MARK: - ABCDelegate
+extension MyViewController: ABCDelegate {
+    ...
+}
+
+// MARK: - XYZDelegate
+extension MyViewController: XYZDelegate {
+    ...
+}
+
+private extension MyViewController {
+    ...
+}
+```
 
 ## Explicit Documentation
 
