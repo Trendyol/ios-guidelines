@@ -22,7 +22,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
   * [Minimal Imports](#minimal-imports)
-* [Spacing](#spacing)
+* [Spacing & New Line](#spacing-and-new-line)
 * [Comments](#comments)
 * [Explicit Documentation](#explicit-documentation)
 * [Classes and Structures](#classes-and-structures)
@@ -363,17 +363,115 @@ import UIKit
 var deviceModels: [String]
 ```
 
-## Spacing
 
-* Indent using 2 spaces rather than tabs to conserve space and help prevent line wrapping. Be sure to set this preference in Xcode and in the Project settings as shown below:
+## Spacing And New Line
+**Important**: Go to  `Xcode > Preferences > Text Editing > While editing`
+* Starting from Xcode 4.4 whitespaces will be trimmed automatically by default, unless the line is all whitespace. You can also activate  `Including whitespace-only lines`  to fix this, which is not active by default.
 
-![Xcode indent settings](screens/indentation.png)
+![Xcode while editing settings](screens/text-editing-while-editing.png)
 
-* Method braces and other braces (`if`/`else`/`switch`/`while` etc.) always open on the same line as the statement but close on a new line.
-* Tip: You can re-indent by selecting some code (or **Command-A** to select all) and then **Control-I** (or **Editor ▸ Structure ▸ Re-Indent** in the menu). Some of the Xcode template code will have 4-space tabs hard coded, so this is a good way to fix that.
+* Also, Indent using 2 spaces rather than tabs to conserve space and help prevent line wrapping. Be sure to set this preference in Xcode and in the Project settings as shown below:
+
+![Xcode indent settings](screens/text-editing-tab-width-indent.png)
+
+-   Method braces and other braces (`if`/`else`/`switch`/`while`  etc.) always open on the same line as the statement but close on a new line.
+-   Tip: You can re-indent by selecting some code (or  **Command-A**  to select all) and then  **Control-I**  (or  **Editor ▸ Structure ▸ Re-Indent**  in the menu). Some of the Xcode template code will have 4-space tabs hard coded, so this is a good way to fix that.
+
+ #### 1. Colon Spacing
+
+Place the colon immediately after an identifier, followed by a space
 
 **Preferred**:
 ```swift
+var something: Double = 0
+
+class MyClass: SuperClass {
+  // ...
+}
+
+var dict = [KeyType: ValueType]()
+```
+
+**Not Preferred**:
+```swift
+var something : Double = 0
+}
+
+class MyClass : SuperClass {
+  // ...
+}
+
+var dict = [KeyType:ValueType]()
+var dict = [KeyType : ValueType]()
+```
+
+
+ #### 2. Return Arrow Spacing
+
+Place a space on either side of a return arrow for readability
+
+**Preferred**:
+```swift
+func doSomething() -> String {
+  // ...
+}
+
+func doSomething(completion: () -> Void) {
+  // ...
+}
+```
+
+**Not Preferred**:
+```swift
+func doSomething()->String {
+  // ...
+}
+
+func doSomething(completion: ()->Void) {
+  // ...
+}
+```
+
+**Multi-line arrays should have each bracket on a separate line.** Put the opening and closing brackets on separate lines from any of the elements of the array. Also add a trailing comma on the last element.
+
+**Preferred**:
+```swift
+let rowContent = [
+  listingUrgencyDatesRowContent(),
+  listingUrgencyBookedRowContent(),
+  listingUrgencyBookedShortRowContent(),
+]
+```
+
+**Not Preferred**:
+```swift
+let rowContent = [listingUrgencyDatesRowContent(),
+                  listingUrgencyBookedRowContent(),
+                  listingUrgencyBookedShortRowContent()]
+
+let rowContent = [
+  listingUrgencyDatesRowContent(),
+  listingUrgencyBookedRowContent(),
+  listingUrgencyBookedShortRowContent()
+]
+```
+
+ #### 3. Whitespace Around Braces
+ 
+Braces should be surrounded by a single whitespace character (either a space, or a newline) on each side.
+
+**Preferred**:
+```swift
+struct Planet {
+  …
+}
+
+if condition {
+  …
+} else {
+  …
+}
+
 if user.isHappy {
   // Do something
 } else {
@@ -383,6 +481,16 @@ if user.isHappy {
 
 **Not Preferred**:
 ```swift
+struct Planet{
+  …
+}
+
+if condition{
+  …
+}else{
+  …
+}
+
 if user.isHappy
 {
   // Do something
@@ -392,17 +500,24 @@ else {
 }
 ```
 
-* There should be one blank line between methods and up to one blank line between type declarations to aid in visual clarity and organization. Whitespace within methods should separate functionality, but having too many sections in a method often means you should refactor into several methods.
+-   There should be one blank line between methods and up to one blank line between type declarations to aid in visual clarity and organization. Whitespace within methods should separate functionality, but having too many sections in a method often means you should refactor into several methods.
+    
+-   There should be no blank lines after an opening brace or before a closing brace.
+    
+-   Closing parentheses should not appear on a line by themselves. // TODO: - We should talk about this issue again
 
-* There should be no blank lines after an opening brace or before a closing brace.
-
-* Closing parentheses should not appear on a line by themselves.
+-   Depending on the need, you can also use **Control-m** if there won't be too much distortion in the pattern and there is a subject that involves more than one parameter.
 
 **Preferred**:
 ```swift
-let user = try await getUser(
-  for: userID,
-  on: connection)
+let user = try await getUser(for: userID,
+                             on: connection)
+
+ManyParamInit(
+    param1: String,
+    param2: String,
+    param3: String
+)
 ```
 
 **Not Preferred**:
@@ -411,9 +526,125 @@ let user = try await getUser(
   for: userID,
   on: connection
 )
+
+ManyParamInit(param1: String, param2: String, param3: String)
 ```
 
-* Colons always have no space on the left and one space on the right. Exceptions are the ternary operator `? :`, empty dictionary `[:]` and `#selector` syntax `addTarget(_:action:)`.
+ #### 4. No Spaces Around Parens
+
+For function calls and declarations, there should be no spaces before or inside the parentheses of the argument list.
+
+**Preferred**:
+```swift
+func install(_ engine: Engine) { }
+
+install(AntimatterDrive())
+```
+
+**Not Preferred**:
+```swift
+func install ( _ engine: Engine ) { }
+```
+
+ #### 4. Space In Empty Braces
+
+Include a single space in an empty set of braces (`{ }`).
+
+**Preferred**:
+```swift
+extension Spaceship: Trackable { }
+
+extension SpaceshipView {
+  var accessibilityIdentifier: String {
+    get { spaceship.name }
+    set { }
+  }
+}
+```
+
+**Not Preferred**:
+```swift
+extension Spaceship: Trackable {}
+
+extension SpaceshipView {
+  var accessibilityIdentifier: String {
+    get { spaceship.name }
+    set {}
+  }
+}
+```
+
+ #### 5. No Blank Lines At Start Or End Of Non-Type Scopes
+ 
+**Remove blank lines at the top and bottom of scopes**, excluding type bodies which can optionally include blank lines.
+
+**Preferred**:
+```swift
+class Planet {
+  func terraform() {
+    generateAtmosphere()
+    generateOceans()
+  }
+}
+```
+
+**Not Preferred**:
+```swift
+class Planet {
+  func terraform() {
+
+    generateAtmosphere()
+    generateOceans()
+
+  }
+}
+
+class Planet {
+
+  func terraform() {
+    generateAtmosphere()
+    generateOceans()
+  }
+
+}
+```
+
+ #### 6. Newline Between Subsections
+ 
+**Add empty lines between property declarations of different kinds.** (e.g. between static properties and instance properties.)
+
+**Preferred**:
+```swift
+static let gravityEarth: CGFloat = 9.8
+static let gravityMoon: CGFloat = 1.6
+
+var gravity: CGFloat
+```
+
+**Not Preferred**:
+```swift
+static let gravityEarth: CGFloat = 9.8
+static let gravityMoon: CGFloat = 1.6
+var gravity: CGFloat
+```
+
+ #### 7. No Space Inside Brackets
+
+There should be no spaces inside the brackets of collection literals.
+
+**Preferred**:
+```swift
+let innerPlanets = [mercury, venus, earth, mars]
+let largestObjects = [.star: sun, .planet: jupiter]
+```
+
+**Not Preferred**:
+```swift
+let innerPlanets = [ mercury, venus, earth, mars ]
+let largestObjects = [ .star: sun, .planet: jupiter  ]
+```
+
+Colons always have no space on the left and one space on the right. Exceptions are the ternary operator  `? :`, empty dictionary  `[:]`  and  `#selector`  syntax  `addTarget(_:action:)`.
 
 **Preferred**:
 ```swift
@@ -429,11 +660,63 @@ class TestDatabase : Database {
 }
 ```
 
-* Long lines should be wrapped at around 70 characters. A hard limit is intentionally not specified.
+-   Avoid trailing whitespaces at the ends of lines.
+    
+-   Add a single newline character at the end of each file.
 
-* Avoid trailing whitespaces at the ends of lines.
+ #### 8. Multi Line Conditions
 
-* Add a single newline character at the end of each file.
+// TODO: **We should talk about this issue again**
+
+ #### 9. Closure Brace Spacing
+
+**Closures should have a single space or newline inside each brace.** Trailing closures should additionally have a single space or newline outside each brace.
+
+**Preferred**:
+```swift
+let evenSquares = numbers.filter { $0.isMultiple(of: 2) }.map { $0 * $0 }
+let evenSquares = numbers.filter({ $0.isMultiple(of: 2) }).map({ $0 * $0 })
+
+let evenSquares = numbers
+  .filter { $0.isMultiple(of: 2) }
+  .map { $0 * $0 }
+```
+
+**Not Preferred**:
+```swift
+let evenSquares = numbers.filter{$0.isMultiple(of: 2)}.map{  $0 * $0  }
+let evenSquares = numbers.filter( { $0.isMultiple(of: 2) } ).map( { $0 * $0 } )
+
+let evenSquares = numbers
+  .filter{ $0.isMultiple(of: 2) }
+  .map{
+    $0 * $0
+  }
+```
+
+ #### 10. Infix Operator Spacing
+ 
+**Infix operators should have a single space on either side.** Prefer parenthesis to visually group statements with many operators rather than varying widths of whitespace. This rule does not apply to range operators (e.g. `1...3`) and postfix or prefix operators (e.g. `guest?` or `-1`).
+
+**Preferred**:
+```swift
+let capacity = 1 + 2
+let capacity = currentCapacity ?? 0
+let mask = (UIAccessibilityTraitButton | UIAccessibilityTraitSelected)
+let capacity = newCapacity
+let latitude = region.center.latitude - (region.span.latitudeDelta / 2.0)
+```
+
+**Not Preferred**:
+```swift
+let capacity = 1+2
+let capacity = currentCapacity   ?? 0
+let mask = (UIAccessibilityTraitButton|UIAccessibilityTraitSelected)
+let capacity=newCapacity
+let latitude = region.center.latitude - region.span.latitudeDelta/2.0
+```
+
+---
 
 ## Comments
 
