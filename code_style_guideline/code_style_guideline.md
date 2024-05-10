@@ -18,7 +18,8 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Use Type Inferred Context](#use-type-inferred-context)
   * [Generics](#generics)
   * [Class and Structs](#class-struct)
-  * [Language](#language)
+  * [Language](#language) 
+  * [String Concatenation](#string-concatenation)
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
@@ -586,6 +587,20 @@ Also, you can look for the correct form via right-click
 
 ![Xcode while editing settings](screens/check-spelling-suggestion.png)
 
+### String Concatenation
+
+### 1. String(format:) usage
+Prefer "\()" over String(format:).
+
+**Preferred**:
+```swift
+return "user name: \(user.name), user id: \(user.id), user height: \(length)"
+```
+
+**Not Preferred**:
+```swift
+return String(format: "user name: %@, user id: %d, user height: %f", user.name,  user.id, length)
+```
 
 ## Code Organization
 
