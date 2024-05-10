@@ -1863,6 +1863,10 @@ The Ternary operator, `?:` , should only be used when it increases clarity or co
 **Preferred**:
 
 ```swift
+let destinationPlanet = solarSystem.hasPlanetsInHabitableZone
+  ? solarSystem.planetsInHabitableZone.first
+  : solarSystem.uninhabitablePlanets.first
+
 let value = 5
 result = value != 0 ? x : y
 
@@ -1873,6 +1877,8 @@ result = isHorizontal ? x : y
 **Not Preferred**:
 
 ```swift
+let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first
+
 result = a > b ? x = c > d ? c : d : y
 ```
 
@@ -1920,7 +1926,32 @@ switch direction {
 }
 ```
 
-## Golden Path
+### Else Statements
+**Preferred**:
+```swift
+if let galaxy {
+  …
+} else if let bigBangService {
+  …
+} else {
+  …
+}
+```
+
+**Not Preferred**:
+```swift
+if let galaxy {
+  …
+}
+else if let bigBangService {
+  …
+}
+else {
+  …
+}
+```
+
+### Golden Path
 
 When coding with conditionals, the left-hand margin of the code should be the "golden" or "happy" path. That is, don't nest `if` statements. Multiple return statements are OK. The `guard` statement is built for this.
 
@@ -1989,7 +2020,6 @@ if let number1 = number1 {
 
 In any `guard`-statement, the `else` (and its left brace) goes on the same line after the last condition.
 
-
 **Preferred**:
 ```swift
 guard !array.isEmpty else {
@@ -2003,9 +2033,165 @@ guard !array.isEmpty
     // ...
 ```
 
-### Failing Guards
+#### Failing Guards
 
 Guard statements are required to exit in some way. Generally, this should be simple one line statement such as `return`, `throw`, `break`, `continue`, and `fatalError()`. Large code blocks should be avoided. If cleanup code is required for multiple exit points, consider using a `defer` block to avoid cleanup code duplication.
+
+#### Omit the right-hand side of the expression
+
+**Preferred**:
+```swift
+if let galaxy,
+    galaxy.name == "Milky Way" { 
+… 
+}
+
+guard let galaxy,
+          galaxy.name == "Milky Way" else { … }
+```
+
+**Not Preferred**:
+```swift
+if let galaxy = galaxy,
+    galaxy.name == "Milky Way" { 
+… 
+}
+
+guard let galaxy = galaxy,
+          galaxy.name == "Milky Way" else { … }
+```
+
+#### Add a line break after the assignment operator (=) before a multi-line if or switch expression
+
+**Preferred**:
+```swift
+let planetLocation = 
+  if let star = planet.star {
+    "The \(star.name) system"
+  } else {
+    "Rogue planet"
+  }
+  
+let planetType: PlanetType =
+  switch planet {
+  case .mercury, .venus, .earth, .mars:
+    .terrestrial
+  case .jupiter, .saturn, .uranus, .neptune:
+    .gasGiant
+  }
+```
+
+**Not Preferred**:
+```swift
+// Should have a line break after the first `=`. 
+let planetLocation = if let star = planet.star {
+  "The \(star.name) system"
+ } else {
+  "Rogue planet"
+}
+
+// The first `=` should be on the line of the variable being assigned.
+let planetLocation 
+  = if let star = planet.star {
+    "The \(star.name) system"
+  } else {
+    "Rogue planet"
+  }
+
+// `switch` expression should be indented.
+let planetLocation =
+switch planet {
+case .mercury, .venus, .earth, .mars:
+  .terrestrial
+case .jupiter, .saturn, .uranus, .neptune:
+  .gasGiant
+}
+```
+
+#### Insert a blank line following a switch case with a multi-line body
+
+**Preferred**:
+```swift
+// All of the cases have a trailing blank line.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+    navigationComputer.destination = targetedDestination
+    warpDrive.spinUp()
+    warpDrive.activate()
+
+  case .enableArtificialGravity:
+    artificialGravityEngine.enable(strength: .oneG)
+
+  case .scanPlanet(let planet):
+    scanner.target = planet
+    scanner.scanAtmosphere()
+    scanner.scanBiosphere()
+    scanner.scanForArtificialLife()
+    
+  case .handleIncomingEnergyBlast:
+    energyShields.engage()
+  }
+}
+
+// Since none of the cases are multi-line, blank lines are not required.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+      warpDrive.engage()
+  case .enableArtificialGravity:
+      artificialGravityEngine.enable(strength: .oneG)
+  case .scanPlanet(let planet):
+      scanner.scan(planet)
+  case .handleIncomingEnergyBlast:
+      energyShields.engage()
+  }
+}
+```
+
+**Not Preferred**:
+```swift
+// These switch cases should be followed by a blank line.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+    navigationComputer.destination = targetedDestination
+    warpDrive.spinUp()
+    warpDrive.activate()
+  case .enableArtificialGravity:
+    artificialGravityEngine.enable(strength: .oneG)
+  case .scanPlanet(let planet):
+    scanner.target = planet
+    scanner.scanAtmosphere()
+    scanner.scanBiosphere()
+    scanner.scanForArtificialLife()
+  case .handleIncomingEnergyBlast:
+    energyShields.engage()
+  }
+}
+
+// While the `.enableArtificialGravity` case isn't multi-line, the other cases are.
+// For consistency, it should also include a trailing blank line.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+    navigationComputer.destination = targetedDestination
+    warpDrive.spinUp()
+    warpDrive.activate()
+
+  case .enableArtificialGravity:
+    artificialGravityEngine.enable(strength: .oneG)
+  case .scanPlanet(let planet):
+    scanner.target = planet
+    scanner.scanAtmosphere()
+    scanner.scanBiosphere()
+    scanner.scanForArtificialLife()
+    
+  case .handleIncomingEnergyBlast:
+    energyShields.engage()
+  }
+}
+```
 
 ## Semicolons
 
