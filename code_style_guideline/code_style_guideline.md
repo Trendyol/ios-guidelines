@@ -11,12 +11,13 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Using SwiftLint](#using-swiftlint)
 * [Naming](#naming)
   * [Prose](#prose)
+  * [Variables](#variables)
   * [Methods](#methods)
   * [Delegates](#delegates)
   * [Interface](#interface)
   * [Use Type Inferred Context](#use-type-inferred-context)
   * [Generics](#generics)
-  * [Class Prefixes](#class-prefixes)
+  * [Class and Structs](#class-struct)
   * [Language](#language)
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
@@ -38,6 +39,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Constants](#constants)
   * [Static Methods and Variable Type Properties](#static-methods-and-variable-type-properties)
   * [Optionals](#optionals)
+  * [Enums](#enums)
   * [Lazy Initialization](#lazy-initialization)
   * [Type Inference](#type-inference)
   * [Syntactic Sugar](#syntactic-sugar)
@@ -115,6 +117,153 @@ For the above example using `UIGestureRecognizer`, 1 is unambiguous and preferre
 
 ![Methods in Xcode jump bar](screens/xcode-jump-bar.png)
 
+### Variables
+### 1. Booleans
+Use one the **is**, **has** or **should** etc. prefixes to name a boolean to makes it clear that it is boolean and not other type.
+
+**Preferred**:
+```swift
+ let isAddressAvailable = false
+ let hasPermissionChanged = true
+```
+
+**Not Preferred**:
+```swift
+let permissionChanged = false
+let isProductHasContent = false
+```
+
+### 2. Declaration
+Variable declaration should be lowerCamelCase.
+
+### 3. Type Inference
+Don't include type information.
+
+**Preferred**:
+```swift
+let screenName = ""
+let presenter = ScreenPresenter()
+```
+
+**Not Preferred**:
+```swift
+let screenName: String = ""
+let presenter: ScreenPresenter = ScreenPresenter()
+```
+
+There might be some exceptions, like array and floating number declarations when explicitly needed.
+
+```swift
+let products: [Product] = []
+let products: [Product] = .empty
+let buttonOpacity: CGFloat = 1
+```
+
+### 4. Let vs var
+Always use let over var for immutable variables.
+
+### 5. Avoid Ambuguity
+Name variables according to their roles, rather than their types. Include all the words needed to avoid ambiguity for a person reading code where the name is used. 
+
+**Preferred**:
+```swift
+@IBOutlet private weak var iconImageView: UIImageView!
+let isLowestPriceDurationActive = false
+let greetingText = "Hello Trendyol!"
+```
+
+**Not Preferred**:
+```swift
+@IBOutlet private weak var icon: UIImageView!
+let isDurationActive = false
+let text = "Hello Trendyol!"
+```
+
+### 6. Naming from general part to specific part
+Order names by starting with the most general part and ending with the most specific part.
+
+**Preferred**:
+```swift
+let borderRadius: CGFloat
+let bodyMarginRight: CGFloat
+```
+
+**Not Preferred**:
+```swift
+let radiusBorder: CGFloat
+let bodyRightMargin: CGFloat
+```
+
+### 7. Underscore Usage
+Don't use underscore.
+
+**Preferred**:
+```swift
+let array: [String] = []
+let filteredArray: [String] = []
+```
+
+**Not Preferred**:
+```swift
+let array: [String] = []
+let _array: [String] = []
+```
+
+### 8. Static Properties
+Static properties returning instances of their declaring type are not suffixed with the type's name.
+
+**Preferred**:
+```swift
+enum Constant {
+    enum InstallmentView {
+        static let backgroundColor: UIColor
+        static let cornerRadius: CGFloat
+        static let borderWidth: Double
+    }
+}
+```
+
+**Not Preferred**:
+```swift
+enum Constant {
+    static let installmentViewBackgroundColor: UIColor
+    static let installmentViewCornerRadius: CGFloat
+    static let installmentViewBorderWidth: Double
+}
+```
+
+### 9. Proper Nouns
+Use lowercased naming if noun is being used as prefix, otherwise it should be uppercased.
+
+**Preferred**:
+```swift
+ var utf8Bytes: [UTF8.CodeUnit]
+ var endpointURL: URL
+ var userSMTPServer: SecureSMTPServer
+```
+
+**Not Preferred**:
+```swift
+ var endpointUrl: URL
+ var userSmtpServer: SecureSMTPServer
+```
+
+### 10. Computed Properties
+Naming should be just like ordinary variable, not like functions.
+
+**Preferred**:
+```swift
+var productDetailDescriptionText: String {
+    ...
+}
+```
+
+**Not Preferred**:
+```swift
+var makeProductDetailDescriptionText: String {
+    ...
+}
+```
 
 ### Class Prefixes
 
@@ -177,41 +326,122 @@ private func nextButtonAction(_ sender: UIButton) { // ...
 
 However, if the return value might be useful in some specific situations, it doesn't force one to use it (the `@discardableResult` annotation serves this purpose). Though, such return values are not encouraged. An engineer shall follow the principle of [the command-query separation](https://en.wikipedia.org/wiki/Command–query_separation).
 
+---
+
 ### Delegates
 
-When creating custom delegate methods, an unnamed first parameter should be the delegate source. (UIKit contains numerous examples of this.)
+Methods on delegate protocols and delegate-like protocols (such as data sources) are named using the linguistic syntax described below, which is inspired by Cocoa’s protocols.
 
+> The term “delegate’s source object” refers to the object that invokes methods on the delegate. For example, a  `UITableView`  is the source object that invokes methods on the  `UITableViewDelegate`  that is set as the view’s  `delegate`  property.
+
+All methods take the delegate’s source object as the first argument.
+
+For methods that take the delegate’s source object as their  **only**  argument:
+
+-   If the method returns  `Void`  (such as those used to notify the delegate that an event has occurred), then the method’s base name is the  **delegate’s source type**  followed by an  **indicative verb phrase**  describing the event. The argument is  **unlabeled.**
+    
+    ```swift
+    func scrollViewDidBeginScrolling(_ scrollView: UIScrollView)
+    ```
+    
+-   If the method returns  `Bool`  (such as those that make an assertion about the delegate’s source object itself), then the method’s name is the  **delegate’s source type**  followed by an  **indicative or conditional verb phrase**  describing the assertion. The argument is  **unlabeled.**
+    
+    ```swift
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool
+    ```
+    
+-   If the method returns some other value (such as those querying for information about a property of the delegate’s source object), then the method’s base name is a  **noun phrase**  describing the property being queried. The argument is  **labeled with a preposition or phrase with a trailing preposition**  that appropriately combines the noun phrase and the delegate’s source object.
+    
+    ```swift
+    func numberOfSections(in scrollView: UIScrollView) -> Int
+    ```
+    
+
+For methods that take  **additional**  arguments after the delegate’s source object, the method’s base name is the delegate’s source type  **by itself**  and the first argument is  **unlabeled.**  Then:
+
+-   If the method returns  `Void`, the second argument is  **labeled with an indicative verb phrase**  describing the event that has the argument as its  **direct object or prepositional object,**  and any other arguments (if present) provide further context.
+    
+    ```swift
+    func tableView(
+      _ tableView: UITableView,
+      willDisplayCell cell: UITableViewCell,
+      forRowAt indexPath: IndexPath)
+    ```
+    
+-   If the method returns  `Bool`, the second argument is  **labeled with an indicative or conditional verb phrase**  that describes the return value in terms of the argument, and any other arguments (if present) provide further context.
+    
+    ```swift
+    func tableView(
+      _ tableView: UITableView,
+      shouldSpringLoadRowAt indexPath: IndexPath,
+      with context: UISpringLoadedInteractionContext
+    ) -> Bool
+    ```
+    
+-   If the method returns some other value, the second argument is  **labeled with a noun phrase and trailing preposition**  that describes the return value in terms of the argument, and any other arguments (if present) provide further context.
+    
+    ```swift
+    func tableView(
+      _ tableView: UITableView,
+      heightForRowAt indexPath: IndexPath
+    ) -> CGFloat
+    ```
+    
+
+Apple’s documentation on  [delegates and data sources](https://developer.apple.com/library/content/documentation/General/Conceptual/CocoaEncyclopedia/DelegatesandDataSources/DelegatesandDataSources.html)  also contains some good general guidance about such names.
+
+#### Examples:
 **Preferred**:
 ```swift
 func namePickerView(_ namePickerView: NamePickerView, didSelectName name: String)
 func namePickerViewShouldReload(_ namePickerView: NamePickerView) -> Bool
+func namePickerViewNumberOfSections(in scrollView: UIScrollView) -> Int
+func namePickerViewRefreshOrdersAndFocus(on orderParentId: String)
 ```
 
 **Not Preferred**:
 ```swift
 func didSelectName(namePicker: NamePickerViewController, name: String)
 func namePickerShouldReload() -> Bool
+func numberOfSections(scrollView: UIScrollView) -> Int
+func viewRefreshOrdersAndFocus(on orderParentId: String)
 ```
+---
 
 ### Interface
 
-Classes and structures are named using noun phrases, as well as protocols describing what an object is. Protocols which add abilities are named descriptively (e.g., `Sortable`). Protocols should not have the word `Protocol` at the end of the name. Instead, conforming types should have a specifying word in the name, because protocols are general, but classes and structures are specific.
-
-Types implementing design patterns are usually named with the pattern name at the end (e.g., ViewBuilder, `DisplayingStrategy`).
-
-No prefixes shall be used (e.g., just `PriceCalculator` instead of `XYZPriceCalculator`), since there's no necessity for that in Swift (other than, maybe, to maintain consistency with Objective-C libraries and components).
+Classes and structures are named using noun phrases, as well as protocols describing what an object is. Protocols which add abilities are named descriptively (e.g., `Sortable`). Protocols should not have the word `Protocol` at the end of the name. Instead, conforming types should have a specifying word in the name with Interface suffix
 
 **Preferred**:
 ```swift
-protocol Engine { }
-struct DefaultEngine: Engine { }
+protocol EngineInterface { }
+struct DefaultEngine: EngineInterface { }
+protocol AccountRouterInterface { }
+struct AccountRouter: AccountRouterInterface { }
+private let router: AccountRouterInterface
 ```
-
 **Not Preferred**:
 ```swift
 protocol EngineProtocol { }
 struct Engine: EngineProtocol { }
+protocol AccountRouter { }
+protocol AccountRouterProtocol { }
+private let router: AccountRouter
 ```
+Which introduced support for using the AnyObject keyword as a protocol constraint, recommends preferring AnyObject over class:
+
+> This proposal merges the concepts of class and AnyObject, which now have the same meaning: they represent an existential for classes. To get rid of the duplication, we suggest only keeping AnyObject around. To reduce source-breakage to a minimum, class could be redefined as typealias class = AnyObject and give a deprecation warning on class for the first version of Swift this proposal is implemented in. Later, class could be removed in a subsequent version of Swift.
+
+**Preferred**:
+```swift
+protocol Foo: AnyObject { }
+```
+
+**Not Preferred**:
+```swift
+protocol Foo: class { }
+```
+---
 
 ### Use Type Inferred Context
 
@@ -251,7 +481,87 @@ func write<target: OutputStream>(to target: inout target)
 func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
 ```
 
-### Language
+### Class and Structs
+### 1. Controller Suffix
+Don't use "Controller" in names of classes that aren't view controllers.
+
+### 2. Declaration
+Use PascalCase for type names.
+
+### 3. Mock Naming
+Use "Mock" prefix for entire mock classes. 
+
+**Preferred**:
+```swift
+class MockPriceView: PriceViewInterface { }
+```
+
+**Not Preferred**:
+```swift
+class PriceView: PriceViewInterface { }
+```
+
+Don't use "controller" and "interface" suffixes for mock naming.
+
+**Preferred**:
+```swift
+class MockPriceView: PriceViewInterface { }
+```
+
+**Not Preferred**:
+```swift
+class MockPriceViewInterface: PriceViewInterface { }
+class MockPriceViewController: PriceViewInterface { } 
+```
+
+"Mock" prefix should be first rather than channel prefixes.
+
+**Preferred**:
+```swift
+class MockPDPTagView: PriceViewInterface { }
+```
+
+**Not Preferred**:
+```swift
+class PDPMockTagView: PriceViewInterface { }
+```
+
+### 4. Test Class Naming
+Use "Tests" suffix for BaseXCTestCases.
+
+### 5. UI Related Class Naming
+Use type constraint as suffix.
+
+**Preferred**:
+```swift
+class INTPriceView: UIView { }
+class INTDescriptionCell: UICollectionViewCell { }
+```
+
+**Not Preferred**:
+```swift
+class INTPriceComponent: UIView { }
+class INTDescriptionComponent: UICollectionViewCell { }
+```
+
+### 6. Version Suffixes
+Use "V" suffix for versions of the classes. 
+
+**Preferred**:
+```swift
+class ProductSliderCell { }
+class ProductSliderCellV2 { }
+class ProductSliderCellV3 { }
+```
+
+**Not Preferred**:
+```swift
+class ProductSliderCell { }
+class ProductSliderCellNew { }
+class ProductSliderCellRedesign { }
+```
+
+## Language
 
 Use US English spelling to match Apple's API.
 
@@ -265,17 +575,41 @@ let color = "red"
 let colour = "red"
 ```
 
+***Some tips***:
+
+ if you turn on "Check spelling while you type", found in the Edit->Format->Spelling and Grammar menu, Xcode will display the red word spelled wrong indicator for comments as they are spelled wrong. It will also spell check camel case identifiers
+
+![Xcode while editing settings](screens/check-spelling.png)
+
+Also, you can look for the correct form via right-click
+
+![Xcode while editing settings](screens/check-spelling-suggestion.png)
+
+
 ## Code Organization
 
 Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
 
 ### Protocol Conformance
+### 1. AnyObject vs class
+Use AnyObject instead of class in protocol definitions.
 
-In particular, when adding protocol conformance to a model, prefer adding a separate extension for the protocol methods. This keeps the related methods grouped together with the protocol and can simplify instructions to add a protocol to a class with its associated methods.
+### 2. Mark Usage
+Use mark for protocol conformance.
+
+```swift
+// MARK: - ViewInterface
+extension MyViewController: ViewInterface {
+...
+}
+```
+
+### 3. Extension Usage
+Prefer adding a separate extension for the protocol methods and each extension should confirm single protocol. If protocol/type is generic or don't require any implementation, it can be confirmed without extension.
 
 **Preferred**:
 ```swift
-class MyViewController: UIViewController {
+class MyViewController: UIViewController, Loadable {
   // class stuff here
 }
 
@@ -284,22 +618,18 @@ extension MyViewController: UITableViewDataSource {
   // table view data source methods
 }
 
-// MARK: - UIScrollViewDelegate
-extension MyViewController: UIScrollViewDelegate {
+// MARK: - UITableViewDelegate
+extension MyViewController: UITableViewDelegate {
   // scroll view delegate methods
 }
 ```
 
 **Not Preferred**:
 ```swift
-class MyViewController: UIViewController, UITableViewDataSource, UIScrollViewDelegate {
-  // all methods
+extension MyViewController: UITableViewDelegate, UITableViewDataSource {
+  // scroll view delegate methods
 }
 ```
-
-Since the compiler does not allow you to re-declare protocol conformance in a derived class, it is not always required to replicate the extension groups of the base class. This is especially true if the derived class is a terminal class and a small number of methods are being overridden. When to preserve the extension groups is left to the discretion of the author.
-
-For UIKit view controllers, consider grouping lifecycle, custom accessors, and IBAction in separate class extensions.
 
 ### Unused Code
 
@@ -316,22 +646,26 @@ override func tableView(_ tableView: UITableView, numberOfRowsInSection section:
 
 **Not Preferred**:
 ```swift
-override func didReceiveMemoryWarning() {
-  super.didReceiveMemoryWarning()
-  // Dispose of any resources that can be recreated.
-}
-
-override func numberOfSections(in tableView: UITableView) -> Int {
-  // #warning Incomplete implementation, return the number of sections
-  return 1
-}
-
 override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
   // #warning Incomplete implementation, return the number of rows
   return Database.contacts.count
 }
-
 ```
+
+**Reason:** You called super method and you didn't implement any body. You don't need to override `didReceiveMemoryWarning`
+```swift
+override func didReceiveMemoryWarning() {
+  super.didReceiveMemoryWarning()
+}
+```
+
+**Reason:** numberOfSections's default value is `1`.
+```swift
+override func numberOfSections(in tableView: UITableView) -> Int {
+  return 1
+}
+```
+
 ### Minimal Imports
 
 Import only the modules a source file requires. For example, don't import `UIKit` when importing `Foundation` will suffice. Likewise, don't import `Foundation` if you must import `UIKit`.
@@ -604,16 +938,17 @@ var diameter: Double {
 
 ### Final
 
-Marking classes or members as `final` in tutorials can distract from the main topic and is not required. Nevertheless, use of `final` can sometimes clarify your intent and is worth the cost. In the below example, `Box` has a particular purpose and customization in a derived class is not intended. Marking it `final` makes that clear.
+Default classes to final. 
 
+Details Why? If a class needs to be overridden, the author should opt into that functionality by omitting the final keyword.
+
+**Not Preferred**:
 ```swift
-// Turn any generic type into a reference type using this Box class.
-final class Box<T> {
-  let value: T
-  init(_ value: T) {
-    self.value = value
-  }
-}
+class SettingsRepository { // ... }
+```
+**Preferred**:
+```swift
+final class SettingsRepository { // ... }
 ```
 
 ## Function Declarations
@@ -804,7 +1139,7 @@ let color = UIColor(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
 ```swift
 let color: UIColor = .init(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
 ```
-
+---
 ### Constants
 
 Constants are defined using the `let` keyword and variables with the `var` keyword. Always use `let` instead of `var` if the value of the variable will not change.
@@ -833,6 +1168,53 @@ let root2 = 1.41421356237309504880168872
 let hypotenuse = side * root2 // what is root2?
 ```
 
+Use caseless enums for organizing **public** or **internal** constants and functions into namespaces. `SwiftFormat: enumNamespaces`
+
+- Avoid creating non-namespaced global constants and functions.
+- Feel free to nest namespaces where it adds clarity.
+- **private** globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an **enum** namespace to match the guidelines for other declaration types.
+
+For correct usage, We should use **enum** instead of **struct**. 
+
+**Why?** Caseless `enums` work well as namespaces because they cannot be instantiated, which matches their intent.
+
+**Preferred**:
+```swift
+struct Environment {
+  struct Earth {
+    static let gravity = 9.8
+  }
+
+  struct Moon {
+    static let gravity = 1.6
+  }
+}
+```
+
+**Not Preferred**:
+```swift
+struct Environment {
+  static let earthGravity = 9.8
+  static let moonGravity = 1.6
+}
+```
+
+**Note:** We should put constant under extension of class and class extension must be private
+
+**Preferred**:
+```swift
+private extension AccountPresenter {
+    enum Constant {
+        enum Date {
+            static let cobrandedOnboardingLastShownDateFormat: String = "yyyy-MM-dd"
+        }
+
+        enum URL {
+            static let trendyolDeeplinkUrl = "ty://"
+        }
+ }
+ ```
+---
 ### Static Methods and Variable Type Properties
 
 Static methods and type properties work similarly to global functions and global variables and should be used sparingly. They are useful when functionality is scoped to a particular type or when Objective-C interoperability is required.
@@ -936,6 +1318,332 @@ let product = try XCTUnwrap(priceComparisonResponse.stores?.first?.products?.fir
 let product = priceComparisonResponse.stores!.first!.products!.first!
 ```
 
+### Enums 
+Omit enum associated values from case statements when all arguments are unlabeled. SwiftLint: **empty_enum_arguments**
+
+**Not Preferred**:
+```swift
+if case .done(_) = result { ... }
+
+switch animal {
+case .dog(_, _, _):
+  ...
+}
+```
+
+**Preferred**:
+```swift
+if case .done = result { ... }
+
+switch animal {
+case .dog:
+  ...
+}
+```
+When destructuring an enum case or a tuple, place the let keyword inline, adjacent to each individual property assignment. SwiftFormat: **hoistPatternLet**
+
+**Not Preferred**:
+```swift
+switch result {
+case let .success(value):
+  // ...
+case let .error(errorCode, errorReason):
+  // ...
+}
+
+// WRONG
+guard let case .success(value) else {
+  return
+}
+```
+
+**Preferred**:
+```swift
+switch result {
+case .success(let value):
+  // ...
+case .error(let errorCode, let errorReason):
+  // ...
+}
+
+// RIGHT
+guard case .success(let value) else {
+  return
+}
+```
+
+**Notes:**
+Clarity: Inlining the let keyword makes it more clear which identifiers are part of the conditional check and which identifiers are binding new variables, since the let keyword is always adjacent to the variable identifier.
+```swift
+// `let` is adjacent to the variable identifier, so it is immediately obvious
+// at a glance that these identifiers represent new variable bindings
+case .enumCaseWithSingleAssociatedValue(let string):
+case .enumCaseWithMultipleAssociatedValues(let string, let int):
+
+// The `let` keyword is quite far from the variable identifiers,
+// so it is less obvious that they represent new variable bindings
+case let .enumCaseWithSingleAssociatedValue(string):
+case let .enumCaseWithMultipleAssociatedValues(string, int):
+```
+##### Enum Namespaces
+Use caseless enums for organizing public or internal constants and functions into namespaces. SwiftFormat: **enumNamespaces**
+  
+ + Avoid creating non-namespaced global constants and functions.  
+ + Feel free to nest namespaces where it adds clarity.  
+ + private globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an enum namespace to match the guidelines for other declaration types.  
+    
+Caseless enums work well as namespaces because they cannot be instantiated, which matches their intent.  
+  
+**Not Preferred**:
+```swift
+struct Environment {  
+    static let earthGravity = 9.8  
+    static let moonGravity = 1.6  
+}  
+  
+// WRONG  
+struct Environment {  
+  struct Earth {  
+    static let gravity = 9.8  
+  }  
+  
+  struct Moon {  
+    static let gravity = 1.6  
+  }  
+} 
+```  
+**Not Preferred**:
+```swift
+// RIGHT  
+enum Environment {  
+  enum Earth {  
+    static let gravity = 9.8  
+  }  
+  
+  enum Moon {  
+    static let gravity = 1.6  
+  }  
+}
+``` 
+
+Use Swift's automatic enum values unless they map to an external source. Add a comment explaining why explicit values are defined. SwiftFormat: **redundantRawValues**
+  
+Why?  
+To minimize user error, improve readability, and write code faster, rely on Swift's automatic enum values. If the value maps to an external source (e.g. it's coming from a network request) or is persisted across binaries, however, define the values explicitly, and document what these values are mapping to.  
+  
+This ensures that if someone adds a new value in the middle, they won't accidentally break things.  
+  
+  **Not Preferred**:
+```swift
+// WRONG  
+enum ErrorType: String {  
+  case error = "error"  
+  case warning = "warning"  
+}  
+  
+// WRONG  
+enum UserType: String {  
+  case owner  
+  case manager  
+  case member  
+}  
+  
+// WRONG  
+enum Planet: Int {  
+  case mercury = 0  
+  case venus = 1  
+  case earth = 2  
+  case mars = 3  
+  case jupiter = 4  
+  case saturn = 5  
+  case uranus = 6  
+  case neptune = 7  
+}  
+  
+// WRONG  
+enum ErrorCode: Int {  
+  case notEnoughMemory  
+  case invalidResource  
+  case timeOut  
+}  
+``` 
+  **Preferred**:
+```swift
+// RIGHT  
+// Relying on Swift's automatic enum values  
+enum ErrorType: String {  
+  case error  
+  case warning  
+}  
+  
+// RIGHT  
+/// These are written to a logging service. Explicit values ensure they're consistent across binaries.  
+// swiftformat:disable redundantRawValues  
+enum UserType: String {  
+  case owner = "owner"  
+  case manager = "manager"  
+  case member = "member"  
+}  
+// swiftformat:enable redundantRawValues  
+  
+// RIGHT  
+// Relying on Swift's automatic enum values  
+enum Planet: Int {  
+  case mercury  
+  case venus  
+  case earth  
+  case mars  
+  case jupiter  
+  case saturn  
+  case uranus  
+  case neptune  
+}  
+  
+// RIGHT  
+/// These values come from the server, so we set them here explicitly to match those values.  
+enum ErrorCode: Int {  
+  case notEnoughMemory = 0  
+  case invalidResource = 1  
+  case timeOut = 2  
+}
+``` 
+
+Dont use the default case when switching over an enum.  
+  
+Why?  
+Enumerating every case requires developers and reviewers have to consider the correctness of every switch statement when new cases are added.  
+  **Preferred**:
+```swift 
+switch anEnum {  
+case .a:  
+// Do something  
+default:  
+// Do something else.  
+}  
+```
+  **Preferred**:
+```swift 
+switch anEnum {  
+case .a:  
+// Do something  
+case .b, .c:  
+// Do something else.  
+}  
+```
+  When all cases of an `enum` must be `indirect`, the `enum` itself is declared `indirect` and the keyword is omitted on the individual cases.
+  
+**Preferred**:
+```swift 
+public indirect enum DependencyGraphNode {  
+  case userDefined(dependencies: [DependencyGraphNode])  
+  case synthesized(dependencies: [DependencyGraphNode])  
+}  
+```
+**Not Preferred**:
+```swift 
+public enum DependencyGraphNode {  
+  indirect case userDefined(dependencies: [DependencyGraphNode])  
+  indirect case synthesized(dependencies: [DependencyGraphNode])  
+} 
+```
+When an enum case does not have associated values, empty parentheses are never present.  
+
+ **Preferred**:
+```swift 
+public enum BinaryTree<Element> {  
+  indirect case node(element: Element, left: BinaryTree, right: BinaryTree)  
+  case empty // GOOD.  
+}
+```
+**Not Preferred**:
+```swift 
+public enum BinaryTree<Element> {  
+  indirect case node(element: Element, left: BinaryTree, right: BinaryTree)  
+  case empty() // AVOID.  
+}
+```
+In general, there is only one case per line in an enum. The comma-delimited form may be used only when none of the cases have associated values or raw values, all cases fit on a single line, and the cases do not need further documentation because their meanings are obvious from their names.  
+
+ **Not Preferred**:
+```swift 
+public enum Token {  
+  case comma  
+  case semicolon  
+  case identifier  
+}  
+  
+public enum Token {  
+  case comma, semicolon, identifier  
+}  
+  
+public enum Token {  
+  case comma  
+  case semicolon  
+  case identifier(String)  
+}  
+```
+ 
+ **Not Preferred**:
+```swift 
+public enum Token {  
+  case comma, semicolon, identifier(String)  
+}  
+```
+  
+The cases of an enum must follow a logical ordering that the author could explain if asked. If there is no obviously logical ordering, use a lexicographical ordering based on the cases’ names.
+
+In the following example, the cases are arranged in numerical order based on the underlying HTTP status code and blank lines are used to separate groups.
+
+ **Preferred**:
+```swift 
+public enum HTTPStatus: Int {
+  case ok = 200
+
+  case badRequest = 400
+  case notAuthorized = 401
+  case paymentRequired = 402
+  case forbidden = 403
+  case notFound = 404
+
+  case internalServerError = 500
+}
+
+```
+
+The following version of the same enum is less readable. Although the cases are ordered lexicographically, the meaningful groupings of related values has been lost.
+
+ **Not Preferred**:
+```swift 
+public enum HTTPStatus: Int {
+  case badRequest = 400
+  case forbidden = 403
+  case internalServerError = 500
+  case notAuthorized = 401
+  case notFound = 404
+  case ok = 200
+  case paymentRequired = 402
+}
+```
+
+`Enum` naming should not be plural, it should be `singular`
+
+**Preferred**:
+```swift
+public enum Token {
+  case comma
+  case semicolon
+  case identifier
+}
+```
+**Not Preferred**:
+```swift
+public enum Tokens {
+  case comma
+  case semicolon
+  case identifier
+}
+```
+
 ### Lazy Initialization
 
 Consider using lazy initialization for finer grained control over object lifetime. This is especially true for `UIViewController` that loads views lazily. You can either use a closure that is immediately called `{ }()` or call a private factory method. Example:
@@ -956,12 +1664,15 @@ private func makeLocationManager() -> CLLocationManager {
   - `[unowned self]` is not required here. A retain cycle is not created.
   - Location manager has a side-effect for popping up UI to ask the user for permission so fine grain control makes sense here.
 
+___
 
 ### Type Inference
+___
 
 Prefer compact code and let the compiler infer the type for constants or variables of single instances. Type inference is also appropriate for small, non-empty arrays and dictionaries. When required, specify the specific type such as `CGFloat` or `Int16`.
 
-**Preferred**:
+**Preferred:**
+
 ```swift
 let message = "Click the button"
 let currentBounds = computeViewBounds()
@@ -969,81 +1680,55 @@ var names = ["Mic", "Sam", "Christine"]
 let maximumWidth: CGFloat = 106.5
 ```
 
-**Not Preferred**:
+**Not Preferred:**
+
 ```swift
 let message: String = "Click the button"
 let currentBounds: CGRect = computeViewBounds()
 var names = [String]()
 ```
 
-#### Type Annotation for Empty Arrays and Dictionaries
+## Type Annotation for Empty Arrays and Dictionaries
 
-For empty arrays and dictionaries, use type annotation. (For an array or dictionary assigned to a large, multi-line literal, use type annotation.)
+For empty arrays and dictionaries, use type annotation. For an array or dictionary assigned to a large, multi-line literal, use type annotation.
 
-**Preferred**:
+**Preferred:**
+
 ```swift
 var names: [String] = []
 var lookup: [String: Int] = [:]
 ```
 
-**Not Preferred**:
+**Not Preferred:**
+
 ```swift
 var names = [String]()
 var lookup = [String: Int]()
 ```
-
-**NOTE**: Following this guideline means picking descriptive names is even more important than before.
-
-Array literals shall not contain spaces after the left square bracket and before the right one. The included items shall be listed one below another, aligned at the same level of indentation. The first element shall be on the declaration's line. The closing bracket shall go on the same line with the last item. However, if items are short and their sequence can be read easily (e.g., integer literals) it's acceptable to have them all on the one line.
-
-**Preferred**:
-```swift
-var numbers = [1, 2, 3]
-
-let airVehicles = [helicopter,
-                   airLiner,
-                   carrierRocket,
-                   wings]
-```
-
-**Not Preferred**:
-```swift
-var numbers = [
-    1, 
-    2, 
-    3
-]
-              
-let airVehicles = [helicopter, airLiner, carrierRocket, wings]
-```
-
-The option with braces on separate lines is used when elements don't fit the line width:
-
-**Preferred**:
-```swift
-let airVehicles = [
-    assumeThisNameDoesNotFitTheLineWidth,
-    airLiner
-]
-```
+_Note: Following this guideline means picking descriptive names is even more important than before._
 
 ### Syntactic Sugar
+___
 
 Prefer the shortcut versions of type declarations over the full generics syntax.
 
-**Preferred**:
+Prefer the shortcut versions of type declarations over the full generics syntax.
+
+**Preferred:**
+
 ```swift
 var deviceModels: [String]
 var employees: [Int: String]
 var faxNumber: Int?
 ```
+**Not Preferred:**
 
-**Not Preferred**:
 ```swift
 var deviceModels: Array<String>
 var employees: Dictionary<Int, String>
 var faxNumber: Optional<Int>
 ```
+___
 
 ## Functions vs Methods
 
@@ -1174,7 +1859,21 @@ while i < attendeeList.count {
 
 ### Ternary Operator
 
-1. Long ternary operator expressions should wrap before the ? and before the :, putting each conditional branch on a separate line. SwiftFormat: wrap
+* Long ternary operator expressions should wrap before the ? and before the :, putting each conditional branch on a separate line. SwiftFormat: wrap
+
+**Preferred**:
+
+```swift
+let destinationPlanet = solarSystem.hasPlanetsInHabitableZone
+  ? solarSystem.planetsInHabitableZone.first
+  : solarSystem.uninhabitablePlanets.first
+
+let value = 5
+result = value != 0 ? x : y
+
+let isHorizontal = true
+result = isHorizontal ? x : y
+```
 
 **Not Preferred**:
 ```swift
@@ -1189,16 +1888,10 @@ let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.plan
 // WRONG (unbalanced operators) 
 let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first
 ```
-**Preferred**:
-```swift
-let destinationPlanet = solarSystem.hasPlanetsInHabitableZone 
-? solarSystem.planetsInHabitableZone.first
-: solarSystem.uninhabitablePlanets.first
-```
 
-2. If we have huge logic and code, we should use if condition instead of ternary operator
+* If we have huge logic and code, we should use if condition instead of ternary operator
 
-**Preferred**:
+
 ```swift
 let result: Bool
 
@@ -1209,7 +1902,7 @@ if IamOldIfElse {
 }
 ```
 
-3. By using ternary operator, we were able to get rid of many lines of code. But some developers find the ternary operator hard to read so for those, Swift 5.9 improved the if else statement to be on one single line for the single statements:
+* By using ternary operator, we were able to get rid of many lines of code. But some developers find the ternary operator hard to read so for those, Swift 5.9 improved the if else statement to be on one single line for the single statements:
 
 **Not Preferred**:
 ```swift
@@ -1221,6 +1914,8 @@ let result = IamTernary ? true : false
 let result = if IamNewIfElse { true } else { false }
 
 ```
+
+---
 
 ### Switch Statements
 
@@ -1250,7 +1945,32 @@ switch direction {
 }
 ```
 
-## Golden Path
+### Else Statements
+**Preferred**:
+```swift
+if let galaxy {
+  …
+} else if let bigBangService {
+  …
+} else {
+  …
+}
+```
+
+**Not Preferred**:
+```swift
+if let galaxy {
+  …
+}
+else if let bigBangService {
+  …
+}
+else {
+  …
+}
+```
+
+### Golden Path
 
 When coding with conditionals, the left-hand margin of the code should be the "golden" or "happy" path. That is, don't nest `if` statements. Multiple return statements are OK. The `guard` statement is built for this.
 
@@ -1319,7 +2039,6 @@ if let number1 = number1 {
 
 In any `guard`-statement, the `else` (and its left brace) goes on the same line after the last condition.
 
-
 **Preferred**:
 ```swift
 guard !array.isEmpty else {
@@ -1333,9 +2052,165 @@ guard !array.isEmpty
     // ...
 ```
 
-### Failing Guards
+#### Failing Guards
 
 Guard statements are required to exit in some way. Generally, this should be simple one line statement such as `return`, `throw`, `break`, `continue`, and `fatalError()`. Large code blocks should be avoided. If cleanup code is required for multiple exit points, consider using a `defer` block to avoid cleanup code duplication.
+
+#### Omit the right-hand side of the expression
+
+**Preferred**:
+```swift
+if let galaxy,
+    galaxy.name == "Milky Way" { 
+… 
+}
+
+guard let galaxy,
+          galaxy.name == "Milky Way" else { … }
+```
+
+**Not Preferred**:
+```swift
+if let galaxy = galaxy,
+    galaxy.name == "Milky Way" { 
+… 
+}
+
+guard let galaxy = galaxy,
+          galaxy.name == "Milky Way" else { … }
+```
+
+#### Add a line break after the assignment operator (=) before a multi-line if or switch expression
+
+**Preferred**:
+```swift
+let planetLocation = 
+  if let star = planet.star {
+    "The \(star.name) system"
+  } else {
+    "Rogue planet"
+  }
+  
+let planetType: PlanetType =
+  switch planet {
+  case .mercury, .venus, .earth, .mars:
+    .terrestrial
+  case .jupiter, .saturn, .uranus, .neptune:
+    .gasGiant
+  }
+```
+
+**Not Preferred**:
+```swift
+// Should have a line break after the first `=`. 
+let planetLocation = if let star = planet.star {
+  "The \(star.name) system"
+ } else {
+  "Rogue planet"
+}
+
+// The first `=` should be on the line of the variable being assigned.
+let planetLocation 
+  = if let star = planet.star {
+    "The \(star.name) system"
+  } else {
+    "Rogue planet"
+  }
+
+// `switch` expression should be indented.
+let planetLocation =
+switch planet {
+case .mercury, .venus, .earth, .mars:
+  .terrestrial
+case .jupiter, .saturn, .uranus, .neptune:
+  .gasGiant
+}
+```
+
+#### Insert a blank line following a switch case with a multi-line body
+
+**Preferred**:
+```swift
+// All of the cases have a trailing blank line.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+    navigationComputer.destination = targetedDestination
+    warpDrive.spinUp()
+    warpDrive.activate()
+
+  case .enableArtificialGravity:
+    artificialGravityEngine.enable(strength: .oneG)
+
+  case .scanPlanet(let planet):
+    scanner.target = planet
+    scanner.scanAtmosphere()
+    scanner.scanBiosphere()
+    scanner.scanForArtificialLife()
+    
+  case .handleIncomingEnergyBlast:
+    energyShields.engage()
+  }
+}
+
+// Since none of the cases are multi-line, blank lines are not required.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+      warpDrive.engage()
+  case .enableArtificialGravity:
+      artificialGravityEngine.enable(strength: .oneG)
+  case .scanPlanet(let planet):
+      scanner.scan(planet)
+  case .handleIncomingEnergyBlast:
+      energyShields.engage()
+  }
+}
+```
+
+**Not Preferred**:
+```swift
+// These switch cases should be followed by a blank line.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+    navigationComputer.destination = targetedDestination
+    warpDrive.spinUp()
+    warpDrive.activate()
+  case .enableArtificialGravity:
+    artificialGravityEngine.enable(strength: .oneG)
+  case .scanPlanet(let planet):
+    scanner.target = planet
+    scanner.scanAtmosphere()
+    scanner.scanBiosphere()
+    scanner.scanForArtificialLife()
+  case .handleIncomingEnergyBlast:
+    energyShields.engage()
+  }
+}
+
+// While the `.enableArtificialGravity` case isn't multi-line, the other cases are.
+// For consistency, it should also include a trailing blank line.
+func handle(_ action: SpaceshipAction) {
+  switch action {
+  case .engageWarpDrive:
+    navigationComputer.destination = targetedDestination
+    warpDrive.spinUp()
+    warpDrive.activate()
+
+  case .enableArtificialGravity:
+    artificialGravityEngine.enable(strength: .oneG)
+  case .scanPlanet(let planet):
+    scanner.target = planet
+    scanner.scanAtmosphere()
+    scanner.scanBiosphere()
+    scanner.scanForArtificialLife()
+    
+  case .handleIncomingEnergyBlast:
+    energyShields.engage()
+  }
+}
+```
 
 ## Semicolons
 
