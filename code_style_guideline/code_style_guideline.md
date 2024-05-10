@@ -34,6 +34,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Computed Properties](#computed-properties)
   * [Final](#final)
 * [Function Declarations](#function-declarations)
+* [High Order Functions](#high-order-functions)
 * [Function Calls](#function-calls)
 * [Closure Expressions](#closure-expressions)
 * [Types](#types)
@@ -1707,6 +1708,99 @@ func updateConstraints() -> () {
 }
 
 typealias CompletionHandler = (result) -> ()
+```
+
+## High Order Functions
+
+### 1. KeyPath
+Prefer to use keypaths over providing closures. 
+
+**Preferred**:
+```swift
+response.restaurants?.compactMap(\.id)
+```
+
+**Not Preferred**:
+```swift
+response.restaurants?.compactMap({ $0.id })
+```
+
+### 2. Chaining
+Move to new line per high order function. Also, take care of chaining performance, avoid multiple loops as much as possible.
+
+**Preferred**:
+```swift
+let value = numbers
+  .map { $0 * 2 }
+  .filter { $0 > 50 }
+  .map { $0 + 10 }
+
+attributes.contains { $0.key == filterAttribute.id }
+```
+
+**Not Preferred**:
+```swift
+let value = numbers.map { $0 * 2 }.filter { $0 > 50 }.map { $0 + 10 }
+
+attributes.map(\.key).contains($0.id)
+```
+
+### 3. Paranthesis
+Prefer omitting paranthesis unless we need to put dot after the expression.
+
+**Preferred**:
+```swift
+planets.map { $0.name }
+planets.first { $0.flag }
+planets.first({ $0.flag }).name
+```
+
+**Not Preferred**:
+```swift
+planets.map({ $0.name })
+planets.first(where: { $0.flag })
+planets.first { $0.flag }.name
+```
+
+### 4. Passing method name as closure
+Prefer to pass method name over closure.
+
+**Preferred**:
+```swift
+items.map(TargetModel.init)
+items.forEach(checkFlags)
+```
+
+**Not Preferred**:
+```swift
+items.map {
+     TargetModel(item: $0)
+}
+
+items.forEach { 
+    checkFlags($0)
+}
+```
+
+### 5. Prefering High Order Functions Over Traditional Loops
+Prefer high order functions over traditional loops.
+
+**Preferred**:
+```swift
+items.map(TargetModel.init)
+let filteredStamps = stamps.filter { $0.shouldShowOnSearch ?? true }
+```
+
+**Not Preferred**:
+```swift
+for item in items {
+      TargetModel(id: item.id)
+}
+
+var filteredStamps: [Stamp] = []
+for stamp in stamps where stamp.shouldShowOnSearch == true {
+      filteredStamps.append(stamp)
+}
 ```
 
 ## Function Calls
