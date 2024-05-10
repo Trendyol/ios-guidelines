@@ -21,7 +21,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
-  * [Minimal Imports](#minimal-imports)
+  * [Imports](#imports)
 * [Spacing](#spacing)
 * [Comments](#comments)
 * [Explicit Documentation](#explicit-documentation)
@@ -332,7 +332,56 @@ override func tableView(_ tableView: UITableView, numberOfRowsInSection section:
 }
 
 ```
-### Minimal Imports
+### Imports
+
+Alphabetize and deduplicate module imports within a file. Place all imports at the top of the file below the header comments. Do not add additional line breaks between import statements. Add a single empty line before the first import and after the last import. SwiftFormat: **sortedImports** SwiftFormat: **duplicateImports**
+
+A standard organization method helps engineers more quickly determine which modules a file depends on.
+Duplicated import statements have no effect and should be removed for clarity.
+**Not Preferred**:
+```swift
+//  Copyright © 2018 Airbnb. All rights reserved.
+//
+import DLSPrimitives
+import Constellation
+import Constellation
+import Epoxy
+
+import Foundation
+```
+**Preferred**:
+```swift
+//  Copyright © 2018 Airbnb. All rights reserved.
+//
+
+import Constellation
+import DLSPrimitives
+import Epoxy
+import Foundation
+Exception: @testable import should be grouped after the regular import and separated by an empty line.
+```
+**Not Preferred**:
+```swift
+Details
+//  Copyright © 2018 Airbnb. All rights reserved.
+//
+
+import DLSPrimitives
+@testable import Epoxy
+import Foundation
+import Nimble
+import Quick
+```
+**Preferred**:
+```swift
+//  Copyright © 2018 Airbnb. All rights reserved.
+//
+
+import DLSPrimitives
+import Foundation
+import Nimble
+import Quick
+```
 
 Import only the modules a source file requires. For example, don't import `UIKit` when importing `Foundation` will suffice. Likewise, don't import `Foundation` if you must import `UIKit`.
 
