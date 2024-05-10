@@ -591,12 +591,25 @@ Also, you can look for the correct form via right-click
 Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
 
 ### Protocol Conformance
+### 1. AnyObject vs class
+Use AnyObject instead of class in protocol definitions.
 
-In particular, when adding protocol conformance to a model, prefer adding a separate extension for the protocol methods. This keeps the related methods grouped together with the protocol and can simplify instructions to add a protocol to a class with its associated methods.
+### 2. Mark Usage
+Use mark for protocol conformance.
+
+```swift
+// MARK: - ViewInterface
+extension MyViewController: ViewInterface {
+...
+}
+```
+
+### 3. Extension Usage
+Prefer adding a separate extension for the protocol methods and each extension should confirm single protocol. If protocol/type is generic or don't require any implementation, it can be confirmed without extension.
 
 **Preferred**:
 ```swift
-class MyViewController: UIViewController {
+class MyViewController: UIViewController, Loadable {
   // class stuff here
 }
 
@@ -605,22 +618,18 @@ extension MyViewController: UITableViewDataSource {
   // table view data source methods
 }
 
-// MARK: - UIScrollViewDelegate
-extension MyViewController: UIScrollViewDelegate {
+// MARK: - UITableViewDelegate
+extension MyViewController: UITableViewDelegate {
   // scroll view delegate methods
 }
 ```
 
 **Not Preferred**:
 ```swift
-class MyViewController: UIViewController, UITableViewDataSource, UIScrollViewDelegate {
-  // all methods
+extension MyViewController: UITableViewDelegate, UITableViewDataSource {
+  // scroll view delegate methods
 }
 ```
-
-Since the compiler does not allow you to re-declare protocol conformance in a derived class, it is not always required to replicate the extension groups of the base class. This is especially true if the derived class is a terminal class and a small number of methods are being overridden. When to preserve the extension groups is left to the discretion of the author.
-
-For UIKit view controllers, consider grouping lifecycle, custom accessors, and IBAction in separate class extensions.
 
 ### Unused Code
 
