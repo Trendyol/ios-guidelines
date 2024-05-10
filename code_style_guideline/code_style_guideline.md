@@ -20,6 +20,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Class and Structs](#class-struct)
   * [Language](#language) 
   * [String Concatenation](#string-concatenation)
+* [File Organization](#file-organization)
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
@@ -600,6 +601,212 @@ return "user name: \(user.name), user id: \(user.id), user height: \(length)"
 **Not Preferred**:
 ```swift
 return String(format: "user name: %@, user id: %d, user height: %f", user.name,  user.id, length)
+```
+
+## File Organization
+
+### Alphabetize and deduplicate module imports within a file. Place all imports at the top of the file below the header comments.
+
+**Why**: A standard organization method helps engineers more quickly determine which modules a file depends on.
+Duplicated import statements have no effect and should be removed for clarity.
+
+**Not Preferred**:
+```swift
+//  Copyright © 2024 Trendyol. All rights reserved.
+//
+
+import TYCoreUtils
+import Foundation
+import CommonKit
+import AccessibilityKit
+
+import MemberKit
+```
+
+**Preferred**:
+```swift
+//  Copyright © 2024 Trendyol. All rights reserved.
+//
+
+import AccessibilityKit
+import CommonKit
+import Foundation
+import MemberKit
+import TYCoreUtils
+```
+
+#### @testable usage
+
+**Preferred**:
+```swift
+//  Copyright © 2024 Trendyol. All rights reserved.
+//
+
+import AccessibilityKit
+import CommonKit
+import Foundation
+import MemberKit
+import TYCoreUtils
+
+@testable import Trendyol
+```
+
+**Also Preferred**:
+```swift
+//  Copyright © 2024 Trendyol. All rights reserved.
+//
+
+import AccessibilityKit
+import CommonKit
+import Foundation
+import MemberKit
+@testable import Trendyol
+import TYCoreUtils
+```
+
+### Limit consecutive whitespace to one blank line or space (excluding indentation)
+
+**Not Preferred**:
+```swift
+struct Planet {
+  let mass:          Double
+  let hasAtmosphere: Bool
+
+
+  func distance(to: Planet) { }
+}
+```
+
+**Preferred**:
+```swift
+struct Planet {
+  let mass: Double
+  let hasAtmosphere: Bool
+
+  func distance(to: Planet) { }
+}
+```
+
+### Declarations that include scopes spanning multiple lines should be separated from adjacent declarations in the same scope by a newline.
+
+Insert a single blank line between multi-line scoped declarations (e.g. types, extensions, functions, computed properties, etc.) and other declarations at the same indentation level.
+
+**Why**: Dividing scoped declarations from other declarations at the same scope visually separates them, making adjacent declarations easier to differentiate from the scoped declaration.
+
+**Not Preferred**:
+```swift
+struct SolarSystem {
+  var numberOfPlanets: Int {
+    …
+  }
+  func distance(to: SolarSystem) -> AstronomicalUnit {
+    …
+  }
+}
+struct Galaxy {
+  func distance(to: Galaxy) -> AstronomicalUnit {
+    …
+  }
+  func contains(_ solarSystem: SolarSystem) -> Bool {
+    …
+  }
+}
+```
+
+**Preferred**:
+```swift
+struct SolarSystem {
+  var numberOfPlanets: Int {
+    …
+  }
+
+  func distance(to: SolarSystem) -> AstronomicalUnit {
+    …
+  }
+}
+
+struct Galaxy {
+  func distance(to: Galaxy) -> AstronomicalUnit {
+    …
+  }
+
+  func contains(_ solarSystem: SolarSystem) -> Bool {
+    …
+  }
+}
+```
+
+### Remove blank lines at the top and bottom of scopes, excluding type bodies which can optionally include blank lines.
+
+**Not Preferred**:
+```swift
+class Planet {
+  func terraform() {
+
+    generateAtmosphere()
+    generateOceans()
+
+  }
+}
+```
+
+**Preferred**:
+```swift
+class Planet {
+  func terraform() {
+    generateAtmosphere()
+    generateOceans()
+  }
+}
+```
+
+### Within each top-level section, place content in the following order. This allows a new reader of your code to more easily find what they are looking for. 
+
+* Nested types and type aliases
+* Static properties
+* Class properties
+* Instance properties
+* Static methods
+* Class methods
+* Instance methods
+
+### Add empty lines between property declarations of different kinds. (e.g. between static properties and instance properties.)
+
+**Not Preferred**:
+```swift
+static let gravityEarth: CGFloat = 9.8
+static let gravityMoon: CGFloat = 1.6
+var gravity: CGFloat
+```
+
+**Preferred**:
+```swift
+static let gravityEarth: CGFloat = 9.8
+static let gravityMoon: CGFloat = 1.6
+
+var gravity: CGFloat
+```
+
+### Computed properties and properties with property observers should appear at the end of the set of declarations of the same kind. (e.g. instance properties.)
+
+**Not Preferred**:
+```swift
+var atmosphere: Atmosphere {
+  didSet {
+    print("oh my god, the atmosphere changed")
+  }
+}
+var gravity: CGFloat
+```
+
+**Preferred**:
+```swift
+var gravity: CGFloat
+var atmosphere: Atmosphere {
+  didSet {
+    print("oh my god, the atmosphere changed")
+  }
+}
 ```
 
 ## Code Organization
