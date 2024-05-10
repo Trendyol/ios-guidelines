@@ -19,7 +19,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Generics](#generics)
   * [Class and Structs](#class-struct)
   * [Language](#language) 
-  * [String Concatenation] (#string-concatenation)
+  * [String Concatenation](#string-concatenation)
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
