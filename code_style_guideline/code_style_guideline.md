@@ -37,6 +37,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [High Order Functions](#high-order-functions)
 * [Function Calls](#function-calls)
 * [Closure Expressions](#closure-expressions)
+* [Closure](#closure)
 * [Types](#types)
   * [Initialization](#initialization)
   * [Constants](#constants)
@@ -1905,6 +1906,90 @@ let value = numbers
   .map {$0 * 2}
   .filter {$0 > 50}
   .map {$0 + 10}
+```
+
+### Closures
+
+### 1. Closure Complexity
+Extract closure content to separate method if closure gets too complex.
+
+### 2. Void Usage
+Prefer Void over (). You can also declare your own typealiases for closures for your own module.
+
+**Preferred**:
+```swift
+typealias IntHandler = (Int) -> Void
+```
+
+**Not Preferred**:
+```swift
+typealias IntHandler = (Int) -> ()
+```
+
+### 3. Unused Closure Parameters
+Use underscore for unused closure parameters.
+
+**Preferred**:
+```swift
+fetchUser() { _,  param2 in
+  print(param2)
+}
+```
+
+**Not Preferred**:
+```swift
+fetchUser() { param1, param2 in
+  print(param2)
+}
+```
+
+### 4. Trailing Closure
+Prefer trailing closure syntax if there's a single closure at the end of the arguments. If you have multiple arguments, declare closure as last argument.
+
+**Preferred**:
+```swift
+myMethod(productCount: 1) {
+    ...
+}
+```
+
+**Not Preferred**:
+```swift
+myMethod(productCount: 1, completion: {
+  ...
+})
+```
+
+### 5. Single Expression Closure
+Omit return if you have single expression in closure.
+
+**Preferred**:
+```swift
+users.first { user in
+  user.isLoggedIn
+}
+```
+
+**Not Preferred**:
+```swift
+users.first { user in
+   return user.isLoggedIn
+}
+```
+
+### 6. Lazy Closures
+Prefer short syntax for single line lazy var declarations.
+
+**Preferred**:
+```swift
+lazy var item = Item()
+```
+
+**Not Preferred**:
+```swift
+lazy var item: Item = {
+     return Item()
+}()
 ```
 
 ## Tuples
