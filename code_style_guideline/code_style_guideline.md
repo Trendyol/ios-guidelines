@@ -977,7 +977,7 @@ var deviceModels: [String]
 
 ![Xcode while editing settings](screens/text-editing-while-editing.png)
 
-* Also, Indent using 2 spaces rather than tabs to conserve space and help prevent line wrapping. Be sure to set this preference in Xcode and in the Project settings as shown below:
+*  While the generall recommendation advises indenting with 2 spaces rather than tabs to save space and prevent line wrapping, we've chosen to adhere to our decision of using 4 spaces for indentation. Be sure to set this preference in Xcode and in the Project settings as shown below::
 
 ![Xcode indent settings](screens/text-editing-tab-width-indent.png)
 
@@ -1110,8 +1110,6 @@ else {
 -   There should be one blank line between methods and up to one blank line between type declarations to aid in visual clarity and organization. Whitespace within methods should separate functionality, but having too many sections in a method often means you should refactor into several methods.
     
 -   There should be no blank lines after an opening brace or before a closing brace.
-    
--   Closing parentheses should not appear on a line by themselves. // TODO: - We should talk about this issue again
 
 -   Depending on the need, you can also use **Control-m** if there won't be too much distortion in the pattern and there is a subject that involves more than one parameter.
 
@@ -1273,7 +1271,56 @@ class TestDatabase : Database {
 
  #### 8. Multi Line Conditions
 
-// TODO: **We should talk about this issue again**
+Multi-line conditional statements should break after the leading keyword. Indent each individual statement by 2 spaces.
+
+*Why?*
+Breaking after the leading keyword resets indentation to the standard 2-space grid, which helps avoid fighting Xcode's control + i indentation behavior.
+
+**Preferred**:
+```swift
+if
+  let galaxy,
+  galaxy.name == "Milky Way"
+{ … }
+
+guard
+  let galaxy,
+  galaxy.name == "Milky Way"
+else { … }
+
+guard
+  let earth = universe.find(
+    .planet,
+    named: "Earth"),
+  earth.isHabitable
+else { … }
+
+if let galaxy {
+  …
+}
+
+guard let galaxy else {
+  …
+}
+
+```
+
+**Not Preferred**:
+```swift
+if let galaxy,
+  galaxy.name == "Milky Way" // Indenting by two spaces fights Xcode's ^+I indentation behavior
+{ … }
+
+guard let galaxy,
+      galaxy.name == "Milky Way" // Variable width indentation (6 spaces)
+else { … }
+
+guard let earth = universe.find(
+  .planet,
+  named: "Earth"),
+  earth.isHabitable // Blends in with previous condition's method arguments
+else { … }
+```
 
  #### 9. Closure Brace Spacing
 
