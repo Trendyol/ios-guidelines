@@ -39,6 +39,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Constants](#constants)
   * [Static Methods and Variable Type Properties](#static-methods-and-variable-type-properties)
   * [Optionals](#optionals)
+  * [Enums](#enums)
   * [Lazy Initialization](#lazy-initialization)
   * [Type Inference](#type-inference)
   * [Syntactic Sugar](#syntactic-sugar)
@@ -1243,6 +1244,332 @@ let product = try XCTUnwrap(priceComparisonResponse.stores?.first?.products?.fir
 **Not Preferred**:
 ```swift
 let product = priceComparisonResponse.stores!.first!.products!.first!
+```
+
+### Enums 
+Omit enum associated values from case statements when all arguments are unlabeled. SwiftLint: **empty_enum_arguments**
+
+**Not Preferred**:
+```swift
+if case .done(_) = result { ... }
+
+switch animal {
+case .dog(_, _, _):
+  ...
+}
+```
+
+**Preferred**:
+```swift
+if case .done = result { ... }
+
+switch animal {
+case .dog:
+  ...
+}
+```
+When destructuring an enum case or a tuple, place the let keyword inline, adjacent to each individual property assignment. SwiftFormat: **hoistPatternLet**
+
+**Not Preferred**:
+```swift
+switch result {
+case let .success(value):
+  // ...
+case let .error(errorCode, errorReason):
+  // ...
+}
+
+// WRONG
+guard let case .success(value) else {
+  return
+}
+```
+
+**Preferred**:
+```swift
+switch result {
+case .success(let value):
+  // ...
+case .error(let errorCode, let errorReason):
+  // ...
+}
+
+// RIGHT
+guard case .success(let value) else {
+  return
+}
+```
+
+**Notes:**
+Clarity: Inlining the let keyword makes it more clear which identifiers are part of the conditional check and which identifiers are binding new variables, since the let keyword is always adjacent to the variable identifier.
+```swift
+// `let` is adjacent to the variable identifier, so it is immediately obvious
+// at a glance that these identifiers represent new variable bindings
+case .enumCaseWithSingleAssociatedValue(let string):
+case .enumCaseWithMultipleAssociatedValues(let string, let int):
+
+// The `let` keyword is quite far from the variable identifiers,
+// so it is less obvious that they represent new variable bindings
+case let .enumCaseWithSingleAssociatedValue(string):
+case let .enumCaseWithMultipleAssociatedValues(string, int):
+```
+##### Enum Namespaces
+Use caseless enums for organizing public or internal constants and functions into namespaces. SwiftFormat: **enumNamespaces**
+  
+ + Avoid creating non-namespaced global constants and functions.  
+ + Feel free to nest namespaces where it adds clarity.  
+ + private globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an enum namespace to match the guidelines for other declaration types.  
+    
+Caseless enums work well as namespaces because they cannot be instantiated, which matches their intent.  
+  
+**Not Preferred**:
+```swift
+struct Environment {  
+    static let earthGravity = 9.8  
+    static let moonGravity = 1.6  
+}  
+  
+// WRONG  
+struct Environment {  
+  struct Earth {  
+    static let gravity = 9.8  
+  }  
+  
+  struct Moon {  
+    static let gravity = 1.6  
+  }  
+} 
+```  
+**Not Preferred**:
+```swift
+// RIGHT  
+enum Environment {  
+  enum Earth {  
+    static let gravity = 9.8  
+  }  
+  
+  enum Moon {  
+    static let gravity = 1.6  
+  }  
+}
+``` 
+
+Use Swift's automatic enum values unless they map to an external source. Add a comment explaining why explicit values are defined. SwiftFormat: **redundantRawValues**
+  
+Why?  
+To minimize user error, improve readability, and write code faster, rely on Swift's automatic enum values. If the value maps to an external source (e.g. it's coming from a network request) or is persisted across binaries, however, define the values explicitly, and document what these values are mapping to.  
+  
+This ensures that if someone adds a new value in the middle, they won't accidentally break things.  
+  
+  **Not Preferred**:
+```swift
+// WRONG  
+enum ErrorType: String {  
+  case error = "error"  
+  case warning = "warning"  
+}  
+  
+// WRONG  
+enum UserType: String {  
+  case owner  
+  case manager  
+  case member  
+}  
+  
+// WRONG  
+enum Planet: Int {  
+  case mercury = 0  
+  case venus = 1  
+  case earth = 2  
+  case mars = 3  
+  case jupiter = 4  
+  case saturn = 5  
+  case uranus = 6  
+  case neptune = 7  
+}  
+  
+// WRONG  
+enum ErrorCode: Int {  
+  case notEnoughMemory  
+  case invalidResource  
+  case timeOut  
+}  
+``` 
+  **Preferred**:
+```swift
+// RIGHT  
+// Relying on Swift's automatic enum values  
+enum ErrorType: String {  
+  case error  
+  case warning  
+}  
+  
+// RIGHT  
+/// These are written to a logging service. Explicit values ensure they're consistent across binaries.  
+// swiftformat:disable redundantRawValues  
+enum UserType: String {  
+  case owner = "owner"  
+  case manager = "manager"  
+  case member = "member"  
+}  
+// swiftformat:enable redundantRawValues  
+  
+// RIGHT  
+// Relying on Swift's automatic enum values  
+enum Planet: Int {  
+  case mercury  
+  case venus  
+  case earth  
+  case mars  
+  case jupiter  
+  case saturn  
+  case uranus  
+  case neptune  
+}  
+  
+// RIGHT  
+/// These values come from the server, so we set them here explicitly to match those values.  
+enum ErrorCode: Int {  
+  case notEnoughMemory = 0  
+  case invalidResource = 1  
+  case timeOut = 2  
+}
+``` 
+
+Dont use the default case when switching over an enum.  
+  
+Why?  
+Enumerating every case requires developers and reviewers have to consider the correctness of every switch statement when new cases are added.  
+  **Preferred**:
+```swift 
+switch anEnum {  
+case .a:  
+// Do something  
+default:  
+// Do something else.  
+}  
+```
+  **Preferred**:
+```swift 
+switch anEnum {  
+case .a:  
+// Do something  
+case .b, .c:  
+// Do something else.  
+}  
+```
+  When all cases of an `enum` must be `indirect`, the `enum` itself is declared `indirect` and the keyword is omitted on the individual cases.
+  
+**Preferred**:
+```swift 
+public indirect enum DependencyGraphNode {  
+  case userDefined(dependencies: [DependencyGraphNode])  
+  case synthesized(dependencies: [DependencyGraphNode])  
+}  
+```
+**Not Preferred**:
+```swift 
+public enum DependencyGraphNode {  
+  indirect case userDefined(dependencies: [DependencyGraphNode])  
+  indirect case synthesized(dependencies: [DependencyGraphNode])  
+} 
+```
+When an enum case does not have associated values, empty parentheses are never present.  
+
+ **Preferred**:
+```swift 
+public enum BinaryTree<Element> {  
+  indirect case node(element: Element, left: BinaryTree, right: BinaryTree)  
+  case empty // GOOD.  
+}
+```
+**Not Preferred**:
+```swift 
+public enum BinaryTree<Element> {  
+  indirect case node(element: Element, left: BinaryTree, right: BinaryTree)  
+  case empty() // AVOID.  
+}
+```
+In general, there is only one case per line in an enum. The comma-delimited form may be used only when none of the cases have associated values or raw values, all cases fit on a single line, and the cases do not need further documentation because their meanings are obvious from their names.  
+
+ **Not Preferred**:
+```swift 
+public enum Token {  
+  case comma  
+  case semicolon  
+  case identifier  
+}  
+  
+public enum Token {  
+  case comma, semicolon, identifier  
+}  
+  
+public enum Token {  
+  case comma  
+  case semicolon  
+  case identifier(String)  
+}  
+```
+ 
+ **Not Preferred**:
+```swift 
+public enum Token {  
+  case comma, semicolon, identifier(String)  
+}  
+```
+  
+The cases of an enum must follow a logical ordering that the author could explain if asked. If there is no obviously logical ordering, use a lexicographical ordering based on the cases’ names.
+
+In the following example, the cases are arranged in numerical order based on the underlying HTTP status code and blank lines are used to separate groups.
+
+ **Preferred**:
+```swift 
+public enum HTTPStatus: Int {
+  case ok = 200
+
+  case badRequest = 400
+  case notAuthorized = 401
+  case paymentRequired = 402
+  case forbidden = 403
+  case notFound = 404
+
+  case internalServerError = 500
+}
+
+```
+
+The following version of the same enum is less readable. Although the cases are ordered lexicographically, the meaningful groupings of related values has been lost.
+
+ **Not Preferred**:
+```swift 
+public enum HTTPStatus: Int {
+  case badRequest = 400
+  case forbidden = 403
+  case internalServerError = 500
+  case notAuthorized = 401
+  case notFound = 404
+  case ok = 200
+  case paymentRequired = 402
+}
+```
+
+`Enum` naming should not be plural, it should be `singular`
+
+**Preferred**:
+```swift
+public enum Token {
+  case comma
+  case semicolon
+  case identifier
+}
+```
+**Not Preferred**:
+```swift
+public enum Tokens {
+  case comma
+  case semicolon
+  case identifier
+}
 ```
 
 ### Lazy Initialization
