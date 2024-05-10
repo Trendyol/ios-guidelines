@@ -1663,12 +1663,15 @@ private func makeLocationManager() -> CLLocationManager {
   - `[unowned self]` is not required here. A retain cycle is not created.
   - Location manager has a side-effect for popping up UI to ask the user for permission so fine grain control makes sense here.
 
+___
 
 ### Type Inference
+___
 
 Prefer compact code and let the compiler infer the type for constants or variables of single instances. Type inference is also appropriate for small, non-empty arrays and dictionaries. When required, specify the specific type such as `CGFloat` or `Int16`.
 
-**Preferred**:
+**Preferred:**
+
 ```swift
 let message = "Click the button"
 let currentBounds = computeViewBounds()
@@ -1676,81 +1679,55 @@ var names = ["Mic", "Sam", "Christine"]
 let maximumWidth: CGFloat = 106.5
 ```
 
-**Not Preferred**:
+**Not Preferred:**
+
 ```swift
 let message: String = "Click the button"
 let currentBounds: CGRect = computeViewBounds()
 var names = [String]()
 ```
 
-#### Type Annotation for Empty Arrays and Dictionaries
+## Type Annotation for Empty Arrays and Dictionaries
 
-For empty arrays and dictionaries, use type annotation. (For an array or dictionary assigned to a large, multi-line literal, use type annotation.)
+For empty arrays and dictionaries, use type annotation. For an array or dictionary assigned to a large, multi-line literal, use type annotation.
 
-**Preferred**:
+**Preferred:**
+
 ```swift
 var names: [String] = []
 var lookup: [String: Int] = [:]
 ```
 
-**Not Preferred**:
+**Not Preferred:**
+
 ```swift
 var names = [String]()
 var lookup = [String: Int]()
 ```
-
-**NOTE**: Following this guideline means picking descriptive names is even more important than before.
-
-Array literals shall not contain spaces after the left square bracket and before the right one. The included items shall be listed one below another, aligned at the same level of indentation. The first element shall be on the declaration's line. The closing bracket shall go on the same line with the last item. However, if items are short and their sequence can be read easily (e.g., integer literals) it's acceptable to have them all on the one line.
-
-**Preferred**:
-```swift
-var numbers = [1, 2, 3]
-
-let airVehicles = [helicopter,
-                   airLiner,
-                   carrierRocket,
-                   wings]
-```
-
-**Not Preferred**:
-```swift
-var numbers = [
-    1, 
-    2, 
-    3
-]
-              
-let airVehicles = [helicopter, airLiner, carrierRocket, wings]
-```
-
-The option with braces on separate lines is used when elements don't fit the line width:
-
-**Preferred**:
-```swift
-let airVehicles = [
-    assumeThisNameDoesNotFitTheLineWidth,
-    airLiner
-]
-```
+_Note: Following this guideline means picking descriptive names is even more important than before._
 
 ### Syntactic Sugar
+___
 
 Prefer the shortcut versions of type declarations over the full generics syntax.
 
-**Preferred**:
+Prefer the shortcut versions of type declarations over the full generics syntax.
+
+**Preferred:**
+
 ```swift
 var deviceModels: [String]
 var employees: [Int: String]
 var faxNumber: Int?
 ```
+**Not Preferred:**
 
-**Not Preferred**:
 ```swift
 var deviceModels: Array<String>
 var employees: Dictionary<Int, String>
 var faxNumber: Optional<Int>
 ```
+___
 
 ## Functions vs Methods
 
