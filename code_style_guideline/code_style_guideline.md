@@ -1,7 +1,6 @@
-# The Official Kodeco Swift Style Guide.
-### Updated for Swift 5
+# Trendyol iOS Style Guide
 
-This style guide is different from others you may see, because the focus is centered on readability for print and the web. We created this style guide to keep the code in our books, tutorials, and starter kits nice and consistent — even though we have many different authors working on the books.
+Tailored exclusively for the Trendyol app, this Swift Style Guide prioritizes code readability within Trendyol's unique development environment. Crafted to ensure consistency across diverse contributors, the guide serves as a dedicated resource for maintaining a cohesive and clear codebase.
 
 Our overarching goals are clarity, consistency and brevity, in that order.
 
@@ -64,9 +63,6 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Pre-processor Directives](#pre-processor-directives)
 * [No Emoji](#no-emoji)
 * [No #imageLiteral or #colorLiteral](#no-imageliteral-or-colorliteral)
-* [Organization and Bundle Identifier](#organization-and-bundle-identifier)
-* [Copyright Statement](#copyright-statement)
-* [Smiley Face](#smiley-face)
 * [References](#references)
 
 
@@ -76,7 +72,7 @@ Strive to make your code compile without warnings. This rule informs many style 
 
 ## Using SwiftLint
 
-When writing for Kodeco, you are strongly encouraged — perhaps even required, depending on your team — to use our SwiftLint configuration. See the [SwiftLint Policy](SWIFTLINT.markdown) for more information.
+When developing for Trendyol, it is highly recommended — and may even be mandatory, depending on your team — to incorporate our SwiftLint configuration. Please refer to the [SwiftLint Policy](SWIFTLINT.markdown) for detailed information.
 
 ## Naming
 
@@ -97,6 +93,7 @@ Descriptive and consistent naming makes software easier to read and understand. 
   - boolean types should read like assertions
   - protocols that describe _what something is_ should read as nouns
   - protocols that describe _a capability_ should end in _-able_ or _-ible_
+- omitting all labels when arguments can't be usefully distinguished _e.g. min(number1, number2), zip(sequence1, sequence2)_
 - using terms that don't surprise experts or confuse beginners
 - generally avoiding abbreviations
 - using precedent for names
@@ -304,22 +301,10 @@ func makeView(position: CGPoint, size: CGSize) -> UIView
 init(withName name: String, andID id: Int)
 ```
 
-It's very common to force engineers to put an object of delegation as the first argument of delegation methods. This is not strictly necessary and is used only in cases when it makes sense.
+UIKit's UIControl actions are called with the control's name in the beginning and the "tapped" word in the end:
 
 **Preferred**:
-```
-func buttonTapped(_ button: UIButton)
-```
-
-**Not Preferred**:
 ```swift
-func screen(_ screen: UIViewController, hasButtonTapped button: UIButton)
-```
-
-UIKit's UIControl actions are called with the control's name in the beginning and the "action" word in the end:
-
-**Preferred**:
-```
 @objc
 private func nextButtonTapped(_ sender: UIButton) { // ...
 ```
@@ -328,6 +313,87 @@ private func nextButtonTapped(_ sender: UIButton) { // ...
 ```swift
 @objc
 private func nextButtonAction(_ sender: UIButton) { // ...
+```
+
+Omit unused parameters.
+
+**Preferred**:
+```swift
+func calculateSum(_ a: Int, _ b: Int) -> Int {
+    return a + b
+}
+```
+
+**Not Preferred**:
+```swift
+func calculateSum(_ a: Int, _ b: Int, _ c: Int) -> Int {
+    return a + b  // The parameter 'c' is unused
+}
+```
+
+Omit `Void` return types from function definitions.
+
+**Preferred**:
+```swift
+func performTask() {
+    // Implementation
+}
+```
+
+**Not Preferred**:
+```swift
+func performTask() -> Void {
+    // Implementation
+}
+```
+
+Long function invocations should also break on each argument. Put the closing parenthesis on the last line of the invocation.
+
+**Preferred**:
+```swift
+universe.generateStars(at: location,
+                       count: 5,
+                       color: starColor,
+                       withAverageDistance: 4)
+```
+
+**Not Preferred**:
+```swift
+universe.generate(
+  5,
+  .stars,
+  at: location)
+```
+
+**Not Preferred**:
+```swift
+universe.generateStars(
+  at: location,
+  count: 5,
+  color: starColor,
+  withAverageDistance: 4)
+```
+
+**Not Preferred**:
+```swift
+universe.generate(5,
+  .stars,
+  at: location)
+```
+
+**Not Preferred**:
+```swift
+universe.generateStars(
+  at: location,
+  count: 5,
+  color: starColor,
+  withAverageDistance: 4
+)
+```
+
+**Not Preferred**:
+```swift
+universe.generateStars(at: location, count: 5, color: starColor, withAverageDistance: 4)
 ```
 
 However, if the return value might be useful in some specific situations, it doesn't force one to use it (the `@discardableResult` annotation serves this purpose). Though, such return values are not encouraged. An engineer shall follow the principle of [the command-query separation](https://en.wikipedia.org/wiki/Command–query_separation).
@@ -1910,7 +1976,6 @@ let success = reticulateSplines(
   comment: "normalize the display")
 ```
 
-
 A method declaration is placed on a single line if it can fit most display screen widths without a carry-over. Otherwise, each parameter is placed on its own line and matches the beginning of the previous one. Return type carries on to the last parameter's line.
 
 **Preferred**:
@@ -2188,6 +2253,7 @@ enum Math {
 let hypotenuse = side * Math.root2
 
 ```
+
 **Note:** The advantage of using a case-less enumeration is that it can't accidentally be instantiated and works as a pure namespace.
 
 **Not Preferred**:
@@ -2271,6 +2337,7 @@ if let textContainer = textContainer {
 }
 
 ```
+
 **Notes:** Swift 5.7 introduced new shorthand syntax for unwrapping optionals into shadowed variables:
 
 ```swift
@@ -2879,6 +2946,7 @@ launch(&rocket)
 ```
 
 **Free Function Exceptions**
+
 ```swift
 let tuples = zip(a, b)  // feels natural as a free function (symmetry)
 let value = max(x, y, z)  // another free function that feels natural
@@ -3526,7 +3594,6 @@ let message = "You cannot charge the flux " +
   "which costs 10 credits. You currently " +
   "have \(credits) credits available."
 ```
-
 ## Line breaks
 
 Long expressions are broken into several parts on different lines so that the symbol that connects two parts of expression starts the new line. Each new line is indented with one additional indentation level. Having a special character starting a new line avoids creating the illusion that a new line is a new statement.
@@ -3575,68 +3642,10 @@ Do not use emoji in your projects. For those readers who actually type in their 
 
 Likewise, do not use Xcode's ability to drag a color or an image into a source statement. These turn into #colorLiteral and #imageLiteral, respectively, and present unpleasant challenges for a reader trying to enter them based on tutorial text. Instead, use `UIColor(red:green:blue)` and `UIImage(imageLiteralResourceName:)`.
 
-## Organization and Bundle Identifier
-
-Where an Xcode project is involved, the organization should be set to `Kodeco` and the Bundle Identifier set to `com.yourcompany.TutorialName` where `TutorialName` is the name of the tutorial project.
-
-![Xcode Project settings](screens/project_settings.png)
-
-## Copyright Statement
-
-The following copyright statement should be included at the top of every source
-file:
-
-```swift
-/// Copyright (c) 2023 Kodeco Inc.
-/// 
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-/// 
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-/// 
-/// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
-/// distribute, sublicense, create a derivative work, and/or sell copies of the
-/// Software in any work that is designed, intended, or marketed for pedagogical or
-/// instructional purposes related to programming, coding, application development,
-/// or information technology.  Permission for such use, copying, modification,
-/// merger, publication, distribution, sublicensing, creation of derivative works,
-/// or sale is expressly withheld.
-/// 
-/// This project and source code may use libraries or frameworks that are
-/// released under various Open-Source licenses. Use of those libraries and
-/// frameworks are governed by their own individual licenses.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
-```
-
-## Smiley Face
-
-Smiley faces are a very prominent style feature of the [Kodeco](https://www.kodeco.com/) site! It is very important to have the correct smile signifying the immense amount of happiness and excitement for the coding topic. The closing square bracket `]` is used because it represents the largest smile able to be captured using ASCII art. A closing parenthesis `)` creates a half-hearted smile, and thus is not preferred.
-
-**Preferred**:
-```
-:]
-```
-
-**Not Preferred**:
-```
-:)
-```
-
 ## References
 
 * [The Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
 * [The Swift Programming Language](https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/index.html)
 * [Using Swift with Cocoa and Objective-C](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/index.html)
 * [Swift Standard Library Reference](https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/SwiftStandardLibraryReference/index.html)
+* [Airbnb Swift Style Guide](https://github.com/airbnb/swift)
