@@ -24,6 +24,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
+  * [Omitting Return](#omitting-return)
   * [Imports](#imports)
 * [Spacing & New Line](#spacing-and-new-line)
 * [Comments](#comments)
@@ -888,6 +889,46 @@ override func didReceiveMemoryWarning() {
 ```swift
 override func numberOfSections(in tableView: UITableView) -> Int {
   return 1
+}
+```
+
+### Omitting Return
+
+Omit the return keyword when not required by the language.
+
+**Preferred**:
+```swift
+["1", "2", "3"].compactMap { Int($0) }
+
+var size: CGSize {
+  CGSize(
+    width: 100.0,
+    height: 100.0)
+}
+
+func makeInfoAlert(message: String) -> UIAlertController {
+  UIAlertController(
+    title: "ℹ️ Info",
+    message: message,
+    preferredStyle: .alert)
+}
+```
+
+**Not Preferred**:
+```swift
+["1", "2", "3"].compactMap { return Int($0) }
+
+var size: CGSize {
+  return CGSize(
+    width: 100.0,
+    height: 100.0)
+}
+
+func makeInfoAlert(message: String) -> UIAlertController {
+  return UIAlertController(
+    title: "ℹ️ Info",
+    message: message,
+    preferredStyle: .alert)
 }
 ```
 
