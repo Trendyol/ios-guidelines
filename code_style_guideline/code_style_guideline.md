@@ -885,7 +885,6 @@ let hypotenuse = side * Math.root2
 
 ```
 
-
 **Note:** The advantage of using a case-less enumeration is that it can't accidentally be instantiated and works as a pure namespace.
 
 **Not Preferred**:
@@ -930,7 +929,6 @@ if let textContainer {
   // do many things with textContainer
 }
 ```
-
 
 When naming optional variables and properties, avoid naming them like `optionalString` or `maybeView` since their optional-ness is already in the type declaration.
 
