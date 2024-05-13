@@ -21,6 +21,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Code Organization](#code-organization)
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
+  * [Omitting Return](#omitting-return)
   * [Minimal Imports](#minimal-imports)
 * [Spacing](#spacing)
 * [Comments](#comments)
