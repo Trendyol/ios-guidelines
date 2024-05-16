@@ -34,7 +34,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Function Calls](#function-calls)
 * [Closure Expressions](#closure-expressions)
 * [Types](#types)
-  * [Initialization](#initialization)
+  * [Init Usage](#initialization)
   * [Constants](#constants)
   * [Static Methods and Variable Type Properties](#static-methods-and-variable-type-properties)
   * [Optionals](#optionals)
@@ -264,70 +264,6 @@ let color = "red"
 ```swift
 let colour = "red"
 ```
-
-### Init Usage
-
-### 1. Variable declaration
-Do not use '.init()' while assigning value to variable. Unit test variable declarations is an exception for this rule.
-
-**Preferred**:
-```swift
-presenter = MyCellPresenter()
-```
-
-**Not Preferred**:
-```swift
-presenter: MyCellPresenter= .init()
-```
-
-### 2. Nested Statement
-Prefer not to use use .init inside nested statements.
-
-**Preferred**:
-```swift
-tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: EvenArgument(type: .click, screen: arguments.screen)))
-```
-
-**Not Preferred**:
-```swift
-tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: .init(type: .click, screen: arguments.screen)))
-```
-
-### 3. Convenience init
-Use convenience init if we have already one designated initializer.
-
-### 4.Initializer Arguments
-Don't omit parameter names for initializers, parameter name should be same as the variable its initializing.
-
-**Preferred**:
-```swift
-struct BasketDiscountViewEvent: CoreTrackable {
-    enum Action: String {    }
-    
-    let action: Action
-
-    init(action: Action) {
-        self.action = action
-    }
-}
-```
-
-**Not Preferred**:
-```swift
-struct BasketDiscountViewEvent: CoreTrackable {
-    enum Action: String {    }
-    
-    let action: Action
-
-    init(_ eventAction: Action) {
-         action = eventAction
-    }
-}
-```
-
-### 5. Failable Initializers
-Avoid failable initializers as much as possible.
-
 
 ## Code Organization
 
@@ -853,21 +789,68 @@ let widthString: NSString = width.stringValue        // NSString
 
 In drawing code, use `CGFloat` if it makes the code more succinct by avoiding too many conversions.
 
-##  Initialization
+##  Init Usage
 
-If the initial or constant value of a property doesn't depend on the initializer's parameters, a default value is preferred over setting it within the initialization code.
-
-`.init()` is not used for initialization:
+### 1. Variable Declaration
+Do not use '.init()' while assigning value to variable. Unit test variable declarations is an exception for this rule.
 
 **Preferred**:
 ```swift
-let color = UIColor(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
-``` 
+presenter = MyCellPresenter()
+```
 
 **Not Preferred**:
 ```swift
-let color: UIColor = .init(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+presenter: MyCellPresenter= .init()
 ```
+
+### 2. Nested Statement
+Prefer not to use use .init inside nested statements.
+
+**Preferred**:
+```swift
+tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: EvenArgument(type: .click, screen: arguments.screen)))
+```
+
+**Not Preferred**:
+```swift
+tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: .init(type: .click, screen: arguments.screen)))
+```
+
+### 3. Convenience init
+Use convenience init if we have already one designated initializer.
+
+### 4.Initializer Arguments
+Don't omit parameter names for initializers, parameter name should be same as the variable its initializing.
+
+**Preferred**:
+```swift
+struct BasketDiscountViewEvent: CoreTrackable {
+    enum Action: String {    }
+    
+    let action: Action
+
+    init(action: Action) {
+        self.action = action
+    }
+}
+```
+
+**Not Preferred**:
+```swift
+struct BasketDiscountViewEvent: CoreTrackable {
+    enum Action: String {    }
+    
+    let action: Action
+
+    init(_ eventAction: Action) {
+         action = eventAction
+    }
+}
+```
+
+### 5. Failable Initializers
+Avoid failable initializers as much as possible.
 
 ### Constants
 
