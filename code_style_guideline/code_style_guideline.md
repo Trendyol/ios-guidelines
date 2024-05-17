@@ -863,7 +863,7 @@ init() {
 }
 ```
 
-Also see for file organization [ExamplePresenter.swift](/examples/ExamplePresenter.swift)
+Also see for file organization [ExamplePresenter.swift](/code_style_guideline/examples/ExamplePresenter.swift)
 
 ## Code Organization
 
