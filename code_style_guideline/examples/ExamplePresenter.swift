@@ -13,8 +13,8 @@ protocol ExamplePresenterInterface {
     func secondMethod()
 }
 
-private extension ExamplePresenter {
-    enum Constants {
+extension ExamplePresenter {
+    private enum Constants {
         static let dataFetchLimit = 2
         static let defaultBarTitle = "..."
     }
@@ -71,8 +71,8 @@ final class ExamplePresenter {
     }
 }
 
-private extension ExamplePresenter {
-    func fetchFirstData() {
+extension ExamplePresenter {
+    private func fetchFirstData() {
         .
         .
         interactor.fetchFirstData()
@@ -80,7 +80,7 @@ private extension ExamplePresenter {
         .
     }
 
-    func fetchSecondData() {
+    private func fetchSecondData() {
         .
         .
         interactor.fetchSecondData()
@@ -89,7 +89,7 @@ private extension ExamplePresenter {
     }
 
     @discardableResult
-    func handleName(with text: String?) -> Bool {
+    private func handleName(with text: String?) -> Bool {
         guard let text else { return false }
         manager.name = text
         secondMethod()
@@ -134,6 +134,7 @@ extension ExamplePresenter: TYPopupDelegate {
     }
 }
 
+// MARK: - FavoriteManagerDelegate
 extension ExamplePresenter: FavoriteManagerDelegate {
     func favoriteManagerDidAddToListSuccessfully(_ manager: FavoriteManager) {
         .
@@ -145,7 +146,12 @@ extension ExamplePresenter: FavoriteManagerDelegate {
 // MARK: - ExampleInteractorOutput
 extension ExamplePresenter: ExampleInteractorOutput {
     func handleResult(_ result: Result<ExampleResponseModel, Error>) {
-        .
-        .
+        switch result {
+        case .success(let data):
+            let ids = data.products.compactMap{ $0.id }
+            saveProducts(with: ids)
+        case .failure:
+            view?.showErrorAlert()
+        }
     }
 }
