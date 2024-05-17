@@ -38,6 +38,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Function Calls](#function-calls)
 * [Closure Expressions](#closure-expressions)
 * [Closure](#closure)
+* [Property Observers](#property-observers)
 * [Types](#types)
   * [Initialization](#initialization)
   * [Constants](#constants)
@@ -2194,6 +2195,70 @@ struct Product {
 let product = Product()
 product.priceSet.1 // returns 80.0
 ```
+
+## Property Observers
+
+Extract complex property observers into methods. This reduces nestedness, separates side-effects from property declarations, and makes the usage of implicitly-passed parameters like oldValue explicit.
+**Not Preferred**:
+```swift
+class TextField {
+  var text: String? {
+    didSet {
+      guard oldValue != text else {
+        return
+      }
+
+      // Do a bunch of text-related side-effects.
+    }
+  }
+}
+```
+**Preferred**:
+```swift
+class TextField {
+  var text: String? {
+    didSet { textDidUpdate(from: oldValue) }
+  }
+
+  private func textDidUpdate(from oldValue: String?) {
+    guard oldValue != text else {
+      return
+    }
+
+    // Do a bunch of text-related side-effects.
+  }
+}
+```
+
+Property observers also take parameters that refer to the old and the new values.
+
+By default, these parameters are called oldValue and newValue.
+
+The willSet block always stores the incoming value as newValue.
+The didSet block always stores the previous value as oldValue.
+To access these parameters, you do not need to declare them anywhere. They are automatically in your use.
+
+For example:
+```swift
+var name: String = """"Alice"""" {
+    willSet { print(""""Name will from \(name) to \(newValue)"""") }
+    didSet { print(""""Name changed from \(oldValue) to \(name)"""")}
+}
+```
+As you can see from the code, the newValue, and oldValue automatically referenced the name before and after the change.
+Also we can change default variable with defined names;
+```swift
+var name: String = """"Alice"""" {
+    willSet(newName) {
+        print(""""Name will from \(name) to \(newName)"""")
+    }
+    didSet(oldName) {
+        print(""""Name changed from \(oldName) to \(name)"""")
+    }
+}"""
+```
+
+---
 
 ## Types
 
