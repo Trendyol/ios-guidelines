@@ -599,6 +599,169 @@ for (index, item) in array.enumarated() {
 }
 ```
 
+### Self and self usage
+
+### 1. Bind to self
+Bind to self when capturing weak self reference.
+
+ **Preferred**:
+ ```swift
+ func fetch(completion: () -> Void) {
+   networkManager.request() { [weak self] response in
+     guard let self else { return }
+     self.bar()
+     self.foo()
+   }
+ }
+ ```
+
+### 2. Bind to self
+Prefer using guard self checking unless you have single self usage. If you bind to self, don't use self again in the rest of the closure.
+
+ **Preferred**:
+ ```swift
+
+ func fetch(completion: () -> Void) {
+     networkManager.request { [weak self] response in
+         guard let self else { return }
+         bark()
+         foo()
+     }
+ }
+
+ func fetch(completion: () -> Void) {
+     networkManager.request { [weak self] response in
+         self?.bark()
+     }
+ }
+
+ func fetch(completion: () -> Void) {
+     networkManager..request() { [weak self] response in.
+         guard let self else { return }
+         bark(item, item2)
+     }
+ }
+ ```
+
+ **Not Preferred**:
+ ```swift
+ func fetch(completion: () -> Void) {
+     networkManager..request { [weak self] response in
+         guard let self else { return }
+         bark()
+     }
+ }
+
+ func fetch(completion: () -> Void) {
+     networkManager..request { [weak self] response in
+         self?.foo()
+         self?.bark()
+     }
+ }
+
+ func fetch(completion: () -> Void) {
+     networkManager.request { [weak self] response in.
+         self?.bark(self?.item, self?.item2)
+     }
+ }
+ ```
+
+### 3. Unnecesary self usage
+Use self only if you need it explicitly.
+
+### 4. Self usage
+Prefer to use "Self" over concrete type name.
+
+ **Preferred**:
+ ```swift
+ final class HomePageBarButtonsBuilder {
+     private var buttons: [UIBarButtonItem] = []
+
+     @discardableResult
+     func appendSellerNotificationButton(target: Any?, selector: Selector) -> Self {
+         ...
+         return self
+     }
+
+     @discardableResult
+     func appendSpacerButton(width: CGFloat) -> Self {
+         ...
+         return self
+     }
+
+     func build() -> [UIBarButtonItem] {
+         return buttons
+     }
+ }
+
+ protocol SomeProtocol {
+     static func createModule() -> Self
+ }
+ ```
+
+## Init Usage
+
+### 1. Variable Declaration
+Do not use '.init()' while assigning value to variable. Unit test variable declarations is an exception for this rule.
+
+ **Preferred**:
+ ```swift
+ presenter = MyCellPresenter()
+ ```
+
+ **Not Preferred**:
+ ```swift
+ presenter: MyCellPresenter= .init()
+ ```
+
+### 2. Nested Statement
+Prefer not to use use .init inside nested statements.
+
+ **Preferred**:
+ ```swift
+ tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: EvenArgument(type: .click, screen: arguments.screen)))
+ ```
+
+ **Not Preferred**:
+ ```swift
+ tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: .init(type: .click, screen: arguments.screen)))
+ ```
+
+### 3. Convenience init
+ Use convenience init if we have already one designated initializer.
+
+### 4.Initializer Arguments
+Don't omit parameter names for initializers, parameter name should be same as the variable its initializing.
+
+ **Preferred**:
+ ```swift
+ struct BasketDiscountViewEvent: CoreTrackable {
+     enum Action: String {    }
+
+     let action: Action
+
+     init(action: Action) {
+         self.action = action
+     }
+ }
+ ```
+
+ **Not Preferred**:
+ ```swift
+ struct BasketDiscountViewEvent: CoreTrackable {
+     enum Action: String {    }
+
+     let action: Action
+
+     init(_ eventAction: Action) {
+          action = eventAction
+     }
+ }
+ ```
+
+### 5. Failable Initializers
+Avoid failable initializers as much as possible.
+
 ### Class and Structs
 ### 1. Controller Suffix
 Don't use "Controller" in names of classes that aren't view controllers.
