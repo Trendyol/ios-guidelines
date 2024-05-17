@@ -675,64 +675,7 @@ return String(format: "user name: %@, user id: %d, user height: %f", user.name, 
 
 ## File Organization
 
-### Alphabetize and deduplicate module imports within a file. Place all imports at the top of the file below the header comments.
-
-**Why**: A standard organization method helps engineers more quickly determine which modules a file depends on.
-Duplicated import statements have no effect and should be removed for clarity.
-
-**Not Preferred**:
-```swift
-//  Copyright © 2024 Trendyol. All rights reserved.
-//
-
-import TYCoreUtils
-import Foundation
-import CommonKit
-import AccessibilityKit
-
-import MemberKit
-```
-
-**Preferred**:
-```swift
-//  Copyright © 2024 Trendyol. All rights reserved.
-//
-
-import AccessibilityKit
-import CommonKit
-import Foundation
-import MemberKit
-import TYCoreUtils
-```
-
-#### @testable usage
-
-**Preferred**:
-```swift
-//  Copyright © 2024 Trendyol. All rights reserved.
-//
-
-import AccessibilityKit
-import CommonKit
-import Foundation
-import MemberKit
-import TYCoreUtils
-
-@testable import Trendyol
-```
-
-**Also Preferred**:
-```swift
-//  Copyright © 2024 Trendyol. All rights reserved.
-//
-
-import AccessibilityKit
-import CommonKit
-import Foundation
-import MemberKit
-@testable import Trendyol
-import TYCoreUtils
-```
+### Alphabetize and deduplicate module imports within a file. Place all imports at the top of the file below the header comments. (Also see [Imports](#imports).)
 
 ### Limit consecutive whitespace to one blank line or space (excluding indentation)
 
@@ -835,10 +778,20 @@ class Planet {
 * Nested types and type aliases
 * Static properties
 * Class properties
+* IBOutlet properties
 * Instance properties
+* Lifecycle methods
 * Static methods
 * Class methods
+* IBAction methods
 * Instance methods
+
+### Protocol conforms should be ordered for understanding action structure easily.
+
+* Private method extension
+* Type protocol conform extension
+* Delegate conform extension
+* Output conform extension
 
 ### Add empty lines between property declarations of different kinds. (e.g. between static properties and instance properties.)
 
@@ -867,6 +820,10 @@ var atmosphere: Atmosphere {
   }
 }
 var gravity: CGFloat
+
+init() {
+  ...
+}
 ```
 
 **Preferred**:
@@ -877,7 +834,37 @@ var atmosphere: Atmosphere {
     print("oh my god, the atmosphere changed")
   }
 }
+
+init() {
+  ...
+}
 ```
+
+**Also Preferred**:
+
+If a swift file contains a lot of computed and stored property, they can be grouped and sorted among themselves with using MARK.
+
+```swift
+// MARK: - Identitiy Properties
+var name: String
+var surname: String
+var fullName: String {
+  "\(name) \(surname)"
+}
+
+// MARK: - X Component Properties
+var xComponentTitle: String
+var isXComponentFlagEnabled: Bool
+var shouldShowXComponent: Bool {
+  !xComponentTitle.isEmpty && isXComponentFlagEnabled
+}
+
+init() {
+  ...
+}
+```
+
+Also see for file organization [ExamplePresenter.swift](/code_style_guideline/examples/ExamplePresenter.swift)
 
 ## Code Organization
 
@@ -1005,49 +992,59 @@ Alphabetize and deduplicate module imports within a file. Place all imports at t
 
 A standard organization method helps engineers more quickly determine which modules a file depends on.
 Duplicated import statements have no effect and should be removed for clarity.
+
 **Not Preferred**:
 ```swift
-//  Copyright © 2018 Airbnb. All rights reserved.
+//  Copyright © 2024 Trendyol. All rights reserved.
 //
-import DLSPrimitives
-import Constellation
-import Constellation
-import Epoxy
 
+import TYCoreUtils
 import Foundation
+import CommonKit
+import AccessibilityKit
+
+import MemberKit
 ```
+
 **Preferred**:
 ```swift
-//  Copyright © 2018 Airbnb. All rights reserved.
+//  Copyright © 2024 Trendyol. All rights reserved.
 //
 
-import Constellation
-import DLSPrimitives
-import Epoxy
+import AccessibilityKit
+import CommonKit
 import Foundation
-Exception: @testable import should be grouped after the regular import and separated by an empty line.
+import MemberKit
+import TYCoreUtils
 ```
-**Not Preferred**:
-```swift
-Details
-//  Copyright © 2018 Airbnb. All rights reserved.
-//
 
-import DLSPrimitives
-@testable import Epoxy
-import Foundation
-import Nimble
-import Quick
-```
+#### @testable usage
+
 **Preferred**:
 ```swift
-//  Copyright © 2018 Airbnb. All rights reserved.
+//  Copyright © 2024 Trendyol. All rights reserved.
 //
 
-import DLSPrimitives
+import AccessibilityKit
+import CommonKit
 import Foundation
-import Nimble
-import Quick
+import MemberKit
+import TYCoreUtils
+
+@testable import Trendyol
+```
+
+**Also Preferred**:
+```swift
+//  Copyright © 2024 Trendyol. All rights reserved.
+//
+
+import AccessibilityKit
+import CommonKit
+import Foundation
+import MemberKit
+@testable import Trendyol
+import TYCoreUtils
 ```
 
 Import only the modules a source file requires. For example, don't import `UIKit` when importing `Foundation` will suffice. Likewise, don't import `Foundation` if you must import `UIKit`.
