@@ -6,14 +6,12 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 
 ## Table of Contents
 
-* [Correctness](#correctness)
 * [Using SwiftLint](#using-swiftlint)
 * [Naming](#naming)
   * [Variables](#variables)
   * [Methods](#methods)
   * [Delegates](#delegates)
   * [Interface](#interface)
-  * [Use Type Inferred Context](#use-type-inferred-context)
   * [Generics](#generics)
   * [Loops](#loops)
   * [Self and self usage](#self-and-self-usage)
@@ -30,22 +28,17 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Spacing & New Line](#spacing-and-new-line)
 * [Comments](#comments)
 * [Function Declarations](#function-declarations)
-* [High Order Functions](#high-order-functions)
 * [Function Calls](#function-calls)
+* [High Order Functions](#high-order-functions)
 * [Closures](#closures)
 * [Tuples](#tuples)
 * [Property Observers](#property-observers)
 * [Types](#types)
   * [Init Usage](#init-usage)
   * [Constants](#constants)
-  * [Static Methods and Variable Type Properties](#static-methods-and-variable-type-properties)
-  * [Optionals](#optionals)
   * [Enums](#enums)
   * [Typealiases](#typealiases)
   * [Type Inference](#type-inference)
-* [Functions vs Methods](#functions-vs-methods)
-* [Memory Management](#memory-management)
-  * [Extending Object Lifetime](#extending-object-lifetime)
 * [Access Control](#access-control)
 * [Control Flow](#control-flow)
   * [Ternary Operator](#ternary-operator)
@@ -56,10 +49,6 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Pre-processor Directives](#pre-processor-directives)
 * [References](#references)
 
-
-## Correctness
-
-Strive to make your code compile without warnings. This rule informs many style decisions such as using `#selector` types instead of string literals.
 
 ## Using SwiftLint
 
@@ -481,26 +470,6 @@ protocol Foo: AnyObject { }
 protocol Foo: class { }
 ```
 ---
-
-### Use Type Inferred Context
-
-Use compiler inferred context to write shorter, clear code.  (Also see [Type Inference](#type-inference).)
-
-**Preferred**:
-```swift
-let selector = #selector(viewDidLoad)
-view.backgroundColor = .red
-let toView = context.view(forKey: .to)
-let view = UIView(frame: .zero)
-```
-
-**Not Preferred**:
-```swift
-let selector = #selector(ViewController.viewDidLoad)
-view.backgroundColor = UIColor.red
-let toView = context.view(forKey: UITransitionContextViewKey.to)
-let view = UIView(frame: CGRect.zero)
-```
 
 ### Generics
 
@@ -1848,6 +1817,49 @@ func updateConstraints() -> () {
 typealias CompletionHandler = (result) -> ()
 ```
 
+## Function Calls
+
+Mirror the style of function declarations at call sites. Calls that fit on a single line should be written as such:
+
+```swift
+let success = reticulateSplines(splines)
+```
+
+If the call site must be wrapped, put each parameter on a new line, indented one additional level:
+
+```swift
+let success = reticulateSplines(
+  spline: splines,
+  adjustmentFactor: 1.3,
+  translateConstant: 2,
+  comment: "normalize the display")
+```
+
+A method declaration is placed on a single line if it can fit most display screen widths without a carry-over. Otherwise, each parameter is placed on its own line and matches the beginning of the previous one. Return type carries on to the last parameter's line.
+
+**Preferred**:
+
+```swift
+func fetchResults(from endpoint: URL,
+                  transferringTo device: Device,
+                  compressed: Bool,
+                  completionHandler: (() -> Void)?) –> [Data]
+```
+
+**Not Preferred**:
+
+```swift
+func fetchResults(
+    from endpoint: URL = .remoteServerPath,
+    transferringTo device: Device = .current,
+    compressed: Bool = true,
+    completionHandler: ((_ success: Bool) -> ())? = nil
+) –> [Data]
+
+func fetchResults(from endpoint: URL, transferringTo device: Device, 
+                  compressed: Bool, completionHandler: (() -> Void)?) –> [Data]
+```
+
 ## High Order Functions
 
 ### 1. KeyPath
@@ -1940,50 +1952,6 @@ for stamp in stamps where stamp.shouldShowOnSearch == true {
       filteredStamps.append(stamp)
 }
 ```
-
-## Function Calls
-
-Mirror the style of function declarations at call sites. Calls that fit on a single line should be written as such:
-
-```swift
-let success = reticulateSplines(splines)
-```
-
-If the call site must be wrapped, put each parameter on a new line, indented one additional level:
-
-```swift
-let success = reticulateSplines(
-  spline: splines,
-  adjustmentFactor: 1.3,
-  translateConstant: 2,
-  comment: "normalize the display")
-```
-
-A method declaration is placed on a single line if it can fit most display screen widths without a carry-over. Otherwise, each parameter is placed on its own line and matches the beginning of the previous one. Return type carries on to the last parameter's line.
-
-**Preferred**:
-
-```swift
-func fetchResults(from endpoint: URL,
-                  transferringTo device: Device,
-                  compressed: Bool,
-                  completionHandler: (() -> Void)?) –> [Data]
-```
-
-**Not Preferred**:
-
-```swift
-func fetchResults(
-    from endpoint: URL = .remoteServerPath,
-    transferringTo device: Device = .current,
-    compressed: Bool = true,
-    completionHandler: ((_ success: Bool) -> ())? = nil
-) –> [Data]
-
-func fetchResults(from endpoint: URL, transferringTo device: Device, 
-                  compressed: Bool, completionHandler: (() -> Void)?) –> [Data]
-```
----
 
 ## Closures
 
@@ -2347,109 +2315,6 @@ private extension AccountPresenter {
  }
  ```
 ---
-### Static Methods and Variable Type Properties
-
-Static methods and type properties work similarly to global functions and global variables and should be used sparingly. They are useful when functionality is scoped to a particular type or when Objective-C interoperability is required.
-
-### Optionals
-
-Declare variables and function return types as optional with `?` where a `nil` value is acceptable.
-
-Use implicitly unwrapped types declared with `!` only for instance variables that you know will be initialized later before use, such as subviews that will be set up in `viewDidLoad()`. Prefer optional binding to implicitly unwrapped optionals in most other cases.
-
-Don't use as! or try!.
-
-When accessing an optional value, use optional chaining if the value is only accessed once or if there are many optionals in the chain:
-
-```swift
-textContainer?.textLabel?.setNeedsDisplay()
-```
-
-Use optional binding when it's more convenient to unwrap once and perform multiple operations:
-
-```swift
-if let textContainer = textContainer {
-  // do many things with textContainer
-}
-
-```
-
-**Notes:** Swift 5.7 introduced new shorthand syntax for unwrapping optionals into shadowed variables:
-
-```swift
-if let textContainer {
-  // do many things with textContainer
-}
-```
-
-When naming optional variables and properties, avoid naming them like `optionalString` or `maybeView` since their optional-ness is already in the type declaration.
-
-For optional binding, shadow the original name whenever possible rather than using names like `unwrappedView` or `actualLabel`.
-
-**Preferred**:
-```swift
-var subview: UIView?
-var volume: Double?
-
-// later on...
-if let subview = subview, let volume = volume {
-  // do something with unwrapped subview and volume
-}
-
-// another example
-resource.request().onComplete { [weak self] response in
-  guard let self = self else { return }
-  let model = self.updateModel(response)
-  self.updateUI(model)
-}
-```
-
-**Not Preferred**:
-```swift
-var optionalSubview: UIView?
-var volume: Double?
-
-if let unwrappedSubview = optionalSubview {
-  if let realVolume = volume {
-    // do something with unwrappedSubview and realVolume
-  }
-}
-
-// another example
-UIView.animate(withDuration: 2.0) { [weak self] in
-  guard let strongSelf = self else { return }
-  strongSelf.alpha = 1.0
-}
-```
-
-If you don't plan on actually using the value stored in an optional, but need to determine whether or not this value is `nil`, explicitly check this value against `nil` as opposed to using `if let` syntax.
-
-**Preferred**:
-```swift
-if someOptional != nil {
-    // do something
-}
-```
-
-**Not Preferred**:
-```swift
-// NOT PREFERRED
-if let _ = someOptional {
-    // do something
-}
-```
-
-Use XCTUnwrap instead of forced unwrapping in tests.
-
-**Preferred**:
-```swift
-let product = try XCTUnwrap(priceComparisonResponse.stores?.first?.products?.first)
-```
-
-**Not Preferred**:
-```swift
-let product = priceComparisonResponse.stores!.first!.products!.first!
-```
 
 ### Enums 
 Omit enum associated values from case statements when all arguments are unlabeled. SwiftLint: **empty_enum_arguments**
@@ -2936,68 +2801,6 @@ var employees: Dictionary<Int, String>
 var faxNumber: Optional<Int>
 ```
 ___
-
-## Functions vs Methods
-
-Free functions, which aren't attached to a class or type, should be used sparingly. When possible, prefer to use a method instead of a free function. This aids in readability and discoverability.
-
-Free functions are most appropriate when they aren't associated with any particular type or instance.
-
-**Preferred**
-```swift
-let sorted = items.mergeSorted()  // easily discoverable
-rocket.launch()  // acts on the model
-```
-
-**Not Preferred**
-```swift
-let sorted = mergeSort(items)  // hard to discover
-launch(&rocket)
-```
-
-**Free Function Exceptions**
-
-```swift
-let tuples = zip(a, b)  // feels natural as a free function (symmetry)
-let value = max(x, y, z)  // another free function that feels natural
-```
-
-## Memory Management
-
-Code (even non-production, tutorial demo code) should not create reference cycles. Analyze your object graph and prevent strong cycles with `weak` and `unowned` references. Alternatively, use value types (`struct`, `enum`) to prevent cycles altogether.
-
-### Extending object lifetime
-
-Extend object lifetime using the `[weak self]` and `guard let self = self else { return }` idiom. `[weak self]` is preferred to `[unowned self]` where it is not immediately obvious that `self` outlives the closure. Explicitly extending lifetime is preferred to optional chaining.
-
-**Preferred**
-```swift
-resource.request().onComplete { [weak self] response in
-  guard let self = self else {
-    return
-  }
-  let model = self.updateModel(response)
-  self.updateUI(model)
-}
-```
-
-**Not Preferred**
-```swift
-// might crash if self is released before response returns
-resource.request().onComplete { [unowned self] response in
-  let model = self.updateModel(response)
-  self.updateUI(model)
-}
-```
-
-**Not Preferred**
-```swift
-// deallocate could happen between updating the model and updating UI
-resource.request().onComplete { [weak self] response in
-  let model = self?.updateModel(response)
-  self?.updateUI(model)
-}
-```
 
 ## Access Control
 
