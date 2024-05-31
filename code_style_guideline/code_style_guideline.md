@@ -15,7 +15,10 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Interface](#interface)
   * [Use Type Inferred Context](#use-type-inferred-context)
   * [Generics](#generics)
-  * [Class and Structs](#class-struct)
+  * [Loops](#loops)
+  * [Self and self usage](#self-and-self-usage)
+  * [Class and Structs](#class-and-structs)
+  * [Attributes](#attributes) 
   * [Language](#language) 
   * [String Concatenation](#string-concatenation)
 * [File Organization](#file-organization)
@@ -26,25 +29,19 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Imports](#imports)
 * [Spacing & New Line](#spacing-and-new-line)
 * [Comments](#comments)
-* [Classes and Structures](#classes-and-structures)
-  * [Use of Self](#use-of-self)
-  * [Protocol Conformance](#protocol-conformance)
-  * [Computed Properties](#computed-properties)
-  * [Final](#final)
 * [Function Declarations](#function-declarations)
 * [High Order Functions](#high-order-functions)
 * [Function Calls](#function-calls)
-* [Closure Expressions](#closure-expressions)
-* [Closure](#closure)
+* [Closures](#closures)
+* [Tuples](#tuples)
 * [Property Observers](#property-observers)
 * [Types](#types)
-  * [Initialization](#initialization)
+  * [Init Usage](#init-usage)
   * [Constants](#constants)
   * [Static Methods and Variable Type Properties](#static-methods-and-variable-type-properties)
   * [Optionals](#optionals)
   * [Enums](#enums)
-  * [Lazy Initialization](#lazy-initialization)
-  * [Typealiases](#Typealiases)
+  * [Typealiases](#typealiases)
   * [Type Inference](#type-inference)
 * [Functions vs Methods](#functions-vs-methods)
 * [Memory Management](#memory-management)
@@ -52,8 +49,9 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Access Control](#access-control)
 * [Control Flow](#control-flow)
   * [Ternary Operator](#ternary-operator)
+  * [Else Statements](#else-statements)
   * [Switch Statements](#switch-statements)
-* [Failing Guards](#failing-guards)
+  * [Golden Path](#golden-path)
 * [Multi-line String Literals](#multi-line-string-literals)
 * [Pre-processor Directives](#pre-processor-directives)
 * [References](#references)
@@ -521,6 +519,8 @@ struct Stack<T> { ... }
 func write<target: OutputStream>(to target: inout target)
 func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
 ```
+---
+
 ### Loops
 ### 1. Where Clause
 Prefer to use where clause if it's possible.
@@ -567,7 +567,7 @@ for (index, item) in array.enumarated() {
 }
 ```
 
-### Self and self usage
+## Self and self usage
 
 ### 1. Bind to self
 Bind to self when capturing weak self reference.
@@ -666,71 +666,9 @@ Prefer to use "Self" over concrete type name.
      static func createModule() -> Self
  }
  ```
+---
 
-## Init Usage
-
-### 1. Variable Declaration
-Do not use '.init()' while assigning value to variable. Unit test variable declarations is an exception for this rule.
-
- **Preferred**:
- ```swift
- presenter = MyCellPresenter()
- ```
-
- **Not Preferred**:
- ```swift
- presenter: MyCellPresenter= .init()
- ```
-
-### 2. Nested Statement
-Prefer not to use use .init inside nested statements.
-
- **Preferred**:
- ```swift
- tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: EvenArgument(type: .click, screen: arguments.screen)))
- ```
-
- **Not Preferred**:
- ```swift
- tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: .init(type: .click, screen: arguments.screen)))
- ```
-
-### 3. Convenience init
- Use convenience init if we have already one designated initializer.
-
-### 4.Initializer Arguments
-Don't omit parameter names for initializers, parameter name should be same as the variable its initializing.
-
- **Preferred**:
- ```swift
- struct BasketDiscountViewEvent: CoreTrackable {
-     enum Action: String {    }
-
-     let action: Action
-
-     init(action: Action) {
-         self.action = action
-     }
- }
- ```
-
- **Not Preferred**:
- ```swift
- struct BasketDiscountViewEvent: CoreTrackable {
-     enum Action: String {    }
-
-     let action: Action
-
-     init(_ eventAction: Action) {
-          action = eventAction
-     }
- }
- ```
-
-### 5. Failable Initializers
-Avoid failable initializers as much as possible.
-
-### Class and Structs
+## Class and Structs
 ### 1. Controller Suffix
 Don't use "Controller" in names of classes that aren't view controllers.
 
@@ -807,7 +745,9 @@ class ProductSliderCell { }
 class ProductSliderCellNew { }
 class ProductSliderCellRedesign { }
 ```
-### Attributes
+---
+
+## Attributes
 
 ### 1. Attribute Placement
 Prefer to declare attribute in the same line if it's stored property, otherwise declare it in one line above. As exception, IBAction is declared in the same line by Xcode, you don't need to change it.
@@ -1861,109 +1801,7 @@ private extension MyViewController {
     ...
 }
 ```
-
-## Classes and Structures
-
-### Which one to use?
-
-Remember, structs have [value semantics](https://developer.apple.com/library/mac/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html#//apple_ref/doc/uid/TP40014097-CH13-XID_144). Use structs for things that do not have an identity. An array that contains [a, b, c] is really the same as another array that contains [a, b, c] and they are completely interchangeable. It doesn't matter whether you use the first array or the second, because they represent the exact same thing. That's why arrays are structs.
-
-Classes have [reference semantics](https://developer.apple.com/library/mac/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html#//apple_ref/doc/uid/TP40014097-CH13-XID_145). Use classes for things that do have an identity or a specific life cycle. You would model a person as a class because two person objects are two different things. Just because two people have the same name and birthdate, doesn't mean they are the same person. But the person's birthdate would be a struct because a date of 3 March 1950 is the same as any other date object for 3 March 1950. The date itself doesn't have an identity.
-
-Sometimes, things should be structs but need to conform to `AnyObject` or are historically modeled as classes already (`NSDate`, `NSSet`). Try to follow these guidelines as closely as possible.
-
-### Example definition
-
-Here's an example of a well-styled class definition:
-
-```swift
-class Circle: Shape {
-  var x: Int, y: Int
-  var radius: Double
-  var diameter: Double {
-    get {
-      return radius * 2
-    }
-    set {
-      radius = newValue / 2
-    }
-  }
-
-  init(x: Int, y: Int, radius: Double) {
-    self.x = x
-    self.y = y
-    self.radius = radius
-  }
-
-  convenience init(x: Int, y: Int, diameter: Double) {
-    self.init(x: x, y: y, radius: diameter / 2)
-  }
-
-  override func area() -> Double {
-    return Double.pi * radius * radius
-  }
-}
-
-extension Circle: CustomStringConvertible {
-  var description: String {
-    return "center = \(centerString) area = \(area())"
-  }
-  private var centerString: String {
-    return "(\(x),\(y))"
-  }
-}
-```
-
-The example above demonstrates the following style guidelines:
-
- + Specify types for properties, variables, constants, argument declarations and other statements with a space after the colon but not before, e.g. `x: Int`, and `Circle: Shape`.
- + Define multiple variables and structures on a single line if they share a common purpose / context.
- + Indent getter and setter definitions and property observers.
- + Don't add modifiers such as `internal` when they're already the default. Similarly, don't repeat the access modifier when overriding a method.
- + Organize extra functionality (e.g. printing) in extensions.
- + Hide non-shared, implementation details such as `centerString` inside the extension using `private` access control.
-
-### Use of Self
-
-For conciseness, avoid using `self` since Swift does not require it to access an object's properties or invoke its methods.
-
-Use self only when required by the compiler (in `@escaping` closures, or in initializers to disambiguate properties from arguments). In other words, if it compiles without `self` then omit it.
-
-
-### Computed Properties
-
-For conciseness, if a computed property is read-only, omit the get clause. The get clause is required only when a set clause is provided.
-
-**Preferred**:
-```swift
-var diameter: Double {
-  return radius * 2
-}
-```
-
-**Not Preferred**:
-```swift
-var diameter: Double {
-  get {
-    return radius * 2
-  }
-}
-```
-
-### Final
-
-Default classes to final. 
-
-Details Why? If a class needs to be overridden, the author should opt into that functionality by omitting the final keyword.
-
-**Not Preferred**:
-```swift
-class SettingsRepository { // ... }
-```
-**Preferred**:
-```swift
-final class SettingsRepository { // ... }
-```
+---
 
 ## Function Declarations
 
@@ -2145,68 +1983,9 @@ func fetchResults(
 func fetchResults(from endpoint: URL, transferringTo device: Device, 
                   compressed: Bool, completionHandler: (() -> Void)?) –> [Data]
 ```
+---
 
-## Closure Expressions
-
-Use trailing closure syntax only if there's a single closure expression parameter at the end of the argument list. Give the closure parameters descriptive names.
-
-**Preferred**:
-```swift
-UIView.animate(withDuration: 1.0) {
-  self.myView.alpha = 0
-}
-
-UIView.animate(withDuration: 1.0, animations: {
-  self.myView.alpha = 0
-}, completion: { finished in
-  self.myView.removeFromSuperview()
-})
-```
-
-**Not Preferred**:
-```swift
-UIView.animate(withDuration: 1.0, animations: {
-  self.myView.alpha = 0
-})
-
-UIView.animate(withDuration: 1.0, animations: {
-  self.myView.alpha = 0
-}) { f in
-  self.myView.removeFromSuperview()
-}
-```
-
-For single-expression closures where the context is clear, use implicit returns:
-
-```swift
-attendeeList.sort { a, b in
-  a > b
-}
-
-array
-    .filter { $0 > 0 }
-    .sort { $0 > $1 }
-    .map { Int($0) }
-```
-
-**Not Preferred**:
-```swift
-array.filter { $0 > 0 }
-    .sort { $0 > $1 }.map { Int($0) }
-```
-
-Chained methods using trailing closures should be clear and easy to read in context. Decisions on spacing, line breaks, and when to use named versus anonymous arguments is left to the discretion of the author. Examples:
-
-```swift
-let value = numbers.map { $0 * 2 }.filter { $0 % 3 == 0 }.index(of: 90)
-
-let value = numbers
-  .map {$0 * 2}
-  .filter {$0 > 50}
-  .map {$0 + 10}
-```
-
-### Closures
+## Closures
 
 ### 1. Closure Complexity
 Extract closure content to separate method if closure gets too complex.
@@ -2428,22 +2207,70 @@ let widthString: NSString = width.stringValue        // NSString
 
 In drawing code, use `CGFloat` if it makes the code more succinct by avoiding too many conversions.
 
-##  Initialization
+## Init Usage
 
-If the initial or constant value of a property doesn't depend on the initializer's parameters, a default value is preferred over setting it within the initialization code.
+### 1. Variable Declaration
+Do not use '.init()' while assigning value to variable. Unit test variable declarations is an exception for this rule.
 
-`.init()` is not used for initialization:
+ **Preferred**:
+ ```swift
+ presenter = MyCellPresenter()
+ ```
 
-**Preferred**:
-```swift
-let color = UIColor(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
-``` 
+ **Not Preferred**:
+ ```swift
+ presenter: MyCellPresenter= .init()
+ ```
 
-**Not Preferred**:
-```swift
-let color: UIColor = .init(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
-```
+### 2. Nested Statement
+Prefer not to use use .init inside nested statements.
+
+ **Preferred**:
+ ```swift
+ tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: EvenArgument(type: .click, screen: arguments.screen)))
+ ```
+
+ **Not Preferred**:
+ ```swift
+ tracker.track(GRCAvailableTimeSlotsInstantNavigationEvents(arguments: .init(type: .click, screen: arguments.screen)))
+ ```
+
+### 3. Convenience init
+ Use convenience init if we have already one designated initializer.
+
+### 4.Initializer Arguments
+Don't omit parameter names for initializers, parameter name should be same as the variable its initializing.
+
+ **Preferred**:
+ ```swift
+ struct BasketDiscountViewEvent: CoreTrackable {
+     enum Action: String {    }
+
+     let action: Action
+
+     init(action: Action) {
+         self.action = action
+     }
+ }
+ ```
+
+ **Not Preferred**:
+ ```swift
+ struct BasketDiscountViewEvent: CoreTrackable {
+     enum Action: String {    }
+
+     let action: Action
+
+     init(_ eventAction: Action) {
+          action = eventAction
+     }
+ }
+ ```
+
+### 5. Failable Initializers
+Avoid failable initializers as much as possible.
 ---
+
 ### Constants
 
 Constants are defined using the `let` keyword and variables with the `var` keyword. Always use `let` instead of `var` if the value of the variable will not change.
@@ -2950,27 +2777,7 @@ public enum Tokens {
 }
 ```
 
-### Lazy Initialization
-
-Consider using lazy initialization for finer grained control over object lifetime. This is especially true for `UIViewController` that loads views lazily. You can either use a closure that is immediately called `{ }()` or call a private factory method. Example:
-
-```swift
-lazy var locationManager = makeLocationManager()
-
-private func makeLocationManager() -> CLLocationManager {
-  let manager = CLLocationManager()
-  manager.desiredAccuracy = kCLLocationAccuracyBest
-  manager.delegate = self
-  manager.requestAlwaysAuthorization()
-  return manager
-}
-```
-
-**Notes:**
-  - `[unowned self]` is not required here. A retain cycle is not created.
-  - Location manager has a side-effect for popping up UI to ask the user for permission so fine grain control makes sense here.
-
-###  Typealiases
+### Typealiases
 
 Long type aliases of protocol compositions should wrap before the = and before each individual &. SwiftFormat: wrapArguments
 
@@ -3476,6 +3283,88 @@ else {
 }
 ```
 
+### Golden Path
+
+When coding with conditionals, the left-hand margin of the code should be the "golden" or "happy" path. That is, don't nest `if` statements. Multiple return statements are OK. The `guard` statement is built for this.
+
+**Preferred**:
+```swift
+func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies {
+  guard let context = context else {
+    throw FFTError.noContext
+  }
+  guard let inputData = inputData else {
+    throw FFTError.noInputData
+  }
+
+  // use context and input to compute the frequencies
+  return frequencies
+}
+```
+
+**Not Preferred**:
+```swift
+func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies {
+  if let context = context {
+    if let inputData = inputData {
+      // use context and input to compute the frequencies
+
+      return frequencies
+    } else {
+      throw FFTError.noInputData
+    }
+  } else {
+    throw FFTError.noContext
+  }
+}
+```
+
+When multiple optionals are unwrapped either with `guard` or `if let`, minimize nesting by using the compound version when possible. In the compound version, place the `guard` on its own line, then indent each condition on its own line. The `else` clause is indented to match the `guard` itself, as shown below. Example:
+
+**Preferred**:
+```swift
+guard 
+  let number1 = number1,
+  let number2 = number2,
+  let number3 = number3 
+else {
+  fatalError("impossible")
+}
+// do something with numbers
+```
+
+**Not Preferred**:
+```swift
+if let number1 = number1 {
+  if let number2 = number2 {
+    if let number3 = number3 {
+      // do something with numbers
+    } else {
+      fatalError("impossible")
+    }
+  } else {
+    fatalError("impossible")
+  }
+} else {
+  fatalError("impossible")
+}
+```
+
+In any `guard`-statement, the `else` (and its left brace) goes on the same line after the last condition.
+
+**Preferred**:
+```swift
+guard !array.isEmpty else {
+    // ...
+```
+
+**Not Preferred**:
+```swift
+guard !array.isEmpty 
+    else {
+    // ...
+```
+
 #### Failing Guards
 
 Guard statements are required to exit in some way. Generally, this should be simple one line statement such as `return`, `throw`, `break`, `continue`, and `fatalError()`. Large code blocks should be avoided. If cleanup code is required for multiple exit points, consider using a `defer` block to avoid cleanup code duplication.
@@ -3551,7 +3440,7 @@ case .jupiter, .saturn, .uranus, .neptune:
 }
 ```
 
-#### Insert a blank line following a switch case with a multi-line body
+#### Insert a blank line following a switch case with a multi-line body
 
 **Preferred**:
 ```swift
