@@ -2015,7 +2015,9 @@ lazy var item: Item = {
 A tuple type is a comma-separated list of types, enclosed in parentheses.
 
 Name members of tuples for extra clarity. Rule of thumb: if you've got more than **3 fields**, you should probably be using a struct.
+
 *Example 1:*
+
 **Preferred**:
 ```swift
 func whatever() -> (x: Int, y: Int) {
@@ -2039,7 +2041,9 @@ func whatever() -> (Int, Int) {
 let thing = whatever()
 print(thing.0)
 ```
+
 *Example 2:*
+
 **Preferred**:
 ```swift
 struct Product {
