@@ -28,6 +28,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Spacing & New Line](#spacing-and-new-line)
 * [Parentheses & Braces](#parentheses-&-braces)
 * [Comments](#comments)
+* [Final Usage](#final-usage)
 * [Function Declarations](#function-declarations)
 * [Function Calls](#function-calls)
 * [High Order Functions](#high-order-functions)
@@ -422,7 +423,7 @@ func viewRefreshOrdersAndFocus(on orderParentId: String)
 
 ### Interface
 
-Classes and structures are named using noun phrases, as well as protocols describing what an object is. Protocols which add abilities are named descriptively (e.g., `Sortable`). Protocols should not have the word `Protocol` at the end of the name. Instead, conforming types should have a specifying word in the name with Interface suffix
+Classes and structures should be named using noun phrases, similar to protocols that define what an object is. Protocols that add capabilities should be named descriptively (e.g., `Sortable`). Avoid ending protocol names with the word `Protocol`. Instead, conforming types should include a descriptive word in the name followed by the `Interface` suffix.
 
 **Preferred**:
 ```swift
@@ -440,18 +441,18 @@ protocol AccountRouter { }
 protocol AccountRouterProtocol { }
 private let router: AccountRouter
 ```
-Which introduced support for using the AnyObject keyword as a protocol constraint, recommends preferring AnyObject over class:
+Support for using the `AnyObject` keyword as a protocol constraint has been introduced, and it is recommended to prefer `AnyObject` over `class`.
 
-> This proposal merges the concepts of class and AnyObject, which now have the same meaning: they represent an existential for classes. To get rid of the duplication, we suggest only keeping AnyObject around. To reduce source-breakage to a minimum, class could be redefined as typealias class = AnyObject and give a deprecation warning on class for the first version of Swift this proposal is implemented in. Later, class could be removed in a subsequent version of Swift.
+> This proposal consolidates the concepts of `class` and `AnyObject`, which now both denote an existential for classes. To streamline this, the proposal suggests retaining only `AnyObject`. To minimize source-breaking changes, `class` could be redefined as `typealias class = AnyObject`, with `class` receiving a deprecation warning in the initial Swift version implementing this proposal. Eventually, `class` could be phased out in a future Swift release.
 
 **Preferred**:
 ```swift
-protocol Foo: AnyObject { }
+protocol FooInterface: AnyObject { }
 ```
 
 **Not Preferred**:
 ```swift
-protocol Foo: class { }
+protocol FooInterface: class { }
 ```
 ---
 
@@ -731,7 +732,7 @@ class Manager {
 ---
 ### Language
 
-Use US English spelling to match Apple's API.
+Apply US English spelling to align with Apple's API.
 
 **Preferred**:
 ```swift
@@ -1745,6 +1746,22 @@ private extension MyViewController {
 }
 ```
 
+## Final Usage
+
+Default to marking classes as `final`.
+
+If a class needs to be overridden, the author should choose to allow that functionality by omitting the `final` keyword.
+
+**Preferred**:
+```swift
+final class BasketPersonalizedHeaderCell: UICollectionViewCell { // ... }
+```
+
+**Not Preferred**:
+```swift
+class BasketPersonalizedHeaderCell: UICollectionViewCell { // ... }
+```
+
 ## Function Declarations
 
 Keep short function declarations on one line including the opening brace:
@@ -2295,44 +2312,29 @@ private extension AccountPresenter {
 ---
 
 ### Enums 
-Omit enum associated values from case statements when all arguments are unlabeled. SwiftLint: **empty_enum_arguments**
+When all arguments in enum case statements are unlabeled, `omit enum` associated values. SwiftLint: **empty_enum_arguments**
 
 **Preferred**:
 ```swift
-if case .done = result { ... }
+if case .success = result { ... }
 
-switch animal {
-case .dog:
+switch service {
+case .firebase:
   ...
 }
 ```
 
 **Not Preferred**:
 ```swift
-if case .done(_) = result { ... }
+if case .success(_) = result { ... }
 
-switch animal {
-case .dog(_, _, _):
+switch service {
+case .firebase(_, _, _):
   ...
 }
 ```
 
-When destructuring an enum case or a tuple, place the let keyword inline, adjacent to each individual property assignment. SwiftFormat: **hoistPatternLet**
-
-**Not Preferred**:
-```swift
-switch result {
-case let .success(value):
-  // ...
-case let .error(errorCode, errorReason):
-  // ...
-}
-
-// WRONG
-guard let case .success(value) else {
-  return
-}
-```
+When deconstructing an enum case or a tuple, position the let keyword directly next to each separate property assignment.  Inlining the let keyword makes it more clear which identifiers are part of the conditional check and which identifiers are binding new variables, since the let keyword is always adjacent to the variable identifier. SwiftFormat: **hoistPatternLet**
 
 **Preferred**:
 ```swift
@@ -2342,79 +2344,86 @@ case .success(let value):
 case .error(let errorCode, let errorReason):
   // ...
 }
-
-// RIGHT
+ 
 guard case .success(let value) else {
   return
 }
 ```
 
-**Notes:**
-Clarity: Inlining the let keyword makes it more clear which identifiers are part of the conditional check and which identifiers are binding new variables, since the let keyword is always adjacent to the variable identifier.
+**Not Preferred**:
 ```swift
-// `let` is adjacent to the variable identifier, so it is immediately obvious
-// at a glance that these identifiers represent new variable bindings
-case .enumCaseWithSingleAssociatedValue(let string):
-case .enumCaseWithMultipleAssociatedValues(let string, let int):
-
-// The `let` keyword is quite far from the variable identifiers,
-// so it is less obvious that they represent new variable bindings
-case let .enumCaseWithSingleAssociatedValue(string):
-case let .enumCaseWithMultipleAssociatedValues(string, int):
+switch result {
+case let .success(value):
+  // ...
+case let .error(errorCode, errorReason):
+  // ...
+}
+ 
+guard let case .success(value) else {
+  return
+}
 ```
-##### Enum Namespaces
-Use caseless enums for organizing public or internal constants and functions into namespaces. SwiftFormat: **enumNamespaces**
+
+#### Enum Namespaces
+Employ caseless enums to structure public or internal constants and functions within namespaces. SwiftFormat: **enumNamespaces**
   
- + Avoid creating non-namespaced global constants and functions.  
+ + Avoid creating global constants and functions that are non-namespaced.
  + Feel free to nest namespaces where it adds clarity.  
  + private globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an enum namespace to match the guidelines for other declaration types.  
     
-Caseless enums work well as namespaces because they cannot be instantiated, which matches their intent.  
+Enums without cases function effectively as namespaces since they are unable to be instantiated, aligning with their purpose.
   
   **Preferred**:
 ```swift
 // RIGHT  
-enum Environment {  
-  enum Earth {  
-    static let gravity = 9.8  
-  }  
-  
-  enum Moon {  
-    static let gravity = 1.6  
-  }  
+enum Constants {
+  enum ContainerDefaultBorder {
+      static let width: Double = 1.0
+      static let color: String = "#E5E5E5"
+  }
+
+  enum ContainerGradientBorder {
+      static let startPoint: CGPoint = .init(x: 0, y: 0)
+      static let endPoint: CGPoint = .init(x: 1, y: 1)
+      static let width: CGFloat = 0.5
+    }
 }
 ``` 
 
 **Not Preferred**:
 ```swift
-struct Environment {  
-    static let earthGravity = 9.8  
-    static let moonGravity = 1.6  
+struct Constants {  
+  static let width: Double = 1.0
+  static let color: String = "#E5E5E5"
 }  
   
 // WRONG  
-struct Environment {  
-  struct Earth {  
-    static let gravity = 9.8  
+struct Constants {  
+  struct ContainerDefaultBorder {  
+      static let width: Double = 1.0
+      static let color: String = "#E5E5E5"
   }  
   
-  struct Moon {  
-    static let gravity = 1.6  
+  struct ContainerGradientBorder {  
+      static let startPoint: CGPoint = .init(x: 0, y: 0)
+      static let endPoint: CGPoint = .init(x: 1, y: 1)
+      static let width: CGFloat = 0.5
   }  
 } 
 ```
 
-Use Swift's automatic enum values unless they map to an external source. Add a comment explaining why explicit values are defined. SwiftFormat: **redundantRawValues**
+Utilize Swift's automatic enum values unless they correspond to an external source. Add a comment explaining the rationale behind explicitly defined values. SwiftFormat: **redundantRawValues**
   
 **Why?** 
-To minimize user error, improve readability, and write code faster, rely on Swift's automatic enum values. If the value maps to an external source (e.g. it's coming from a network request) or is persisted across binaries, however, define the values explicitly, and document what these values are mapping to.  
+
+For enhanced user error prevention, improved readability, and quicker code writing, prioritize Swift's automatic enum values. Explicitly define values only when they originate from an external source (like a network request) or need persistence across binaries. Document these explicit mappings for clarity and maintainability.
   
-This ensures that if someone adds a new value in the middle, they won't accidentally break things.  
+This approach ensures that adding a new value in the middle won't inadvertently cause issues or break functionality.
   
  **Preferred**:
 ```swift
 // Relying on Swift's automatic enum values  
-enum ErrorType: String {  
+enum ErrorResponseType: String {  
   case error  
   case warning  
 }  
@@ -2450,7 +2459,7 @@ enum ErrorCode: Int {
 
   **Not Preferred**:
 ```swift 
-enum ErrorType: String {  
+enum ErrorResponseType: String {  
   case error = "error"  
   case warning = "warning"  
 }  
@@ -2480,31 +2489,31 @@ enum ErrorCode: Int {
 ```
 
 
-Dont use the default case when switching over an enum.  
+Avoid using the default case when switching over an enum.
   
 **Why?**
-Enumerating every case requires developers and reviewers have to consider the correctness of every switch statement when new cases are added.  
+Enumerating every case necessitates that developers and reviewers carefully assess the correctness of every switch statement when new cases are introduced. 
 
   **Preferred**:
 ```swift 
-switch anEnum {  
-case .a:  
+switch type {  
+case .aType:  
 // Do something  
-case .b, .c:  
+case .bType, .cType:  
 // Do something else.  
 }  
 ```
   **Not Preferred**:
 ```swift 
-switch anEnum {  
-case .a:  
+switch type {  
+case .aType:  
 // Do something  
 default:  
 // Do something else.  
 }  
 ```
 
-  When all cases of an `enum` must be `indirect`, the `enum` itself is declared `indirect` and the keyword is omitted on the individual cases.
+ When all cases of an `enum` require `indirect` handling, declare the `enum` itself as `indirect`, and omit the keyword on the individual cases.
   
 **Preferred**:
 ```swift 
@@ -2536,37 +2545,39 @@ public enum BinaryTree<Element> {
   case empty() // AVOID.  
 }
 ```
-In general, there is only one case per line in an enum. The comma-delimited form may be used only when none of the cases have associated values or raw values, all cases fit on a single line, and the cases do not need further documentation because their meanings are obvious from their names.  
+-   None of the cases have associated values or raw values,
+-   All cases fit on a single line,
+-   The cases' meanings are self-evident from their names and do not require additional documentation.
 
  **Preferred**:
 ```swift 
-public enum Token {  
-  case comma  
-  case semicolon  
-  case identifier  
+public enum DecodingType {  
+  case raw  
+  case combined  
+  case identifier
 }  
   
-public enum Token {  
-  case comma, semicolon, identifier  
+public enum DecodingType {  
+  case raw, combined, identifier  
 }  
   
-public enum Token {  
-  case comma  
-  case semicolon  
+public enum DecodingType {  
+  case raw  
+  case combined  
   case identifier(String)  
 }  
 ```
  
  **Not Preferred**:
 ```swift 
-public enum Token {  
-  case comma, semicolon, identifier(String)  
+public enum DecodingType {  
+  case raw, combined, identifier(String)  
 }  
 ```
   
-The cases of an enum must follow a logical ordering that the author could explain if asked. If there is no obviously logical ordering, use a lexicographical ordering based on the cases’ names.
+The enumerations within an enum should adhere to a coherent sequence that the developer can elucidate upon inquiry. In instances where a clear logical order is absent, employ a lexicographical arrangement based on the names of the cases.
 
-In the following example, the cases are arranged in numerical order based on the underlying HTTP status code and blank lines are used to separate groups.
+In the example below, the cases are organized in numerical order according to the underlying HTTP status code, with blank lines used to separate groups.
 
  **Preferred**:
 ```swift 
@@ -2583,7 +2594,7 @@ public enum HTTPStatus: Int {
 }
 ```
 
-The following version of the same enum is less readable. Although the cases are ordered lexicographically, the meaningful groupings of related values has been lost.
+The revised enum version is less readable. While the cases are ordered alphabetically, the meaningful groupings of related values have been lost.
 
  **Not Preferred**:
 ```swift 
@@ -2598,22 +2609,22 @@ public enum HTTPStatus: Int {
 }
 ```
 
-`Enum` naming should not be plural, it should be `singular`
+`Enum` names should be `singular`, not plural.
 
 **Preferred**:
 ```swift
-public enum Token {
-  case comma
-  case semicolon
-  case identifier
+public enum PageType {
+  case market
+  case store
+  case order
 }
 ```
 **Not Preferred**:
 ```swift
-public enum Tokens {
-  case comma
-  case semicolon
-  case identifier
+public enum PageTypes {
+  case market
+  case store
+  case order
 }
 ```
 ---
@@ -2922,14 +2933,14 @@ while i < attendeeList.count {
 ---
 ### Ternary Operator
 
-* Long ternary operator expressions should wrap before the ? and before the :, putting each conditional branch on a separate line. SwiftFormat: wrap
+* Long ternary operator expressions should be formatted so that each conditional branch, including before the `?` and before the `:`, is placed on a separate line for clarity. SwiftFormat: wrap
 
 **Preferred**:
 
 ```swift
-let destinationPlanet = solarSystem.hasPlanetsInHabitableZone
-  ? solarSystem.planetsInHabitableZone.first
-  : solarSystem.uninhabitablePlanets.first
+let selectedCourse = student.hasCompletedCourses
+  ? student.completedCourses.first
+  : student.coursesInProgress.first
 
 let value = 5
 result = value != 0 ? x : y
@@ -2941,14 +2952,8 @@ result = isHorizontal ? x : y
 **Not Preferred**:
 ```swift
 // WRONG (too long)
- let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first
+ let selectedCourse = student.hasCompletedCourses ? student.completedCourses.first : student.coursesInProgress.first
  let result = a > b ? x = c > d ? c : d : y
- 
-// WRONG (naive wrapping) 
-let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first 
-
-// WRONG (unbalanced operators) 
-let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.planetsInHabitableZone.first : solarSystem.uninhabitablePlanets.first
 ```
 
 * If we have huge logic and code, we should use if condition instead of ternary operator
@@ -2957,23 +2962,23 @@ let destinationPlanet = solarSystem.hasPlanetsInHabitableZone ? solarSystem.plan
 ```swift
 let result: Bool
 
-if IamOldIfElse { 
+if oldStyleIfElse { 
      result = true 
 } else {
     result = false 
 }
 ```
 
-* By using ternary operator, we were able to get rid of many lines of code. But some developers find the ternary operator hard to read so for those, Swift 5.9 improved the if else statement to be on one single line for the single statements:
+* By using the ternary operator, we were able to reduce the number of lines of code significantly. However, some developers find the ternary operator difficult to read. Therefore, in Swift 5.9, the `if-else` statement has been improved to allow single-line formatting for single statements.
 
 **Preferred**:
 ```swift
-let result = if IamNewIfElse { true } else { false }
+let result = if newIfElse { true } else { false }
 ```
 
 **Not Preferred**:
 ```swift
-let result = IamTernary ? true : false
+let result = ternary ? true : false
 ```
 
 --- 
