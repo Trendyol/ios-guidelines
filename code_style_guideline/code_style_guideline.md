@@ -238,15 +238,47 @@ var makeProductDetailDescriptionText: String {
 ---
 ### Methods
 
-Methods without side-effects have names in the form of what: `let size = view.originalSize()`.
+Method Naming for Non-Side-Effect Functions:
 
-Methods with side effects are called in the form of an imperative verb: `list.sort()`.
+Methods that do not cause side effects should be named using the form of a question. For example:
 
-Similar non-mutating methods that return new values must be called using past participle: `let newList = oldList.sorted()`. Or present participle: `let newList = oldList.sortingLexicographically()`.
+```swift
+let size = view.originalSize()
+```
+Method Naming for Side-Effect Functions:
 
-Parameter names follow rules for variable names. An engineer shall make use of Swift syntax possibilities to make the full declaration a human-readable phrase. For example, `func insert(_ element: Element, at index: Int)` is nicely read as `insert(someElement, at: someIndex)` at the call site.
+Methods that perform actions and cause side effects should be named using imperative verbs. For instance:
 
-Factory method names start with the word "make". Both factory methods and initializers have their parameters as a list of items, they are not required to form phrases.
+```swift
+list.sort()
+```
+
+Naming Non-Mutating Methods:
+
+Methods that do not modify the original object but return a new value should be named using the past participle or present participle. Examples include:
+
+```swift
+let newList = oldList.sorted()
+let newList = oldList.sortingLexicographically()
+```
+
+Parameter Naming Convention:
+
+Parameter names should follow the same conventions as variable names. Utilize Swift’s syntax to ensure the method declaration reads naturally, almost like a sentence. For example:
+
+```swift
+func insert(_ element: Element, at index: Int)
+```
+
+should be read as:
+
+```swift
+insert(someElement, at: someIndex)
+```
+
+Factory Method Naming:
+
+Factory method names should start with the word “make”. Both factory methods and initializers should list their parameters, but they are not required to form phrases.
 
 **Preferred**:
 ```swift
@@ -259,21 +291,29 @@ func makeView(position: CGPoint, size: CGSize) -> UIView
 init(withName name: String, andID id: Int)
 ```
 
-UIKit's UIControl actions are called with the control's name in the beginning and the "tapped" word in the end:
+**Naming UIControl Actions:**
+
+UIControl actions should be named starting with the control's name followed by the word "tapped":
 
 **Preferred**:
 ```swift
 @objc
-private func nextButtonTapped(_ sender: UIButton) { // ...
+private func nextButtonTapped(_ sender: UIButton) {
+    // ...
+}
 ```
 
 **Not Preferred**:
 ```swift
 @objc
-private func nextButtonAction(_ sender: UIButton) { // ...
+private func nextButtonAction(_ sender: UIButton) {
+    // ...
+}
 ```
 
-Omit unused parameters.
+Omitting Unused Parameters:
+
+Avoid including parameters that are not used within the function.
 
 **Preferred**:
 ```swift
@@ -289,7 +329,9 @@ func calculateSum(_ a: Int, _ b: Int, _ c: Int) -> Int {
 }
 ```
 
-Omit `Void` return types from function definitions.
+Omitting Void Return Types:
+
+Do not include Void in the return type of function definitions.
 
 **Preferred**:
 ```swift
@@ -305,7 +347,9 @@ func performTask() -> Void {
 }
 ```
 
-Long function invocations should also break on each argument. Put the closing parenthesis on the last line of the invocation.
+Formatting Long Function Invocations:
+
+For long function calls, break each argument onto a new line and place the closing parenthesis on the last line.
 
 **Preferred**:
 ```swift
@@ -342,7 +386,9 @@ universe.generateStars(
 universe.generateStars(at: location, count: 5, color: starColor, withAverageDistance: 4)
 ```
 
-However, if the return value might be useful in some specific situations, it doesn't force one to use it (the `@discardableResult` annotation serves this purpose). Though, such return values are not encouraged. An engineer shall follow the principle of [the command-query separation](https://en.wikipedia.org/wiki/Command–query_separation).
+Command-Query Separation Principle:
+
+When a function’s return value might be useful in certain scenarios but is not always needed, use the @discardableResult annotation. However, this practice is generally discouraged. Follow the [command-query separation](https://en.wikipedia.org/wiki/Command–query_separation) principle to keep functions focused on either performing an action or returning data, but not both.
 
 ---
 
@@ -458,20 +504,21 @@ protocol FooInterface: class { }
 
 ### Generics
 
-Generic type parameters should be descriptive, upper camel case names. When a type name doesn't have a meaningful relationship or role, use a traditional single uppercase letter such as `T`, `U`, or `V`.
+Generic type parameters should be descriptive and use upper camel case naming. If the type doesn't have a specific role or relationship, use a traditional single uppercase letter like `T`, `U`, or `V`.
 
 **Preferred**:
 ```swift
-struct Stack<Element> { ... }
-func write<Target: OutputStream>(to target: inout Target)
-func swap<T>(_ a: inout T, _ b: inout T)
+struct Container<Item> { ... }
+func save<DataType: Encodable>(data: DataType)
+func compare<T>(_ first: T, _ second: T) -> Bool
 ```
+
 
 **Not Preferred**:
 ```swift
-struct Stack<T> { ... }
-func write<target: OutputStream>(to target: inout target)
-func swap<Thing>(_ a: inout Thing, _ b: inout Thing)
+struct Container<T> { ... }
+func save<datatype: Encodable>(data: datatype)
+func compare<Element>(_ first: Element, _ second: Element) -> Bool
 ```
 ---
 
@@ -796,7 +843,6 @@ struct Planet {
 }
 ```
 
-
 **Declarations that include scopes spanning multiple lines should be separated from adjacent declarations in the same scope by a newline.**
 
 Insert a single blank line between multi-line scoped declarations (e.g. types, extensions, functions, computed properties, etc.) and other declarations at the same indentation level.
@@ -925,7 +971,7 @@ init() {
 If a swift file contains a lot of computed and stored property, they can be grouped and sorted among themselves with using MARK.
 
 ```swift
-// MARK: - Identitiy Properties
+// MARK: - Identity Properties
 var name: String
 var surname: String
 var fullName: String {
@@ -957,7 +1003,6 @@ init() {
   ...
 }
 ```
-
 
 Also see for file organization [ExamplePresenter.swift](/code_style_guideline/examples/ExamplePresenter.swift)
 
@@ -1008,33 +1053,37 @@ extension MyViewController: UITableViewDelegate, UITableViewDataSource {
 ---
 ### Unused Code
 
-Unused (dead) code, including Xcode template code and placeholder comments should be removed. An exception is when your tutorial or book instructs the user to use the commented code.
+Remove any unused (dead) code, including default Xcode template code and placeholder comments. The only exception is when the code is part of a tutorial or book and is meant to be uncommented by the user.
 
-Aspirational methods not directly associated with the tutorial whose implementation simply calls the superclass should also be removed. This includes any empty/unused UIApplicationDelegate methods.
+Methods that are not directly needed and simply call the superclass should also be removed, especially if they are empty or unused, such as certain UIApplicationDelegate methods.
 
 **Preferred**:
 ```swift
-override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-  return Database.contacts.count
+override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+  cell.textLabel?.text = Database.contacts[indexPath.row].name
+  return cell
 }
 ```
 
 **Not Preferred**:
 ```swift
-override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-  // #warning Incomplete implementation, return the number of rows
-  return Database.contacts.count
+override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  // #warning Incomplete implementation, configure the cell
+  let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+  cell.textLabel?.text = Database.contacts[indexPath.row].name
+  return cell
 }
 ```
+**Reason**: If you are only calling the superclass method and not adding any additional functionality, there is no need to override methods like `viewDidLoad`.
 
-**Reason:** You called super method and you didn't implement any body. You don't need to override `didReceiveMemoryWarning`
 ```swift
-override func didReceiveMemoryWarning() {
-  super.didReceiveMemoryWarning()
+override func viewDidLoad() {
+  super.viewDidLoad()
 }
 ```
 
-**Reason:** numberOfSections's default value is `1`.
+**Reason**: The default value for `numberOfSections` is 1, so if you are not changing it, there is no need to override.
 ```swift
 override func numberOfSections(in tableView: UITableView) -> Int {
   return 1
@@ -1044,7 +1093,7 @@ override func numberOfSections(in tableView: UITableView) -> Int {
 
 ### Omitting Return
 
-Omit the return keyword when not required by the language.
+Avoid using the `return` keyword when it is not necessary.
 
 **Preferred**:
 ```swift
@@ -1053,14 +1102,16 @@ Omit the return keyword when not required by the language.
 var size: CGSize {
   CGSize(
     width: 100.0,
-    height: 100.0)
+    height: 100.0
+  )
 }
 
 func makeInfoAlert(message: String) -> UIAlertController {
   UIAlertController(
     title: "ℹ️ Info",
     message: message,
-    preferredStyle: .alert)
+    preferredStyle: .alert
+  )
 }
 ```
 
@@ -1071,14 +1122,16 @@ func makeInfoAlert(message: String) -> UIAlertController {
 var size: CGSize {
   return CGSize(
     width: 100.0,
-    height: 100.0)
+    height: 100.0
+  )
 }
 
 func makeInfoAlert(message: String) -> UIAlertController {
   return UIAlertController(
     title: "ℹ️ Info",
     message: message,
-    preferredStyle: .alert)
+    preferredStyle: .alert
+  )
 }
 ```
 ---
@@ -1646,24 +1699,22 @@ class Planet
 
 ## Comments
 
-Comment blocks should use single-line comments (// for code comments and /// for documentation comments), rather than multi-line comments (/* ... */ and /** ... */).
-
+Use single-line comments (`//` for code comments and `///` for documentation comments) instead of multi-line comments (`/* ... */` and `/** ... */`).
 
 **Preferred**:
 ```swift
-/// A planet that exists somewhere in the universe.
+/// Represents a vehicle that can traverse different terrains.
 ///
-/// Planets have many properties. For example, the best planets
-/// have atmospheres and bodies of water to support life.
-class Planet {
-  /// Terraforms the planet, by adding an atmosphere and ocean that is hospitable for life.
-  func terraform() {
-    // Generate the atmosphere first, before generating the ocean.
-    // Otherwise, the water will just boil off immediately.
-    generateAtmosphere()
+/// Vehicles have various attributes. For instance, the best vehicles
+/// can handle both off-road and highway conditions.
+class Vehicle {
+  /// Modifies the vehicle's settings for off-road driving.
+  func configureForOffRoad() {
+    // Adjust the suspension for rough terrain.
+    adjustSuspension()
 
-    // Now that we have an atmosphere, it's safe to generate the ocean
-    generateOceans()
+    // Switch to all-terrain tires for better grip.
+    installAllTerrainTires()
   }
 }
 ```
@@ -1671,24 +1722,23 @@ class Planet {
 **Not Preferred**:
 ```swift
 /**
-* A planet that exists somewhere in the universe.
+* Represents a vehicle that can traverse different terrains.
 *
-* Planets have many properties. For example, the best planets
-* have atmospheres and bodies of water to support life.
+* Vehicles have various attributes. For instance, the best vehicles
+* can handle both off-road and highway conditions.
 */
-class Planet {
+class Vehicle {
   /**
-    Terraforms the planet, by adding an atmosphere and ocean that is hospitable for life.
+    Modifies the vehicle's settings for off-road driving.
   */
-  func terraform() {
+  func configureForOffRoad() {
     /*
-    Generate the atmosphere first, before generating the ocean.
-    Otherwise, the water will just boil off immediately.
+    Adjust the suspension for rough terrain.
     */
-    generateAtmosphere()
+    adjustSuspension()
 
-    /* Now that we have an atmosphere, it's safe to generate the ocean */
-    generateOceans()
+    /* Switch to all-terrain tires for better grip. */
+    installAllTerrainTires()
   }
 }
 ```
@@ -1697,24 +1747,24 @@ Include spaces or newlines before and after comment delimiters
 
 **Preferred**:
 ```swift
-/// A spacecraft with incredible performance characteristics
-struct Spaceship {
+/// An advanced robot capable of performing complex tasks.
+struct Robot {
 
-  func travelFasterThanLight() { /* unimplemented */ }
+  func selfRepair() { /* function not yet implemented */ }
 
-  func travelBackInTime() { } // TODO: research whether or not this is possible
+  func analyzeEnvironment() { } // TODO: add environment analysis code
 
 }
 ```
 
 **Not Preferred**:
 ```swift
-///A spacecraft with incredible performance characteristics
-struct Spaceship {
+///An advanced robot capable of performing complex tasks.
+struct Robot {
 
-  func travelFasterThanLight() {/*unimplemented*/}
+  func selfRepair() {/*function not yet implemented*/}
 
-  func travelBackInTime() { }//TODO: research whether or not this is possible
+  func analyzeEnvironment() { }//TODO: add environment analysis code
 
 }
 ```
@@ -1837,7 +1887,7 @@ func fetchResults(from endpoint: URL,
 ```
 
 **Not Preferred**:
-
+ 
 ```swift
 func fetchResults(
     from endpoint: URL = .remoteServerPath,
@@ -2037,48 +2087,48 @@ Name members of tuples for extra clarity. Rule of thumb: if you've got more than
 
 **Preferred**:
 ```swift
-func whatever() -> (x: Int, y: Int) {
-  return (x: 4, y: 4)
+func fetchDimensions() -> (width: Int, height: Int) {
+  return (width: 1920, height: 1080)
 }
 
-func whatever2() -> (x: Int, y: Int) {
-  return (4, 4)
+func fetchSize() -> (width: Int, height: Int) {
+  return (1920, 1080)
 }
 
-let coord = whatever()
-coord.x
-coord.y
+let dimensions = fetchDimensions()
+dimensions.width
+dimensions.height
 ```
 
 **Not Preferred**:
 ```swift
-func whatever() -> (Int, Int) {
-  return (4, 4)
+func fetchDimensions() -> (Int, Int) {
+  return (1920, 1080)
 }
-let thing = whatever()
-print(thing.0)
+let size = fetchDimensions()
+print(size.0)
 ```
 
 *Example 2:*
 
 **Preferred**:
 ```swift
-struct Product {
-  let priceSet = (price: 100.0, discountedPrice: 80.0)
+struct Inventory {
+  let quantities = (inStock: 50, reserved: 10)
 }
 
-let product = Product()
-product.priceSet.discountedPrice // returns 80.0
+let inventory = Inventory()
+inventory.quantities.reserved // returns 10
 ```
 
 **Not Preferred**:
 ```swift
-struct Product {
-  let priceSet = (100.0, 80.0)
+struct Inventory {
+  let quantities = (50, 10)
 }
 
-let product = Product()
-product.priceSet.1 // returns 80.0
+let inventory = Inventory()
+inventory.quantities.1 // returns 10
 ```
 
 ## Property Observers
@@ -2894,7 +2944,7 @@ static private let myPrivateNumber: Int
 
 ## Control Flow
 
-Prefer the `for-in` style of `for` loop over the `while-condition-increment` style.
+Use the `for-in` style of `for` loop instead of the `while-condition-increment` style.
 
 **Preferred**:
 ```swift
@@ -2933,7 +2983,7 @@ while i < attendeeList.count {
 ---
 ### Ternary Operator
 
-* Long ternary operator expressions should be formatted so that each conditional branch, including before the `?` and before the `:`, is placed on a separate line for clarity. SwiftFormat: wrap
+* When using long ternary operator expressions, format them so that each part of the expression, including before the `?` and before the `:`, is on a separate line for clarity.
 
 **Preferred**:
 
@@ -2956,20 +3006,19 @@ result = isHorizontal ? x : y
  let result = a > b ? x = c > d ? c : d : y
 ```
 
-* If we have huge logic and code, we should use if condition instead of ternary operator
-
+* For complex logic, use an if condition instead of a ternary operator.
 
 ```swift
 let result: Bool
 
 if oldStyleIfElse { 
-     result = true 
+    result = true 
 } else {
     result = false 
 }
 ```
 
-* By using the ternary operator, we were able to reduce the number of lines of code significantly. However, some developers find the ternary operator difficult to read. Therefore, in Swift 5.9, the `if-else` statement has been improved to allow single-line formatting for single statements.
+* While the ternary operator can reduce the number of lines of code, it can be hard to read. Swift 5.9 has improved the `if-else` statement to allow single-line formatting for single statements.
 
 **Preferred**:
 ```swift
@@ -3011,8 +3060,8 @@ else {
 
 ### Switch Statements
 
-One level of indentation is used inside a `switch`'s parentheses and for `case` implementations.
-All statements inside the cases of a `switch` statement start on separate lines.
+Use one level of indentation inside a `switch`’s parentheses and for `case` implementations.
+Ensure that all statements inside the cases of a `switch` statement start on separate lines.
 
 **Preferred**:
 
@@ -3040,68 +3089,57 @@ switch direction {
 
 ### Golden Path
 
-When coding with conditionals, the left-hand margin of the code should be the "golden" or "happy" path. That is, don't nest `if` statements. Multiple return statements are OK. The `guard` statement is built for this.
+When writing conditionals, ensure the "golden" or "happy" path aligns with the left-hand margin of the code. Avoid nesting `if` statements. Using multiple return statements is acceptable. Utilize `guard` statements for this purpose.
 
 **Preferred**:
 ```swift
-func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies {
-  guard let context = context else {
-    throw FFTError.noContext
+func process(user: User?) {
+  guard let user = user else {
+    return
   }
-  guard let inputData = inputData else {
-    throw FFTError.noInputData
-  }
-
-  // use context and input to compute the frequencies
-  return frequencies
+  // Process user
+  print("Processing user \(user.name)")
 }
 ```
 
-**Not Preferred**:
 ```swift
-func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies {
-  if let context = context {
-    if let inputData = inputData {
-      // use context and input to compute the frequencies
-
-      return frequencies
-    } else {
-      throw FFTError.noInputData
-    }
-  } else {
-    throw FFTError.noContext
+func validate(input: String?) -> Bool {
+  guard let input = input, !input.isEmpty else {
+    return false
   }
+  // Continue with valid input
+  return true
 }
 ```
 
-When multiple optionals are unwrapped either with `guard` or `if let`, minimize nesting by using the compound version when possible. In the compound version, place the `guard` on its own line, then indent each condition on its own line. The `else` clause is indented to match the `guard` itself, as shown below. Example:
+When unwrapping multiple optionals with `guard` or `if let`, minimize nesting by using the compound version when possible. In the compound version, place the `guard` on its own line, then indent each condition on its own line. The `else` clause is indented to match the `guard` itself, as shown below.
 
 **Preferred**:
 ```swift
 guard 
-  let number1 = number1,
-  let number2 = number2,
-  let number3 = number3 
+  let username = inputUsername,
+  let password = inputPassword,
+  let email = inputEmail 
 else {
-  fatalError("impossible")
+  fatalError("Missing user information")
 }
-// do something with numbers
+// proceed with user registration
 ```
 
 **Not Preferred**:
 ```swift
-if let number1 = number1 {
-  if let number2 = number2 {
-    if let number3 = number3 {
-      // do something with numbers
+if let username = inputUsername {
+  if let password = inputPassword {
+    if let email = inputEmail {
+      // proceed with user registration
     } else {
-      fatalError("impossible")
+      fatalError("Missing user information")
     }
   } else {
-    fatalError("impossible")
+    fatalError("Missing user information")
   }
 } else {
-  fatalError("impossible")
+  fatalError("Missing user information")
 }
 ```
 
@@ -3122,76 +3160,117 @@ guard !array.isEmpty
 
 #### Failing Guards
 
-Guard statements are required to exit in some way. Generally, this should be simple one line statement such as `return`, `throw`, `break`, `continue`, and `fatalError()`. Large code blocks should be avoided. If cleanup code is required for multiple exit points, consider using a `defer` block to avoid cleanup code duplication.
-
-#### Omit the right-hand side of the expression
+Guard statements must include an exit strategy such as `return`, `throw`, `break`, `continue`, or `fatalError()`. These should generally be simple, one-line statements. Avoid using large code blocks within guard statements. If multiple exit points require cleanup code, use a `defer` block to prevent code duplication.
 
 **Preferred**:
 ```swift
-if let galaxy,
-    galaxy.name == "Milky Way" { 
-… 
+guard let config = loadConfiguration() else {
+  return
 }
 
-guard let galaxy,
-          galaxy.name == "Milky Way" else { … }
+guard isValidUser else {
+  throw AuthenticationError.invalidUser
+}
+
+guard let file = openFile(path: filePath) else {
+  fatalError("File not found")
+}
 ```
 
 **Not Preferred**:
 ```swift
-if let galaxy = galaxy,
-    galaxy.name == "Milky Way" { 
-… 
+guard let config = loadConfiguration() else {
+  // Large code block for cleanup
+  cleanup()
+  logError()
+  return
 }
 
-guard let galaxy = galaxy,
-          galaxy.name == "Milky Way" else { … }
+guard isValidUser else {
+  // Duplicate cleanup code
+  cleanup()
+  throw AuthenticationError.invalidUser
+}
+```
+
+#### Omit the right-hand side of the expression
+
+Avoid using the right-hand side of the expression when unwrapping optionals with if let or guard let.
+
+**Preferred**:
+```swift
+if let user,
+   user.isActive {
+  // process active user
+}
+
+guard let session,
+      session.isValid else {
+  // handle invalid session
+}
+```
+
+**Not Preferred**:
+```swift
+if let user = user,
+   user.isActive {
+  // process active user
+}
+
+guard let session = session,
+      session.isValid else {
+  // handle invalid session
+}
 ```
 
 #### Add a line break after the assignment operator (=) before a multi-line if or switch expression
 
 **Preferred**:
 ```swift
-let planetLocation = 
-  if let star = planet.star {
-    "The \(star.name) system"
+let userStatus = 
+  if user.isLoggedIn {
+    "User is logged in"
   } else {
-    "Rogue planet"
+    "User is not logged in"
   }
   
-let planetType: PlanetType =
-  switch planet {
-  case .mercury, .venus, .earth, .mars:
-    .terrestrial
-  case .jupiter, .saturn, .uranus, .neptune:
-    .gasGiant
+let vehicleType: VehicleType =
+  switch vehicle {
+  case .car, .truck, .motorcycle:
+    .land
+  case .boat, .ship:
+    .water
+  case .airplane, .helicopter:
+    .air
   }
 ```
 
 **Not Preferred**:
 ```swift
 // Should have a line break after the first `=`. 
-let planetLocation = if let star = planet.star {
-  "The \(star.name) system"
+let userStatus = if user.isLoggedIn {
+  "User is logged in"
  } else {
-  "Rogue planet"
+  "User is not logged in"
 }
 
 // The first `=` should be on the line of the variable being assigned.
-let planetLocation 
-  = if let star = planet.star {
-    "The \(star.name) system"
+let userStatus 
+  = if user.isLoggedIn {
+    "User is logged in"
   } else {
-    "Rogue planet"
+    "User is not logged in"
   }
 
 // `switch` expression should be indented.
-let planetLocation =
-switch planet {
-case .mercury, .venus, .earth, .mars:
-  .terrestrial
-case .jupiter, .saturn, .uranus, .neptune:
-  .gasGiant
+let vehicleType =
+switch vehicle {
+case .car, .truck, .motorcycle:
+  .land
+case .boat, .ship:
+  .water
+case .airplane, .helicopter:
+  .air
 }
 ```
 
@@ -3200,38 +3279,36 @@ case .jupiter, .saturn, .uranus, .neptune:
 **Preferred**:
 ```swift
 // All of the cases have a trailing blank line.
-func handle(_ action: SpaceshipAction) {
+func handle(_ action: GameAction) {
   switch action {
-  case .engageWarpDrive:
-    navigationComputer.destination = targetedDestination
-    warpDrive.spinUp()
-    warpDrive.activate()
+  case .jump:
+    character.jump()
+    character.adjustHeight()
 
-  case .enableArtificialGravity:
-    artificialGravityEngine.enable(strength: .oneG)
+  case .crouch:
+    character.crouch()
 
-  case .scanPlanet(let planet):
-    scanner.target = planet
-    scanner.scanAtmosphere()
-    scanner.scanBiosphere()
-    scanner.scanForArtificialLife()
+  case .attack(let enemy):
+    character.target = enemy
+    character.performAttack()
+    character.checkForCriticalHit()
     
-  case .handleIncomingEnergyBlast:
-    energyShields.engage()
+  case .defend:
+    character.raiseShield()
   }
 }
 
 // Since none of the cases are multi-line, blank lines are not required.
-func handle(_ action: SpaceshipAction) {
+func handle(_ action: GameAction) {
   switch action {
-  case .engageWarpDrive:
-      warpDrive.engage()
-  case .enableArtificialGravity:
-      artificialGravityEngine.enable(strength: .oneG)
-  case .scanPlanet(let planet):
-      scanner.scan(planet)
-  case .handleIncomingEnergyBlast:
-      energyShields.engage()
+  case .jump:
+    character.jump()
+  case .crouch:
+    character.crouch()
+  case .attack(let enemy):
+    character.attack(enemy)
+  case .defend:
+    character.defend()
   }
 }
 ```
@@ -3239,43 +3316,39 @@ func handle(_ action: SpaceshipAction) {
 **Not Preferred**:
 ```swift
 // These switch cases should be followed by a blank line.
-func handle(_ action: SpaceshipAction) {
+func handle(_ action: GameAction) {
   switch action {
-  case .engageWarpDrive:
-    navigationComputer.destination = targetedDestination
-    warpDrive.spinUp()
-    warpDrive.activate()
-  case .enableArtificialGravity:
-    artificialGravityEngine.enable(strength: .oneG)
-  case .scanPlanet(let planet):
-    scanner.target = planet
-    scanner.scanAtmosphere()
-    scanner.scanBiosphere()
-    scanner.scanForArtificialLife()
-  case .handleIncomingEnergyBlast:
-    energyShields.engage()
+  case .jump:
+    character.jump()
+    character.adjustHeight()
+  case .crouch:
+    character.crouch()
+  case .attack(let enemy):
+    character.target = enemy
+    character.performAttack()
+    character.checkForCriticalHit()
+  case .defend:
+    character.raiseShield()
   }
 }
 
-// While the `.enableArtificialGravity` case isn't multi-line, the other cases are.
+// While the `.crouch` case isn't multi-line, the other cases are.
 // For consistency, it should also include a trailing blank line.
-func handle(_ action: SpaceshipAction) {
+func handle(_ action: GameAction) {
   switch action {
-  case .engageWarpDrive:
-    navigationComputer.destination = targetedDestination
-    warpDrive.spinUp()
-    warpDrive.activate()
+  case .jump:
+    character.jump()
+    character.adjustHeight()
 
-  case .enableArtificialGravity:
-    artificialGravityEngine.enable(strength: .oneG)
-  case .scanPlanet(let planet):
-    scanner.target = planet
-    scanner.scanAtmosphere()
-    scanner.scanBiosphere()
-    scanner.scanForArtificialLife()
+  case .crouch:
+    character.crouch()
+  case .attack(let enemy):
+    character.target = enemy
+    character.performAttack()
+    character.checkForCriticalHit()
     
-  case .handleIncomingEnergyBlast:
-    energyShields.engage()
+  case .defend:
+    character.raiseShield()
   }
 }
 ```
