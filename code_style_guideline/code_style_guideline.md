@@ -1135,12 +1135,12 @@ func makeInfoAlert(message: String) -> UIAlertController {
 }
 ```
 ---
+
 ### Imports
 
-Alphabetize and deduplicate module imports within a file. Place all imports at the top of the file below the header comments. Do not add additional line breaks between import statements. Add a single empty line before the first import and after the last import. SwiftFormat: **sortedImports** SwiftFormat: **duplicateImports**
+Arrange and deduplicate module imports alphabetically within a file. Place all imports at the top of the file, below any header comments. Avoid adding extra line breaks between import statements. Include a single empty line before the first import and after the last one. SwiftFormat: **sortedImports** SwiftFormat: **duplicateImports**
 
-A standard organization method helps engineers more quickly determine which modules a file depends on.
-Duplicated import statements have no effect and should be removed for clarity.
+A consistent organization method helps engineers quickly determine which modules a file depends on. Duplicate import statements have no effect and should be removed for clarity.
 
 **Not Preferred**:
 ```swift
@@ -2286,51 +2286,50 @@ Avoid failable initializers as much as possible.
 
 ### Constants
 
-Constants are defined using the `let` keyword and variables with the `var` keyword. Always use `let` instead of `var` if the value of the variable will not change.
+Constants should be defined using the `let` keyword, while variables should use the `var` keyword. Always use `let` instead of `var` if the value will not change.
 
-**Tip:** A good technique is to define everything using `let` and only change it to `var` if the compiler complains!
+**Tip:** A good practice is to start by defining everything with `let` and only change it to `var` if the compiler raises an error.
 
-You can define constants on a type rather than on an instance of that type using type properties. To declare a type property as a constant simply use `static let`. Type properties declared in this way are generally preferred over global constants because they are easier to distinguish from instance properties. Example:
+To define constants on a type rather than an instance, use type properties with `static let`. These type properties are generally preferred over global constants as they are easier to distinguish from instance properties. Example:
 
 **Preferred**:
 ```swift
-enum Math {
-  static let e = 2.718281828459045235360287
-  static let root2 = 1.41421356237309504880168872
+enum Mathematics {
+  static let eulerNumber = 2.718281828459045235360287
+  static let squareRootOfTwo = 1.41421356237309504880168872
 }
 
-let hypotenuse = side * Math.root2
-
+let hypotenuse = sideLength * Mathematics.squareRootOfTwo
 ```
 
-**Note:** The advantage of using a case-less enumeration is that it can't accidentally be instantiated and works as a pure namespace.
+**Note:** The advantage of using a case-less enum is that it cannot be instantiated, serving purely as a namespace.
 
 **Not Preferred**:
 ```swift
-let e = 2.718281828459045235360287  // pollutes global namespace
-let root2 = 1.41421356237309504880168872
+let eulerNumber = 2.718281828459045235360287  // pollutes the global namespace
+let squareRootOfTwo = 1.41421356237309504880168872
 
-let hypotenuse = side * root2 // what is root2?
+let hypotenuse = sideLength * squareRootOfTwo // what is squareRootOfTwo?
 ```
 
-Use caseless enums for organizing **public** or **internal** constants and functions into namespaces. `SwiftFormat: enumNamespaces`
+Use case-less enums to organize **public** or **internal** constants and functions into namespaces. `SwiftFormat: enumNamespaces`
 
 - Avoid creating non-namespaced global constants and functions.
-- Feel free to nest namespaces where it adds clarity.
-- **private** globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an **enum** namespace to match the guidelines for other declaration types.
+- Nest namespaces if it adds clarity.
+- **private** globals are allowed since they are file-scoped and do not pollute the global namespace. Consider placing private globals in an **enum** namespace to maintain consistency with other declaration types.
 
-For correct usage, We should use **enum** instead of **struct**. 
+For correct usage, prefer **enum** over **struct** for defining namespaces.
 
-**Why?** Caseless `enums` work well as namespaces because they cannot be instantiated, which matches their intent.
+**Why?** Case-less `enums` are suitable as namespaces because they cannot be instantiated, aligning with their intended purpose.
 
 **Preferred**:
 ```swift
-struct Environment {
-  struct Earth {
+enum Environment {
+  enum Earth {
     static let gravity = 9.8
   }
 
-  struct Moon {
+  enum Moon {
     static let gravity = 1.6
   }
 }
@@ -2344,21 +2343,22 @@ struct Environment {
 }
 ```
 
-**Note:** We should put constant under extension of class and class extension must be private
+**Note:** Place constants within private extensions of classes, and ensure the class extension is marked as private.
 
 **Preferred**:
 ```swift
 private extension AccountPresenter {
-    enum Constant {
-        enum Date {
-            static let cobrandedOnboardingLastShownDateFormat: String = "yyyy-MM-dd"
-        }
+  enum Constants {
+    enum Date {
+      static let cobrandedOnboardingLastShownDateFormat = "yyyy-MM-dd"
+    }
 
-        enum URL {
-            static let trendyolDeeplinkUrl = "ty://"
-        }
- }
- ```
+    enum URL {
+      static let trendyolDeeplinkUrl = "ty://"
+    }
+  }
+}
+```
 ---
 
 ### Enums 
@@ -2384,7 +2384,7 @@ case .firebase(_, _, _):
 }
 ```
 
-When deconstructing an enum case or a tuple, position the let keyword directly next to each separate property assignment.  Inlining the let keyword makes it more clear which identifiers are part of the conditional check and which identifiers are binding new variables, since the let keyword is always adjacent to the variable identifier. SwiftFormat: **hoistPatternLet**
+When deconstructing an enum case or a tuple, position the let keyword directly next to each separate property assignment. Inlining the let keyword makes it more clear which identifiers are part of the conditional check and which identifiers are binding new variables, since the let keyword is always adjacent to the variable identifier. SwiftFormat: **hoistPatternLet**
 
 **Preferred**:
 ```swift
@@ -2417,13 +2417,13 @@ guard let case .success(value) else {
 #### Enum Namespaces
 Employ caseless enums to structure public or internal constants and functions within namespaces. SwiftFormat: **enumNamespaces**
   
- + Avoid creating global constants and functions that are non-namespaced.
- + Feel free to nest namespaces where it adds clarity.  
- + private globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an enum namespace to match the guidelines for other declaration types.  
++ Avoid creating global constants and functions that are non-namespaced.
++ Feel free to nest namespaces where it adds clarity.  
++ private globals are permitted, since they are scoped to a single file and do not pollute the global namespace. Consider placing private globals in an enum namespace to match the guidelines for other declaration types.  
     
 Enums without cases function effectively as namespaces since they are unable to be instantiated, aligning with their purpose.
   
-  **Preferred**:
+**Preferred**:
 ```swift
 // RIGHT  
 enum Constants {
@@ -2436,7 +2436,7 @@ enum Constants {
       static let startPoint: CGPoint = .init(x: 0, y: 0)
       static let endPoint: CGPoint = .init(x: 1, y: 1)
       static let width: CGFloat = 0.5
-    }
+  }
 }
 ``` 
 
@@ -2470,7 +2470,7 @@ For enhanced user error prevention, improved readability, and quicker code writi
   
 This approach ensures that adding a new value in the middle won't inadvertently cause issues or break functionality.
   
- **Preferred**:
+**Preferred**:
 ```swift
 // Relying on Swift's automatic enum values  
 enum ErrorResponseType: String {  
@@ -2507,7 +2507,7 @@ enum ErrorCode: Int {
 }
 ``` 
 
-  **Not Preferred**:
+**Not Preferred**:
 ```swift 
 enum ErrorResponseType: String {  
   case error = "error"  
@@ -2538,13 +2538,12 @@ enum ErrorCode: Int {
 }  
 ```
 
-
 Avoid using the default case when switching over an enum.
   
 **Why?**
 Enumerating every case necessitates that developers and reviewers carefully assess the correctness of every switch statement when new cases are introduced. 
 
-  **Preferred**:
+**Preferred**:
 ```swift 
 switch type {  
 case .aType:  
@@ -2553,7 +2552,7 @@ case .bType, .cType:
 // Do something else.  
 }  
 ```
-  **Not Preferred**:
+**Not Preferred**:
 ```swift 
 switch type {  
 case .aType:  
@@ -2563,7 +2562,7 @@ default:
 }  
 ```
 
- When all cases of an `enum` require `indirect` handling, declare the `enum` itself as `indirect`, and omit the keyword on the individual cases.
+When all cases of an enum require indirect handling, declare the enum itself as indirect, and omit the keyword on the individual cases.
   
 **Preferred**:
 ```swift 
@@ -2579,9 +2578,10 @@ public enum DependencyGraphNode {
   indirect case synthesized(dependencies: [DependencyGraphNode])  
 } 
 ```
+
 When an enum case does not have associated values, empty parentheses are never present.  
 
- **Preferred**:
+**Preferred**:
 ```swift 
 public enum BinaryTree<Element> {  
   indirect case node(element: Element, left: BinaryTree, right: BinaryTree)  
@@ -2595,11 +2595,12 @@ public enum BinaryTree<Element> {
   case empty() // AVOID.  
 }
 ```
--   None of the cases have associated values or raw values,
--   All cases fit on a single line,
--   The cases' meanings are self-evident from their names and do not require additional documentation.
 
- **Preferred**:
+- None of the cases have associated values or raw values,
+- All cases fit on a single line,
+- The cases' meanings are self-evident from their names and do not require additional documentation.
+
+**Preferred**:
 ```swift 
 public enum DecodingType {  
   case raw  
@@ -2618,7 +2619,7 @@ public enum DecodingType {
 }  
 ```
  
- **Not Preferred**:
+**Not Preferred**:
 ```swift 
 public enum DecodingType {  
   case raw, combined, identifier(String)  
@@ -2629,7 +2630,7 @@ The enumerations within an enum should adhere to a coherent sequence that the de
 
 In the example below, the cases are organized in numerical order according to the underlying HTTP status code, with blank lines used to separate groups.
 
- **Preferred**:
+**Preferred**:
 ```swift 
 public enum HTTPStatus: Int {
   case ok = 200
@@ -2646,7 +2647,7 @@ public enum HTTPStatus: Int {
 
 The revised enum version is less readable. While the cases are ordered alphabetically, the meaningful groupings of related values have been lost.
 
- **Not Preferred**:
+**Not Preferred**:
 ```swift 
 public enum HTTPStatus: Int {
   case badRequest = 400
