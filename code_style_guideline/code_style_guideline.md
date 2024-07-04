@@ -2131,21 +2131,21 @@ inventory.quantities.1 // returns 10
 
 ## Property Observers
 
-Extract complex property observers into methods. This reduces nestedness, separates side-effects from property declarations, and makes the usage of implicitly-passed parameters like oldValue explicit.
+Refactor complex property observers into dedicated methods. This approach reduces nested code, separates side effects from property declarations, and makes the usage of implicitly passed parameters like oldValue more explicit.
 
 **Preferred**:
 ```swift
 class TextField {
   var text: String? {
-    didSet { textDidUpdate(from: oldValue) }
+    didSet { handleTextUpdate(from: oldValue) }
   }
 
-  private func textDidUpdate(from oldValue: String?) {
+  private func handleTextUpdate(from oldValue: String?) {
     guard oldValue != text else {
       return
     }
 
-    // Do a bunch of text-related side-effects.
+    // Execute a series of side effects related to text.
   }
 }
 ```
@@ -2159,31 +2159,32 @@ class TextField {
         return
       }
 
-      // Do a bunch of text-related side-effects.
+      // Execute a series of side effects related to text.
     }
   }
 }
 ```
 
-Property observers also take parameters that refer to the old and the new values.
+Property observers also take parameters that refer to the old and new values.
 
-By default, these parameters are called oldValue and newValue.
+By default, these parameters are named `oldValue` and `newValue`.
 
-The willSet block always stores the incoming value as newValue.
-The didSet block always stores the previous value as oldValue.
-To access these parameters, you do not need to declare them anywhere. They are automatically in your use.
+The `willSet` block always stores the incoming value as `newValue`.
+The `didSet`didSet block always stores the previous value as `oldValue`.
+You don't need to declare these parameters; they are automatically available for use.
 
 *For example:*
 ```swift
-var name: String = """"Alice"""" {
+var name: String = """"Trendyol"""" {
     willSet { print(""""Name will from \(name) to \(newValue)"""") }
     didSet { print(""""Name changed from \(oldValue) to \(name)"""")}
 }
 ```
-As you can see from the code, the newValue, and oldValue automatically referenced the name before and after the change.
-Also we can change default variable with defined names;
+As demonstrated, newValue and oldValue automatically reference the name before and after the change.
+Additionally, you can customize the default parameter names;
+
 ```swift
-var name: String = """"Alice"""" {
+var name: String = """"Trendyol"""" {
     willSet(newName) {
         print(""""Name will from \(name) to \(newName)"""")
     }
