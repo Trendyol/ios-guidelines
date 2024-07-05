@@ -2681,59 +2681,60 @@ public enum PageTypes {
 
 ### Typealiases
 
-Long type aliases of protocol compositions should wrap before the = and before each individual &. SwiftFormat: wrapArguments
+Long type aliases for protocol compositions should wrap before the = and before each individual &. SwiftFormat: wrapArguments
 
 **Preferred**:
 ```swift
-public typealias Dependencies
-  = CivilizationServiceProviding
-  & LawsOfPhysicsProviding
-  & PlanetBuilderProviding
-  & UniverseBuilderProviding
-  & UniverseSimulatorServiceProviding
+public typealias AppServices
+  = DataStorageProviding
+  & LoggerServiceProviding
+  & NetworkRequestHandling
+  & UserAuthenticationProviding
+  & UserInterfaceUpdating
 ```
 
 **Not Preferred**:
 ```swift
 // WRONG (too long)
-public typealias Dependencies = CivilizationServiceProviding & LawsOfPhysicsProviding & PlanetBuilderProviding & UniverseBuilderProviding & UniverseSimulatorServiceProviding
+public typealias AppServices = DataStorageProviding & LoggerServiceProviding & NetworkRequestHandling & UserAuthenticationProviding & UserInterfaceUpdating
 
 // WRONG (naive wrapping)
-public typealias Dependencies = CivilizationServiceProviding & LawsOfPhysicsProviding & PlanetBuilderProviding &
-  UniverseBuilderProviding & UniverseSimulatorServiceProviding
+public typealias AppServices = DataStorageProviding & LoggerServiceProviding & NetworkRequestHandling &
+  UserAuthenticationProviding & UserInterfaceUpdating
+
 
 // WRONG (unbalanced)
-public typealias Dependencies = CivilizationServiceProviding
-  & LawsOfPhysicsProviding
-  & PlanetBuilderProviding
-  & UniverseBuilderProviding
-  & UniverseSimulatorServiceProviding
+public typealias AppServices = DataStorageProviding
+  & LoggerServiceProviding
+  & NetworkRequestHandling
+  & UserAuthenticationProviding
+  & UserInterfaceUpdating
 ```
 
 Sort protocol composition type aliases alphabetically. SwiftFormat: sortTypealiases
 
-Protocol composition type aliases are an unordered list with no natural ordering. Sorting alphabetically keeps these lists more organized, which is especially valuable for long protocol compositions.
+Protocol composition type aliases lack a natural order, making them unordered lists. Sorting them alphabetically helps maintain organization, especially for lengthy protocol compositions.
 
 **Preferred**:
 ```swift
 // RIGHT
-public typealias Dependencies
-  = CivilizationServiceProviding
-  & LawsOfPhysicsProviding
-  & PlanetBuilderProviding
-  & UniverseBuilderProviding
-  & UniverseSimulatorServiceProviding
+public typealias AppServices
+  = DataStorageProviding
+  & LoggerServiceProviding
+  & NetworkRequestHandling
+  & UserAuthenticationProviding
+  & UserInterfaceUpdating
 ```
 
 **Not Preferred**:
 ```swift
 // WRONG (not sorted)
-public typealias Dependencies
-  = UniverseBuilderProviding
-  & LawsOfPhysicsProviding
-  & UniverseSimulatorServiceProviding
-  & PlanetBuilderProviding
-  & CivilizationServiceProviding
+public typealias AppServices
+  = UserAuthenticationProviding
+  & DataStorageProviding
+  & NetworkRequestHandling
+  & UserInterfaceUpdating
+  & LoggerServiceProviding
 ```
 
 
@@ -2741,71 +2742,75 @@ If a function returns multiple values, prefer returning a tuple to using inout a
 
 **Preferred**:
 ```swift
-func pirateName() -> (firstName: String, lastName: String) {
-    return ("Guybrush", "Threepwood")
+func getBookDetails() -> (title: String, author: String, year: Int) {
+    return ("1984", "George Orwell", 1949)
 }
 
-let name = pirateName()
-let firstName = name.firstName
-let lastName = name.lastName
+let bookDetails = getBookDetails()
+let bookTitle = bookDetails.title
+let bookAuthor = bookDetails.author
+let publicationYear = bookDetails.year
 
-typealias UserInfo = (firstName: String, lastName: String, age: Int)
 
-func pirateName() -> UserInfo {
-    return ("Guybrush", "Threepwood", 23)
+typealias BookDetail = (title: String, author: String, year: Int)
+
+func getBookDetails() -> BookDetail {
+    return ("1984", "George Orwell", 1984)
 }
 
-let name = pirateName()
-let firstName = name.firstName
-let lastName = name.lastName
+let bookDetails = getBookDetails()
+let bookTitle = bookDetails.title
+let bookAuthor = bookDetails.author
+let publicationYear = bookDetails.year
 ```
 
 **Not Preferred**:
 ```swift
-func pirateName() -> (firstName: String, lastName: String, age: Int) {
-    return ("Guybrush", "Threepwood", 32)
+func getBookDetails() -> (String, String, Int) {
+    return ("Eva", "Test", 23)
 }
 
-let name = pirateName()
-let firstName = name.firstName
-let lastName = name.lastName
+let bookDetails = getBookDetails()
+let bookTitle = bookDetails.$0
+let bookAuthor = bookDetails.$1
+let publicationYear = bookDetails.$2
 ```
 
-Typealias declaration is used only for the sake of brevity when it doesn't prevent clarity.
+Use typealias declarations only for brevity when they do not compromise clarity.
 
 **Preferred**:
 ```swift
-typealias Task = (_ token: Sting) -> (_ result: Result<Data, Error>)
-func enqueue(task: Task)
+typealias AuthWalletResult = (_ token: Sting) -> Result<WalletAuthResponse, APIClientError>
+handleSignupWalletResult(_ result: AuthWalletResult)
 ```
 
 **Not Preferred**:
 ```swift
-typealias T = (Int, Int) -> (String)
-func process(task: T) -> String
+typealias T = (String) -> (String, Int)
+func handleSignupWalletResult(result: T) -> String
 ```
 
 ---
 
 ### Type Inference 
 
-Prefer compact code and let the compiler infer the type for constants or variables of single instances. Type inference is also appropriate for small, non-empty arrays and dictionaries. When required, specify the specific type such as `CGFloat` or `Int16`.
+Favor concise code and let the compiler infer types for single instance constants or variables. Type inference works well for small, non-empty arrays and dictionaries too. When necessary, specify exact types like `CGFloat` or `Int16`.
 
 **Preferred:**
 
 ```swift
-let message = "Click the button"
-let currentBounds = computeViewBounds()
-var names = ["Mic", "Sam", "Christine"]
-let maximumWidth: CGFloat = 106.5
+let message = "Warning Message"
+let edgeInsets = getEdgeInsets()
+var pets = ["Cat", "Dog", "Bird"]
+let minDelay: CGFloat = 12.5
 ```
 
 **Not Preferred:**
 
 ```swift
 let message: String = "Click the button"
-let currentBounds: CGRect = computeViewBounds()
-var names = [String]()
+let edgeInsets: EdgeInsets = getEdgeInsets()
+var pets = [String]()
 ```
 ___
 
