@@ -1238,7 +1238,7 @@ var deviceModels: [String]
 
  #### 1. Colon Spacing
 
-Place the colon immediately after an identifier, followed by a space
+Certainly! Here's the corrected version: "Place the colon immediately after an identifier, followed by a space."
 
 **Preferred**:
 ```swift
@@ -1267,7 +1267,7 @@ var dict = [KeyType : ValueType]()
 
  #### 2. Return Arrow Spacing
 
-Place a space on either side of a return arrow for readability
+Leave a space on each side of a line break arrow for readability.
 
 **Preferred**:
 ```swift
@@ -1291,7 +1291,7 @@ func doSomething(completion: ()->Void) {
 }
 ```
 
-**Multi-line arrays should have each bracket on a separate line.** Put the opening and closing brackets on separate lines from any of the elements of the array. Also add a trailing comma on the last element.
+**Multi-line arrays should have each bracket on a separate line.** Separate the opening and closing brackets from any elements within the array. Additionally, ensure the last element has a trailing comma.
 
 **Preferred**:
 ```swift
@@ -1317,11 +1317,11 @@ let rowContent = [
 
  #### 3. Whitespace Around Braces
  
-Braces should be surrounded by a single whitespace character (either a space, or a newline) on each side.
+Curly braces should be surrounded by a single whitespace character (either a space or a newline) on each side.
 
 **Preferred**:
 ```swift
-struct Planet {
+struct Earth {
   …
 }
 
@@ -1359,11 +1359,11 @@ else {
 }
 ```
 
--   There should be one blank line between methods and up to one blank line between type declarations to aid in visual clarity and organization. Whitespace within methods should separate functionality, but having too many sections in a method often means you should refactor into several methods.
+-   Between methods, there should be one blank line for visual clarity and organization. Between type declarations, there can be up to one blank line. Inside methods, whitespace should be used to separate functionality; however, having too many sections within a method often indicates the need for refactoring into multiple methods.
     
 -   There should be no blank lines after an opening brace or before a closing brace.
 
--   Depending on the need, you can also use **Control-m** if there won't be too much distortion in the pattern and there is a subject that involves more than one parameter.
+-  Depending on the requirement, you can also utilize **Control-m** provided that it doesn't overly distort the pattern and involves a subject with multiple parameters.
 
 **Preferred**:
 ```swift
@@ -1389,7 +1389,7 @@ ManyParamInit(param1: String, param2: String, param3: String)
 
  #### 4. No Spaces Around Parens
 
-For function calls and declarations, there should be no spaces before or inside the parentheses of the argument list.
+For function calls and declarations, avoid placing spaces before or inside the parentheses of the argument list.
 
 **Preferred**:
 ```swift
@@ -1405,7 +1405,7 @@ func install ( _ engine: Engine ) { }
 
  #### 4. Space In Empty Braces
 
-Include a single space in an empty set of braces (`{ }`).
+Empty braces should contain a single space. (`{ }`).
 
 **Preferred**:
 ```swift
@@ -1433,7 +1433,7 @@ extension SpaceshipView {
 
  #### 5. No Blank Lines At Start Or End Of Non-Type Scopes
  
-**Remove blank lines at the top and bottom of scopes**, excluding type bodies which can optionally include blank lines.
+**Remove blank lines at the top and bottom of scopes**, Type bodies are an exception, as they may include optional blank lines.
 
 **Preferred**:
 ```swift
@@ -1487,7 +1487,7 @@ var gravity: CGFloat
 
  #### 7. No Space Inside Brackets
 
-There should be no spaces inside the brackets of collection literals.
+Collection literals should not have spaces inside their brackets.
 
 **Preferred**:
 ```swift
@@ -1523,10 +1523,10 @@ class TestDatabase : Database {
 
  #### 8. Multi Line Conditions
 
-Multi-line conditional statements should break after the leading keyword. Indent each individual statement by 2 spaces.
+Multi-line conditional statements should begin with the keyword on a new line. Each subsequent statement should be indented by 2 spaces
 
 *Why?*
-Breaking after the leading keyword resets indentation to the standard 2-space grid, which helps avoid fighting Xcode's control + i indentation behavior.
+Starting a new line after the leading keyword resets the indentation to the standard 2-space grid. This approach helps prevent conflicts with Xcode's indentation behavior when using control + i.
 
 **Preferred**:
 ```swift
@@ -1576,7 +1576,7 @@ else { … }
 
  #### 9. Closure Brace Spacing
 
-**Closures should have a single space or newline inside each brace.** Trailing closures should additionally have a single space or newline outside each brace.
+**Closures should have a single space or newline inside each brace.** Additionally, trailing closures should have a single space or newline outside each brace
 
 **Preferred**:
 ```swift
@@ -1602,7 +1602,7 @@ let evenSquares = numbers
 
  #### 10. Infix Operator Spacing
  
-**Infix operators should have a single space on either side.** Prefer parenthesis to visually group statements with many operators rather than varying widths of whitespace. This rule does not apply to range operators (e.g. `1...3`) and postfix or prefix operators (e.g. `guest?` or `-1`).
+**Infix operators should have a single space on either side.** Use parentheses to visually group statements with many operators instead of relying on varying widths of whitespace. This guideline excludes range operators (e.g., `1...3`) and postfix or prefix operators (e.g., `guest?` or `-1`).
 
 **Preferred**:
 ```swift
@@ -2817,47 +2817,47 @@ ___
 ## Access Control
 
 #### 1. General
-Omitting an explicit access level is permitted on declarations. For top-level declarations, the default access level is internal. For nested declarations, the default access level is the lesser of internal and the access level of the enclosing declaration. The default access modifier, namely internal, is not specified explicitly (as well as any other default, in general). class type members are rarely useful because of discouraged use of inheritance, especially for static members. An engineer must be aware of the use-cases of class and static modifiers (confusing them is a common mistake.) Generally, encapsulation is honored in any way. E.g., @IBOutlet properties and @IBAction methods are always private. Implementation details are hidden behind meaningful API. 3.2.2 The access modifier keyword should not be on a line by itself - keep it inline with what it is describing.
+Explicitly specifying an access level is optional in declarations. For top-level declarations, the default access level is internal. For nested declarations, the default access level is the more restrictive of either internal or the access level of the enclosing declaration. This means the default access modifier, which is internal, isn't explicitly stated (similarly to other defaults). Class type members are rarely beneficial due to the discouraged use of inheritance, particularly for static members. Engineers should understand the use-cases for class and static modifiers, as confusing them is a common mistake. Generally, encapsulation is maintained in various ways. For instance, @IBOutlet properties and @IBAction methods are always private. Implementation details are concealed behind a meaningful API. Additionally, the access modifier keyword should be kept inline with what it describes and should not be on a separate line.
 
 **Preferred**:
 ```swift
-open class Pirate { /* ... */ }
+open class Cheat { /* ... */ }
 ```
 
 **Not Preferred**:
 ```swift
-open class Pirate { /* ... */ }
+open class Cheat { /* ... */ }
 ```
 
 #### 2. RedundantInternal
 
-Omit the internal keyword when defining types, properties, or functions with an internal access control level.
+When defining types, properties, or functions with an internal access control level, omit the internal keyword.
 
 **Preferred**:
-Because internal access control is implied if no other access control level is specified.
+When defining types, properties, or functions with an internal access control level, omit the internal keyword because internal access control is implied if no other access control level is specified.
 ```swift
 
-class Spaceship { 
+class Car { 
      init() { … } 
-     func travel(to planet: Planet) { … }
+     func travel(to city: City) { … }
  }
 ```
 
 **Not Preferred**:
 ```swift
-internal class Spaceship {
+internal class Car {
  internal init() { … } 
- internal func travel(to planet: Planet) { … }
+ internal func travel(to city: City) { … }
  }
 ```
 
 
 #### 3. Redundant Fileprivate
 
-Access control should be at the strictest level possible. Prefer public to open and private to fileprivate unless you need that behavior.
+Access control should be set to the strictest level possible. Prefer public over open and private over fileprivate unless the specific behavior of the latter is required.
 
 **Preferred**:
-Because internal access control is implied if no other access control level is specified.
+If no other access control level is specified, internal access control is implied.
 ```swift
 // RIGHT: `navigation` is used in `extension Pilot` below,
 // so `fileprivate` is necessary here. 
@@ -2907,7 +2907,7 @@ public func blastOff() {
 ```
 
 #### 4. ExtensionAccessControl
-Specifying an explicit access level at the file level on an extension is forbidden. Each member of the extension has its access level specified if it is different than the default.
+It's not allowed to specify an explicit access level for a file-level extension. Each member of the extension must have its access level specified only if it differs from the default.
 
 **Preferred**:
 ```swift
@@ -2934,7 +2934,7 @@ public extension String {
 ```
 
 #### 5. Access
-Use access control as the leading property specifier. The only things that should come before access control are the static specifier or attributes such as @IBAction, @IBOutlet and @discardableResult. 3.2.1 Write the access modifier keyword first if it is needed. 
+When specifying properties, ensure that access control is the first property specifier. The only things that should precede access control are the static specifier or attributes like @IBAction, @IBOutlet, and @discardableResult. If an access modifier keyword is necessary, it should be written first. 
 
 **Preferred**:
 ```swift
