@@ -1,4 +1,4 @@
-# Contributing
+# Contributing
 
 To contribute to Trendyol iOS Style Guide, create a new branch ( `fix/methods-swiftlint-rule`  ) and commit your changes. Then, create a new pull request with provided [template](PULL_REQUEST_TEMPLATE.md) accordingly.
 
