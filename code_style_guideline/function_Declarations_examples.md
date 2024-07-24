@@ -1,18 +1,17 @@
-# Fonksiyon tanımlamaları ve Fonksiyon çağırmaları
 
-XCode 15 ile birlikte Control+M kısayolu kullnarak kodları reindent yapabiliyoruz. Ama gerçekten anlamda her yerde kullanmak okunabilirliği ve satır sayısı düşürüyor. Bu yüzden bunu birkaç örnekle nasıl kullabileceğimizi açıklamak istedik.
+# Function Declarations and Function Calls
 
-## Xcode Text Editing ayarlarından `Page guide at column` aktif etme 
+With Xcode 15, we can reindent the code using the Control+M shortcut. However, using it everywhere unnecessarily reduces readability and increases line count. Therefore, we wanted to explain how to use it with a few examples.
 
-16inc macbook cihazlarımızdan okunabilirliğin en yüksek seviyede olması için 1 satırdaki karakter sayısı ***105*** olarak belirledik. Bunun kolay uygulanabilir olması için XCode -> Settings -> Text Editing -> Display -> `Page guide at column` 105 değeriyle aktif edilmeli.
+## Activating 'Page guide at column' in Xcode Text Editing Settings
 
-![Xcode while editing settings](code_style_guideline/screens/check-spelling-suggestion.png)
+To achieve the highest readability level on our 16-inch MacBook devices, we set the character count per line to ***105***. For easy implementation, activate `Page guide at column` in Xcode -> Settings -> Text Editing -> Display with a value of 105.
 
-
+![Xcode text editing display column](code_style_guideline/screens/text-editing-display-column.png)
 
 ## Case 1
 
-Self döndüren bir fonksiyon çağırı yapıyorsak bir sonraki fonksion alt satırda olcak şekilde tanımlanmalı, fonksiyon parametreleri 105 satırı geçmediği süretçe aşağıya alınmamalı.
+When calling a self-returning function, the next function should be defined on the next line, and function parameters should not be moved to the next line unless they exceed 105 characters.
 
 **Preferred**:
 ```swift
@@ -23,7 +22,7 @@ shipmentDateTitleLabel.TY
 
 **Not Preferred**:
 ```swift
-        shipmentDateTitleLabel.TY
+shipmentDateTitleLabel.TY
             .textColor(
                 .onSurfaceVariant3
             )
@@ -35,7 +34,7 @@ shipmentDateTitleLabel.TY
 
 ## Case 2
 
-Closure Brace Spacing 105 satırı geçmemeli ve ya bir sonraki closeudan itibaren alt satırda olmalı
+Closure brace spacing should not exceed 105 characters or should be placed on the next line after the closing brace.
 
 **Preferred**:
 ```swift
@@ -50,57 +49,55 @@ let evenSquares = numbers.filter { $0.isMultiple(of: 2) }
 let evenSquares = numbers.filter( { $0.isMultiple(of: 2) } ).map( { $0 * $0 } ).compactMap( { $0 * $0 } ).filter( { $0.isMultiple(of: 2) } )
 
 let evenSquares = numbers
-  .filter{ $0.isMultiple(of: 2) }
-  .map{
+  .filter { $0.isMultiple(of: 2) }
+  .map {
     $0 * $0
   }
 ```
 
 ## Case 3
 
-
 **Preferred**:
 ```swift
-func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, index: Int, needUpdate: Bool) { // 105 satırı geçmiyor
+func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, index: Int, needUpdate: Bool) { // Does not exceed 105 characters
 
 --
 
-    func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, 
-                                        index: Int,
-                                        needUpdateStickyComponent: Bool) {
+func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, 
+                                    index: Int,
+                                    needUpdateStickyComponent: Bool) {
 
 --
 
-    func handleLiveStreamBannerResponse(
-        result: LiveStreamBannerResult,
-        index: Int,
-        needUpdateStickyComponent: Bool
-    ) {
+func handleLiveStreamBannerResponse(
+    result: LiveStreamBannerResult,
+    index: Int,
+    needUpdateStickyComponent: Bool
+) {
 ```
 
 **Not Preferred**:
 ```swift
-    func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, index: Int, needUpdateStickyComponent: Bool) { // 105 satırı geçiyor
+func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, index: Int, needUpdateStickyComponent: Bool) { // Exceeds 105 characters
 
-    func handleLiveStreamBannerResponse(   // 105 satırı geçmemesine rağmen aşağı atılmış
-        result: LiveStreamBannerResult,
-        index: Int
-    ) {
+func handleLiveStreamBannerResponse(   // Unnecessarily moved to the next line, although not exceeding 105 characters
+    result: LiveStreamBannerResult,
+    index: Int
+) {
 ```
 
 ## Case 4
 
-
 **Preferred**:
 ```swift
-// Eğer 105 satırı geçmiyorsa parametreler aşağı atılmalı
+// Parameters should be moved to the next line if they do not exceed 105 characters
 presenter?.presentZoomedImageViewController(imageUrls: images,
                                             currentPage: index,
                                             uxLayout: productDetailResponse?.uxLayout,
                                             contentId: productDetailResponse?.contentId)
 
-Eğer 105'i geçiyorsa parantezden sonra aşağı atılmalı
- presenter?.productRouter.presentZoomedImageViewController(
+If it exceeds 105 characters, move to the next line after the parentheses
+presenter?.productRouter.presentZoomedImageViewController(
             imageUrls: images,
             currentPage: index,
             uxLayout: productDetailResponse?.uxLayout,
@@ -110,22 +107,21 @@ Eğer 105'i geçiyorsa parantezden sonra aşağı atılmalı
 
 **Not Preferred**:
 ```swift
-        presenter?.productRouter.presentZoomedImageViewController(imageUrls: images, currentPage: index, uxLayout: productDetailResponse?.uxLayout, contentId: productDetailResponse?.contentId)
+presenter?.productRouter.presentZoomedImageViewController(imageUrls: images, currentPage: index, uxLayout: productDetailResponse?.uxLayout, contentId: productDetailResponse?.contentId)
 ```
 
 ## Case 5
 
-
 **Preferred**:
 ```swift
-// Eğer 105 satırı geçmiyorsa parametreler aşağı atılmalı
+// Parameters should be moved to the next line if they do not exceed 105 characters
 presenter?.presentZoomedImageViewController(imageUrls: images,
                                             currentPage: index,
                                             uxLayout: productDetailResponse?.uxLayout,
                                             contentId: productDetailResponse?.contentId)
 
-Eğer 105'i geçiyorsa parantezden sonra aşağı atılmalı
- presenter?.productRouter.presentZoomedImageViewController(
+If it exceeds 105 characters, move to the next line after the parentheses
+presenter?.productRouter.presentZoomedImageViewController(
             imageUrls: images,
             currentPage: index,
             uxLayout: productDetailResponse?.uxLayout,
@@ -148,21 +144,21 @@ Eğer 105'i geçiyorsa parantezden sonra aşağı atılmalı
 
 **Not Preferred**:
 ```swift
-        presenter?.productRouter.presentZoomedImageViewController(imageUrls: images, currentPage: index, uxLayout: productDetailResponse?.uxLayout, contentId: productDetailResponse?.contentId)
+presenter?.productRouter.presentZoomedImageViewController(imageUrls: images, currentPage: index, uxLayout: productDetailResponse?.uxLayout, contentId: productDetailResponse?.contentId)
 
-        let arguments = GRCPriceComparisonSectionFooterPresenterArguments(totalPriceTitle: uiModel.store.totalPriceTitle, totalPrice: uiModel.store.totalPrice, discountedTotalPrice: uiModel.store.discountedTotalPrice, productCount: uiModel.store.productCount, focusDiscountedTotalPrice: uiModel.store.focusDiscountedTotalPrice.orFalse, delegate: self)
+let arguments = GRCPriceComparisonSectionFooterPresenterArguments(totalPriceTitle: uiModel.store.totalPriceTitle, totalPrice: uiModel.store.totalPrice, discountedTotalPrice: uiModel.store.discountedTotalPrice, productCount: uiModel.store.productCount, focusDiscountedTotalPrice: uiModel.store.focusDiscountedTotalPrice.orFalse, delegate: self)
 
-// Normalde aşağıdaki gibi tanımlamayı kabul ediyoruz fakat 105 satırı geçiyor bu yüzden preferred alanındakini örnek alınız.
-        let arguments = GRCPriceComparisonSectionFooterPresenterArguments(totalPriceTitle: uiModel.store.totalPriceTitle, 
-                                                                          totalPrice: uiModel.store.totalPrice,
-                                                                          discountedTotalPrice: uiModel.store.discountedTotalPrice,
-                                                                          productCount: uiModel.store.productCount,
-                                                                          focusDiscountedTotalPrice: uiModel.store.focusDiscountedTotalPrice.orFalse,
-                                                                          delegate: self)
+// Although the following definition is generally acceptable, it exceeds 105 characters, so use the example in the preferred section.
+let arguments = GRCPriceComparisonSectionFooterPresenterArguments(totalPriceTitle: uiModel.store.totalPriceTitle, 
+                                                                  totalPrice: uiModel.store.totalPrice,
+                                                                  discountedTotalPrice: uiModel.store.discountedTotalPrice,
+                                                                  productCount: uiModel.store.productCount,
+                                                                  focusDiscountedTotalPrice: uiModel.store.focusDiscountedTotalPrice.orFalse,
+                                                                  delegate: self)
 ```
 
 ## Case 6
-Guard lets
+Guard Lets
 
 **Preferred**:
 ```swift
@@ -184,8 +180,8 @@ Guard lets
 ```
 
 ## Case 7
-Nested statement
-İç içe parametre alan ve 105 satırı geçen tanımlamalarda, fonksiyon parametresindeki datayı dışarıda tanımlamalı ve sonrasında değişken adını verebiliriz.
+Nested Statement
+For nested parameterized functions that exceed 105 characters, the data in the function parameter should be defined outside, and then the variable name can be used.
 
 **Preferred**:
 ```swift
