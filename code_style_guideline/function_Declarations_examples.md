@@ -7,7 +7,8 @@ With Xcode 15, we can reindent the code using the Control+M shortcut. However, u
 
 To achieve the highest readability level on our 16-inch MacBook devices, we set the character count per line to ***105***. For easy implementation, activate `Page guide at column` in Xcode -> Settings -> Text Editing -> Display with a value of 105.
 
-![Xcode text editing display column](code_style_guideline/screens/text-editing-display-column.png)
+
+![Xcode text editing display column](screens/text-editing-display-column.png)
 
 ## Case 1
 
