@@ -1,7 +1,7 @@
 
 # Function Declarations and Function Calls
 
-With Xcode 15, we can reindent the code using the Control+M shortcut. However, using it everywhere unnecessarily reduces readability and increases line count. Therefore, we wanted to explain how to use it with a few examples.
+With Xcode 15, we can reindent the code using the Control+M shortcut. However, using it everywhere unnecessarily reduces readability and increases line count. So, we'd like to explain how to use it with a few examples.
 
 ## Activating 'Page guide at column' in Xcode Text Editing Settings
 
@@ -9,6 +9,12 @@ To achieve the highest readability level on our 16-inch MacBook devices, we set 
 
 
 ![Xcode text editing display column](screens/text-editing-display-column.png)
+
+Column Character Limit Example
+
+*You can look at the divided area*
+
+![Xcode text editing display column](screens/example-of-column-character-limit.png)
 
 ## Case 1
 
