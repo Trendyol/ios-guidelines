@@ -2,6 +2,6 @@
 
 Enter the text here.
 
-### Reasoning and motivation:
+### Reasoning and motivation:
 
 Enter the text here.
