@@ -1,7 +1,7 @@
 
 # Function Declarations and Function Calls
 
-With Xcode 15, we can reindent the code using the Control+M shortcut. However, using it everywhere unnecessarily reduces readability and increases line count. So, we'd like to explain how to use it with a few examples.
+We can reindent the code using the reference of code style guidelines, we'd like to explain how to use it with a few examples.
 
 ## Activating 'Page guide at column' in Xcode Text Editing Settings
 
