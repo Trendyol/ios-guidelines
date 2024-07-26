@@ -7,6 +7,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 ## Table of Contents
 
 * [Using SwiftLint](#using-swiftlint)
+* [Function And Variable Declarations For Page Guide](#function-and-variable-declarations-for-page-guide)
 * [Naming](#naming)
   * [Variables](#variables)
   * [Methods](#methods)
@@ -54,7 +55,11 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 
 ## Using SwiftLint
 
-When developing for Trendyol, it is highly recommended — and may even be mandatory, depending on your team — to incorporate our SwiftLint configuration. Please refer to the [SwiftLint Policy](SWIFTLINT.markdown) for detailed information.
+When developing for Trendyol, it is highly recommended — and may even be mandatory, depending on your team — to incorporate our SwiftLint configuration. Please refer to the [SwiftLint Policy](SWIFTLINT.markdown) for detailed information.,
+
+## Function And Variable Declarations For Page Guide
+
+You can read the [document here](function_Declarations_examples.md), which includes examples to make function and variable definitions more readable and understandable.
 
 ## Naming
 
