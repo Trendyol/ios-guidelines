@@ -45,8 +45,6 @@ Closure brace spacing should not exceed 105 characters or should be placed on th
 
 **Preferred**:
 ```swift
-let evenSquares = numbers.filter { $0.isMultiple(of: 2) }.map { $0 * $0 }
-
 let evenSquares = numbers.filter { $0.isMultiple(of: 2) }
                          .map { $0 * $0 }
 ```
@@ -121,20 +119,6 @@ presenter?.productRouter.presentZoomedImageViewController(imageUrls: images, cur
 
 **Preferred**:
 ```swift
-// Parameters should be moved to the next line if they do not exceed 105 characters
-presenter?.presentZoomedImageViewController(imageUrls: images,
-                                            currentPage: index,
-                                            uxLayout: productDetailResponse?.uxLayout,
-                                            contentId: productDetailResponse?.contentId)
-
-If it exceeds 105 characters, move to the next line after the parentheses
-presenter?.productRouter.presentZoomedImageViewController(
-            imageUrls: images,
-            currentPage: index,
-            uxLayout: productDetailResponse?.uxLayout,
-            contentId: productDetailResponse?.contentId
-        )
-
         let arguments = GRCPriceComparisonSectionFooterPresenterArguments(
             totalPriceTitle: uiModel.store.totalPriceTitle,
             totalPrice: uiModel.store.totalPrice,
