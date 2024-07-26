@@ -59,7 +59,7 @@ When developing for Trendyol, it is highly recommended — and may even be manda
 
 ## Function And Variable Declarations For Page Guide
 
-You can read the document [here](function_Declarations_examples.md), which includes examples to make function and variable definitions more readable and understandable.
+You can read the [document here](function_Declarations_examples.md), which includes examples to make function and variable definitions more readable and understandable.
 
 ## Naming
 
