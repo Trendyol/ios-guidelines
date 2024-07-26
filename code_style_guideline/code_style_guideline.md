@@ -7,7 +7,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 ## Table of Contents
 
 * [Using SwiftLint](#using-swiftlint)
-* [Function And Variable Declarations For Page Guid](#function-and-variable-declarations-for-page-guid)
+* [Function And Variable Declarations For Page Guide](#function-and-variable-declarations-for-page-guide)
 * [Naming](#naming)
   * [Variables](#variables)
   * [Methods](#methods)
