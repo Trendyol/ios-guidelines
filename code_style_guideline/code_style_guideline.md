@@ -48,6 +48,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Else Statements](#else-statements)
   * [Switch Statements](#switch-statements)
   * [Golden Path](#golden-path)
+  * [Else Usage with Guard](#else-usage-with-guard)
 * [Multi-line String Literals](#multi-line-string-literals)
 * [Pre-processor Directives](#pre-processor-directives)
 * [References](#references)
@@ -3360,6 +3361,22 @@ func handle(_ action: GameAction) {
   case .defend:
     character.raiseShield()
   }
+}
+```
+
+### Else Usage with Guard
+#### 1. Single Line
+If `else` block has 1 line, it goes on the same line after the last condition.
+
+**Preferred**:
+```swift
+guard let self else { return }
+```
+
+**Not Preferred**:
+```swift
+guard let self else {
+   return 
 }
 ```
 
