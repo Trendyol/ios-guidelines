@@ -84,11 +84,6 @@ func handleLiveStreamBannerResponse(
 **Not Preferred**:
 ```swift
 func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, index: Int, needUpdateStickyComponent: Bool) { // Exceeds 105 characters
-
-func handleLiveStreamBannerResponse(   // Unnecessarily moved to the next line, although not exceeding 105 characters
-    result: LiveStreamBannerResult,
-    index: Int
-) {
 ```
 
 ## Case 4
@@ -119,18 +114,18 @@ presenter?.productRouter.presentZoomedImageViewController(imageUrls: images, cur
 
 **Preferred**:
 ```swift
-        let arguments = GRCPriceComparisonSectionFooterPresenterArguments(
-            totalPriceTitle: uiModel.store.totalPriceTitle,
-            totalPrice: uiModel.store.totalPrice,
-            discountedTotalPrice: uiModel.store.discountedTotalPrice,
-            productCount: uiModel.store.productCount,
-            focusDiscountedTotalPrice: uiModel.store.focusDiscountedTotalPrice.orFalse,
-            delegate: self
-        )
+let arguments = GRCPriceComparisonSectionFooterPresenterArguments(
+    totalPriceTitle: uiModel.store.totalPriceTitle,
+    totalPrice: uiModel.store.totalPrice,
+    discountedTotalPrice: uiModel.store.discountedTotalPrice,
+    productCount: uiModel.store.productCount,
+    focusDiscountedTotalPrice: uiModel.store.focusDiscountedTotalPrice.orFalse,
+    delegate: self
+)
 
-        let arguments = GRCPricePresenterArguments(totalPriceTitle: uiModel.store.totalPriceTitle,
-                                                   totalPrice: uiModel.store.totalPrice,
-                                                   delegate: self)
+let arguments = GRCPricePresenterArguments(totalPriceTitle: uiModel.store.totalPriceTitle,
+                                           totalPrice: uiModel.store.totalPrice,
+                                           delegate: self)
 ```
 
 **Not Preferred**:
@@ -153,21 +148,22 @@ Guard Lets
 
 **Preferred**:
 ```swift
-        guard 
-            let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJsonFileType)
-        else {
-            throw LocalJsonDecoderError.pathNotFound
-        }
+guard
+    let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJsonFileType)
+else {
+    throw LocalJsonDecoderError.pathNotFound
+}
 --
 
-        guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJsonFileType) else {
-            throw LocalJsonDecoderError.pathNotFound
-        }
+guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJsonFileType) else {
+    throw LocalJsonDecoderError.pathNotFound
+}
+
 ```
 
 **Not Preferred**:
 ```swift
-        guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJsonFileType) else { throw LocalJsonDecoderError.pathNotFound }
+guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJsonFileType) else { throw LocalJsonDecoderError.pathNotFound }
 ```
 
 ## Case 7
@@ -176,24 +172,25 @@ For nested parameterized functions that exceed 105 characters, the data in the f
 
 **Preferred**:
 ```swift
-        let eventData = SearchResultAdsProductImpressionEvent(type: .click,
-                                                              arguments: arguments,
-                                                              searchTerm: newSearchResponse?.info?.title,
-                                                              relativePath: relativePath)
-        coreTracker.track(eventData)
+let eventData = SearchResultAdsProductImpressionEvent(type: .click,
+                                                      arguments: arguments,
+                                                      searchTerm: newSearchResponse?.info?.title,
+                                                      relativePath: relativePath)
+coreTracker.track(eventData)
 
 --
 
-        let eventData = SearchResultAdsProductImpressionEvent(
-            type: .click,
-            arguments: arguments,
-            searchTerm: newSearchResponse?.info?.title,
-            relativePath: relativePath
-        )
-        coreTracker.track(eventData)
+let eventData = SearchResultAdsProductImpressionEvent(
+    type: .click,
+    arguments: arguments,
+    searchTerm: newSearchResponse?.info?.title,
+    relativePath: relativePath
+)
+coreTracker.track(eventData)
+
 ```
 
 **Not Preferred**:
 ```swift
-        coreTracker.track(SearchResultAdsProductImpressionEvent(type: .click, arguments: arguments, searchTerm: newSearchResponse?.info?.title ?? "", relativePath: relativePath))
+coreTracker.track(SearchResultAdsProductImpressionEvent(type: .click, arguments: arguments, searchTerm: newSearchResponse?.info?.title ?? "", relativePath: relativePath))
 ```
