@@ -30,8 +30,6 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Parentheses & Braces](#parentheses-&-braces)
 * [Comments](#comments)
 * [Final Usage](#final-usage)
-* [Function Declarations](#function-declarations)
-* [Function Calls](#function-calls)
 * [High Order Functions](#high-order-functions)
 * [Closures](#closures)
 * [Tuples](#tuples)
@@ -350,45 +348,6 @@ func performTask() {
 func performTask() -> Void {
     // Implementation
 }
-```
-
-Formatting Long Function Invocations:
-
-For long function calls, break each argument onto a new line and place the closing parenthesis on the last line.
-
-**Preferred**:
-```swift
-universe.generateStars(at: location,
-                       count: 5,
-                       color: starColor,
-                       withAverageDistance: 4)
-```
-
-**Not Preferred**:
-```swift
-universe.generate(
-  5,
-  .stars,
-  at: location)
-  
-universe.generateStars(
-  at: location,
-  count: 5,
-  color: starColor,
-  withAverageDistance: 4) 
-  
-universe.generate(5,
-  .stars,
-  at: location)
-  
-universe.generateStars(
-  at: location,
-  count: 5,
-  color: starColor,
-  withAverageDistance: 4
-)
-
-universe.generateStars(at: location, count: 5, color: starColor, withAverageDistance: 4)
 ```
 
 Command-Query Separation Principle:
@@ -1813,94 +1772,6 @@ final class BasketPersonalizedHeaderCell: UICollectionViewCell { // ... }
 **Not Preferred**:
 ```swift
 class BasketPersonalizedHeaderCell: UICollectionViewCell { // ... }
-```
-
-## Function Declarations
-
-Keep short function declarations on one line including the opening brace:
-
-```swift
-func reticulateSplines(spline: [Double]) -> Bool {
-  // reticulate code goes here
-}
-```
-
-For functions with long signatures, put each parameter on a new line and add an extra indent on subsequent lines:
-
-```swift
-func reticulateSplines(
-  spline: [Double], 
-  adjustmentFactor: Double,
-  translateConstant: Int, 
-  comment: String
-) -> Bool {
-  // reticulate code goes here
-}
-```
-
-Don't use `(Void)` to represent the lack of an input; simply use `()`. Use `Void` instead of `()` for closure and function outputs.
-
-**Preferred**:
-
-```swift
-func updateConstraints() -> Void {
-  // magic happens here
-}
-
-typealias CompletionHandler = (result) -> Void
-```
-
-**Not Preferred**:
-
-```swift
-func updateConstraints() -> () {
-  // magic happens here
-}
-
-typealias CompletionHandler = (result) -> ()
-```
-
-## Function Calls
-
-Mirror the style of function declarations at call sites. Calls that fit on a single line should be written as such:
-
-```swift
-let success = reticulateSplines(splines)
-```
-
-If the call site must be wrapped, put each parameter on a new line, indented one additional level:
-
-```swift
-let success = reticulateSplines(
-  spline: splines,
-  adjustmentFactor: 1.3,
-  translateConstant: 2,
-  comment: "normalize the display")
-```
-
-A method declaration is placed on a single line if it can fit most display screen widths without a carry-over. Otherwise, each parameter is placed on its own line and matches the beginning of the previous one. Return type carries on to the last parameter's line.
-
-**Preferred**:
-
-```swift
-func fetchResults(from endpoint: URL,
-                  transferringTo device: Device,
-                  compressed: Bool,
-                  completionHandler: (() -> Void)?) –> [Data]
-```
-
-**Not Preferred**:
- 
-```swift
-func fetchResults(
-    from endpoint: URL = .remoteServerPath,
-    transferringTo device: Device = .current,
-    compressed: Bool = true,
-    completionHandler: ((_ success: Bool) -> ())? = nil
-) –> [Data]
-
-func fetchResults(from endpoint: URL, transferringTo device: Device, 
-                  compressed: Bool, completionHandler: (() -> Void)?) –> [Data]
 ```
 
 ## High Order Functions
