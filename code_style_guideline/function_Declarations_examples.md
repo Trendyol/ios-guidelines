@@ -17,6 +17,24 @@ Column Character Limit Example
 ![Xcode text editing display column](screens/example-of-column-character-limit.png)
 
 ## Case 1
+Use FeatureFlag property wrapper for your configs since traditional config initialization exceeds 105 limit.
+
+**Preferred**:
+```swift
+@FeatureFlag(key: "myConfig", defaultValue: 30)
+private var myConfig: Int
+```
+
+**Not Preferred**:
+```swift
+init(myConfig: Int = TYConfigs.MyConfig().value,
+     ...
+) {
+    self.collectableCouponVisibilityLimit = collectableCouponVisibilityLimit
+}
+```
+
+## Case 2
 
 When calling a self-returning function, the next function should be defined on the next line, and function parameters should not be moved to the next line unless they exceed 105 characters.
 
@@ -30,23 +48,25 @@ shipmentDateTitleLabel.TY
 **Not Preferred**:
 ```swift
 shipmentDateTitleLabel.TY
-            .textColor(
-                .onSurfaceVariant3
-            )
-            .font(
-                .medium,
-                size: .body1
-            )
+    .textColor(
+        .onSurfaceVariant3
+    )
+    .font(
+        .medium,
+        size: .body1
+    )
+
 ```
 
-## Case 2
+## Case 3
 
 Closure brace spacing should not exceed 105 characters or should be placed on the next line after the closing brace.
 
 **Preferred**:
 ```swift
-let evenSquares = numbers.filter { $0.isMultiple(of: 2) }
-                         .map { $0 * $0 }
+let evenSquares = numbers
+    .filter { $0.isMultiple(of: 2) }
+    .map { $0 * $0 }
 ```
 
 **Not Preferred**:
@@ -60,7 +80,7 @@ let evenSquares = numbers
   }
 ```
 
-## Case 3
+## Case 4
 
 **Preferred**:
 ```swift
@@ -86,7 +106,7 @@ func handleLiveStreamBannerResponse(
 func handleLiveStreamBannerResponse(result: LiveStreamBannerResult, index: Int, needUpdateStickyComponent: Bool) { // Exceeds 105 characters
 ```
 
-## Case 4
+## Case 5
 
 **Preferred**:
 ```swift
@@ -110,7 +130,7 @@ presenter?.productRouter.presentZoomedImageViewController(
 presenter?.productRouter.presentZoomedImageViewController(imageUrls: images, currentPage: index, uxLayout: productDetailResponse?.uxLayout, contentId: productDetailResponse?.contentId)
 ```
 
-## Case 5
+## Case 6
 
 **Preferred**:
 ```swift
@@ -143,7 +163,7 @@ let arguments = GRCPriceComparisonSectionFooterPresenterArguments(totalPriceTitl
                                                                   delegate: self)
 ```
 
-## Case 6
+## Case 7
 Guard Lets
 
 **Preferred**:
@@ -166,7 +186,7 @@ guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJs
 guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: kJsonFileType) else { throw LocalJsonDecoderError.pathNotFound }
 ```
 
-## Case 7
+## Case 8
 Nested Statement
 For nested parameterized functions that exceed 105 characters, the data in the function parameter should be defined outside, and then the variable name can be used.
 
