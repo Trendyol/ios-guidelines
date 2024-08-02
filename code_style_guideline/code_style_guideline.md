@@ -2218,7 +2218,7 @@ struct Environment {
 }
 ```
 
-**Note:** Place constants within extensions of classes, and ensure the class extension is not marked as access control. Reference: [Extension Access Control](#4-extensionaccesscontrol)
+**Note:** Place constants within extensions of classes, and ensure the class extension is not marked with any access control. Reference: [Extension Access Control](#4-extensionaccesscontrol)
 
 **Preferred**:
 ```swift
