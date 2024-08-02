@@ -1188,7 +1188,7 @@ var deviceModels: [String]
 ```
 
 ## Spacing And New Line
-**Important**: Go to  `Xcode > Preferences > Text Editing > While editing`
+**Important**: Go to  `Xcode > Settings > Text Editing > Editing`
 * Starting from Xcode 4.4 whitespaces will be trimmed automatically by default, unless the line is all whitespace. You can also activate  `Including whitespace-only lines`  to fix this, which is not active by default.
 
 ![Xcode while editing settings](screens/text-editing-while-editing.png)
