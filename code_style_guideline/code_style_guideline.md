@@ -2218,12 +2218,12 @@ struct Environment {
 }
 ```
 
-**Note:** Place constants within private extensions of classes, and ensure the class extension is marked as private.
+**Note:** Place constants within extensions of classes, and ensure the class extension is not marked as access control. Reference: [Extension Access Control](#4-extensionaccesscontrol)
 
 **Preferred**:
 ```swift
-private extension AccountPresenter {
-  enum Constants {
+extension AccountPresenter {
+  private enum Constant {
     enum Date {
       static let cobrandedOnboardingLastShownDateFormat = "yyyy-MM-dd"
     }
