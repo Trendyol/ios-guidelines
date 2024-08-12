@@ -28,7 +28,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Omitting Return](#omitting-return)
   * [Imports](#imports)
 * [Spacing & New Line](#spacing-and-new-line)
-* [Parentheses & Braces](#parentheses-braces)
+* [Parentheses & Braces](#parentheses-&-braces)
 * [Comments](#comments)
 * [Final Usage](#final-usage)
 * [Function Declarations](#function-declarations)
