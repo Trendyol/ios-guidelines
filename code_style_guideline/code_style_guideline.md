@@ -2975,7 +2975,7 @@ When writing conditionals, ensure the "golden" or "happy" path aligns with the l
 **Preferred**:
 ```swift
 func process(user: User?) {
-  guard let user = user else {
+  guard let user else {
     return
   }
   // Process user
@@ -2985,7 +2985,7 @@ func process(user: User?) {
 
 ```swift
 func validate(input: String?) -> Bool {
-  guard let input = input, !input.isEmpty else {
+  guard let input, !input.isEmpty else {
     return false
   }
   // Continue with valid input
