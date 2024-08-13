@@ -7,6 +7,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 ## Table of Contents
 
 * [Using SwiftLint](#using-swiftlint)
+* [Unit Tests](#unit-tests)
 * [Function And Variable Declarations For Page Guide](#function-and-variable-declarations-for-page-guide)
 * [Naming](#naming)
   * [Variables](#variables)
@@ -50,6 +51,8 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 * [Pre-processor Directives](#pre-processor-directives)
 * [References](#references)
 
+## Unit Tests
+The rules do not apply to unit tests at the moment unless it's explicitly stated that the rule is valid for unit tests too. After the document reaches a certain maturity, separate work will be done for unit testing.
 
 ## Using SwiftLint
 
