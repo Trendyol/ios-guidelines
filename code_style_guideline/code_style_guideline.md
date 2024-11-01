@@ -387,7 +387,7 @@ func performTask() -> Void {
 
 Parameter Naming Convention:
 
-Mostly don't use ommited parameters on function. If parameter name contains on method name at it is clear to recognize. You can use.
+Don't omit parameters unless it is redundant. 
  
  **Preferred**:
 ```swift
