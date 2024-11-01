@@ -1,3 +1,4 @@
+
 # Trendyol iOS Style Guide
 
 Tailored exclusively for the Trendyol app, this Swift Style Guide prioritizes code readability within Trendyol's unique development environment. Crafted to ensure consistency across diverse contributors, the guide serves as a dedicated resource for maintaining a cohesive and clear codebase.
@@ -307,12 +308,28 @@ UIControl actions should be named starting with the control's name followed by t
 private func nextButtonTapped(_ sender: UIButton) {
     // ...
 }
+
+private func campaignViewTapped() {
+   // ...
+}
 ```
 
 **Not Preferred**:
 ```swift
 @objc
 private func nextButtonAction(_ sender: UIButton) {
+    // ...
+}
+
+private func handleBookButtonTap() {
+    // ...
+}
+
+private func tappedCampaign() {
+   // ...
+}
+
+private func modelChanged() {
     // ...
 }
 ```
@@ -335,6 +352,21 @@ func calculateSum(_ a: Int, _ b: Int, _ c: Int) -> Int {
 }
 ```
 
+"If `sender` is not going to be used in `@IBAction`, it should not be included."
+
+**Preferred**:
+```swift 
+@IBAction func deleteAddressClicked() {
+    presenter?.notifyDeleteAddressClicked()
+}
+```
+**Not Preferred**:
+```swift
+@IBAction func deleteAddressClicked(_ sender: UIButton) {
+    presenter?.notifyDeleteAddressClicked()
+}
+```
+
 Omitting Void Return Types:
 
 Do not include Void in the return type of function definitions.
@@ -351,6 +383,59 @@ func performTask() {
 func performTask() -> Void {
     // Implementation
 }
+```
+
+Parameter Naming Convention:
+
+Mostly don't use ommited parameters on function. If parameter name contains on method name at it is clear to recognize. You can use.
+ 
+ **Preferred**:
+```swift
+func addImage(_ image: UIImage) {
+    ...
+}
+
+func addImage(with image: UIImage) {
+  ...
+}
+```
+**Not Preferred**:
+```swift
+func addImage(image: UIImage) {
+    ...
+}
+```
+Check for nil rather than using optional binding if you don't need to use the value. Checking for nil makes it immediately clear what the intent of the statement is. Optional binding is less explicit. 
+
+ **Preferred**:
+```swift
+var thing: Thing?
+
+if thing != nil {
+   doThing()
+}
+```
+
+**Not Preferred**: 
+```swift
+var thing: Thing?
+
+if let _ = thing {
+   doThing()
+}
+```
+
+Use fetch prefix instead of get for interactor functions.
+*Don't use get prefix on function or variable.*
+
+ **Preferred**:
+```swift
+var user = fetchUser()
+```
+
+**Not Preferred**: 
+```swift
+var user = getUser()
 ```
 
 Command-Query Separation Principle:
@@ -1334,7 +1419,7 @@ else {
 
 **Preferred**:
 ```swift
-let user = try await getUser(for: userID,
+let user = try await fetchUser(for: userID,
                              on: connection)
 
 ManyParamInit(
@@ -1346,7 +1431,7 @@ ManyParamInit(
 
 **Not Preferred**:
 ```swift
-let user = try await getUser(
+let user = try await fetchUser(
   for: userID,
   on: connection
 )
@@ -2621,11 +2706,11 @@ If a function returns multiple values, prefer returning a tuple to using inout a
 
 **Preferred**:
 ```swift
-func getBookDetails() -> (title: String, author: String, year: Int) {
+func bookDetails() -> (title: String, author: String, year: Int) {
     return ("1984", "George Orwell", 1949)
 }
 
-let bookDetails = getBookDetails()
+let bookDetails = bookDetails()
 let bookTitle = bookDetails.title
 let bookAuthor = bookDetails.author
 let publicationYear = bookDetails.year
@@ -2633,11 +2718,11 @@ let publicationYear = bookDetails.year
 
 typealias BookDetail = (title: String, author: String, year: Int)
 
-func getBookDetails() -> BookDetail {
+func bookDetails() -> BookDetail {
     return ("1984", "George Orwell", 1984)
 }
 
-let bookDetails = getBookDetails()
+let bookDetails = bookDetails()
 let bookTitle = bookDetails.title
 let bookAuthor = bookDetails.author
 let publicationYear = bookDetails.year
@@ -2645,11 +2730,11 @@ let publicationYear = bookDetails.year
 
 **Not Preferred**:
 ```swift
-func getBookDetails() -> (String, String, Int) {
+func bookDetails() -> (String, String, Int) {
     return ("Eva", "Test", 23)
 }
 
-let bookDetails = getBookDetails()
+let bookDetails = bookDetails()
 let bookTitle = bookDetails.$0
 let bookAuthor = bookDetails.$1
 let publicationYear = bookDetails.$2
@@ -2679,7 +2764,7 @@ Favor concise code and let the compiler infer types for single instance constant
 
 ```swift
 let message = "Warning Message"
-let edgeInsets = getEdgeInsets()
+let edgeInsets = edgeInsets()
 var pets = ["Cat", "Dog", "Bird"]
 let minDelay: CGFloat = 12.5
 ```
@@ -2688,8 +2773,31 @@ let minDelay: CGFloat = 12.5
 
 ```swift
 let message: String = "Click the button"
-let edgeInsets: EdgeInsets = getEdgeInsets()
+let edgeInsets: EdgeInsets = edgeInsets()
 var pets = [String]()
+```
+
+Don't include types where they can be easily inferred.
+
+```swift
+enum Direction {
+  case left
+  case right
+}
+```
+
+**Preferred:**
+```swift
+func someDirection() -> Direction {
+  .left
+}
+```
+
+**Not Preferred:**
+```swift
+func someDirection() -> Direction {
+  Direction.left
+}
 ```
 ___
 
@@ -2915,6 +3023,38 @@ let result = if newIfElse { true } else { false }
 let result = ternary ? true : false
 ```
 
+Use ternary if only setting value or calling function. Swift build times are slow mostly because of expensive type checking. By default Xcode doesn't show code that's slow to compile. You can instruct it to show slowly compiling functions and expressions, though by adding:
+```swift
+-Xfrontend -warn-long-function-bodies=100 (100 means 100ms here, you should experiment with this value depending on your computer speed and project)
+-Xfrontend -warn-long-expression-type-checking=100
+```
+```swift
+// Build time: 239.0ms
+let labelNames = type == 0 ? (1...5).map{type0ToString($0)} : (0...2).map{type1ToString($0)}
+
+// Build time: 16.9ms
+var labelNames: [String]
+if type == 0 {
+    labelNames = (1...5).map{type0ToString($0)}
+} else {
+    labelNames = (0...2).map{type1ToString($0)}
+}
+```
+
+```swift
+// Build time: 1034.0ms
+let moveValue = willShowKeyboard ? -(endKeyboardFrame.height/Constant.dividerNumberForKeyboardHeight + (view?.doneButtonHeight ?? 0)) : 0
+
+// Build time: 103.0ms
+ var moveValue: CGFloat = 0.0
+   if willShowKeyboard {
+      moveValue = -(endKeyboardFrame.height/Constant.dividerNumberForKeyboardHeight)
+      if let doneButtonHeight = view?.doneButtonHeight {
+         moveValue += doneButtonHeight
+      }
+  }
+```
+    
 --- 
 
 ### Else Statements
@@ -2975,6 +3115,8 @@ switch direction {
 ### Golden Path
 
 When writing conditionals, ensure the "golden" or "happy" path aligns with the left-hand margin of the code. Avoid nesting `if` statements. Using multiple return statements is acceptable. Utilize `guard` statements for this purpose.
+
+Prefer using `guard` at the beginning of a scope. It's easier to reason about a block of code when all `guard` statements are grouped together at the top rather than intermixed with business logic
 
 **Preferred**:
 ```swift
