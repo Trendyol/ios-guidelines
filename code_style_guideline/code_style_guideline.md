@@ -771,10 +771,18 @@ Also, you can look for the correct form via right-click
 
 #### 1. String(format:) usage
 Prefer "\()" over String(format:).
+If possible, you should use the first example. If it's not possible and In dynamic strings, you can use `String(format:)`.
 
 **Preferred**:
 ```swift
+Example 1:
 return "user name: \(user.name), user id: \(user.id), user height: \(length)"
+
+Example 2:
+let description = response.otpVerificationPopupEmailCodeDescription
+// "Please enter the verification code delivered to %@."
+// "Lütfen %@ adresine iletilen doğrulama kodunu girin."
+return String(format: description, email)
 ```
 
 **Not Preferred**:
