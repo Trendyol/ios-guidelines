@@ -1,3 +1,5 @@
+
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Trendyol/ios-guidelines/badge)](https://scorecard.dev/viewer/?uri=github.com/Trendyol/ios-guidelines)
 # iOS Guidelines
 List of Architecture and code guidelines at Trendyol when developing for iOS.
 
