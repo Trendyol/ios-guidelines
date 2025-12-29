@@ -47,6 +47,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Else Statements](#else-statements)
   * [Switch Statements](#switch-statements)
   * [Golden Path](#golden-path)
+* [Optionals and Force Unwrapping](#optionals-and-force-unwrapping)
 * [Multi-line String Literals](#multi-line-string-literals)
 * [Pre-processor Directives](#pre-processor-directives)
 * [References](#references)
@@ -3245,6 +3246,51 @@ func handle(_ action: GameAction) {
   }
 }
 ```
+
+## Optionals and Force Unwrapping
+
+Avoid using the `!` operator to force-unwrap optionals in production code. A forced unwrap on a `nil` value will crash the app (resulting in a runtime error like "Unexpectedly found nil while unwrapping an Optional value"). Even if a value is non-nil in the current code, future changes or refactoring can break that assumption and lead to unexpected crashes. Force-unwrapping is also widely considered a code smell by the Swift community and is flagged by linters (for example, SwiftLint's `force_unwrapping` rule). Instead of checking an optional for `nil` and then using `!` (an unsafe and redundant pattern), use Swift's safe optional-handling features.
+
+**Exception**: Using `!` is acceptable for `@IBOutlet` properties (which are implicitly unwrapped after Interface Builder injection) and in unit test code (where an intentional crash on `nil` is an acceptable way to fail a test).
+
+Prefer safe unwrapping patterns such as:
+
+- **Optional Binding** (`if let` / `guard let`) to unwrap and use the value only when it's non-nil. (See [Apple's Optional Binding documentation](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/thebasics#Optional-Binding).)
+- **Nil-coalescing operator** (`??`) to provide a default value if the optional is `nil`.
+- **Optional chaining** (`?.`) to safely call properties or methods on an optional (the chain returns `nil` if any link is `nil`).
+- **Optional map/flatMap** to transform or further handle optionals without force-unwrapping.
+
+**Not Preferred**:
+
+```swift
+// Fragile pattern: manual nil-check followed by force-unwrap
+if title != nil {
+    label.text = title!   // risk of crash if title becomes nil
+}
+
+// Redundant force-unwrap in ternary
+let titleToShow = title != nil ? title! : "Untitled"
+```
+
+**Preferred**:
+
+```swift
+// Using optional binding
+if let title {
+    label.text = title
+}
+
+// Using guard for early exit
+guard let title else {
+    return
+}
+label.text = title
+
+// Using nil-coalescing for a default value
+let titleToShow = title ?? "Untitled"
+```
+
+---
 
 ## Multi-line String Literals
 
